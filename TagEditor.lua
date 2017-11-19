@@ -443,7 +443,7 @@ local function draw(show)
 		end
 	end
 	
-	local cam = workspace.Camera.CFrame.p
+	local cam = workspace.CurrentCamera and workspace.CurrentCamera.CFrame.p or Vector3.new()
 	table.sort(closest, function(a, b)
 		if a:IsA("Model") then
 			if a.PrimaryPart then
@@ -539,14 +539,21 @@ Selection.SelectionChanged:Connect(function()
 end)
 
 local debounce = -math.huge
-workspace.Camera:GetPropertyChangedSignal("CFrame"):Connect(function()
-	if ui.Parent and time() > debounce then
-		debounce = time() + 0.1
-		draw(true)
-	elseif ui.Parent then
-		tooltip()
-	end
-end)
+local cameraChangedConn
+local function addcamera()
+	if cameraChangedConn then cameraChangedConn:Disconnect() end
+	if not workspace.CurrentCamera then return end
+	cameraChangedConn = workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):Connect(function()
+		if ui.Parent and time() > debounce then
+			debounce = time() + 0.1
+			draw(true)
+		elseif ui.Parent then
+			tooltip()
+		end
+	end)
+end
+addcamera()
+workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(addcamera)
 
 game:GetService("UserInputService").InputChanged:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseMovement then
