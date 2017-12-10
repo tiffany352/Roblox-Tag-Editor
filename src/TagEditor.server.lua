@@ -50,10 +50,7 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local mouse = plugin:GetMouse()
 
-if game.StarterGui:FindFirstChild("TagEditorMenu") then
-	game.StarterGui.TagEditorMenu.Enabled = false
-end
-
+local isVisible = false
 local draw
 
 local taglistObj
@@ -73,13 +70,13 @@ local function getTagListObj(create)
 	if tl then
 		tl.ChildAdded:Connect(function()
 			if draw then
-				draw(true)
+				draw()
 			end
 		end)
 
 		tl.ChildRemoved:Connect(function()
 			if draw then
-				draw(true)
+				draw()
 			end
 		end)
 
@@ -89,11 +86,12 @@ local function getTagListObj(create)
 	return taglistObj
 end
 
-local function getTaglist()
+local function getTaglist(create)
 	local taglist = {}
 	
-	if taglistObj then
-		for _,tag in pairs(taglistObj:GetChildren()) do
+	local tl = getTagListObj(create)
+	if tl then
+		for _,tag in pairs(tl:GetChildren()) do
 			if tag:IsA("StringValue") then
 				taglist[#taglist+1] = tag.Value
 			end
@@ -338,7 +336,7 @@ local function tooltip()
 end
 
 local rows = {}
-function draw(show)
+function draw()
 	for _,sel in pairs(selections) do
 		sel:Destroy()
 	end
@@ -348,7 +346,7 @@ function draw(show)
 	end
 	rows = {}
 	
-	if not show then ui.Parent = nil return end
+	if not isVisible then ui.Parent = nil return end
 	
 	ui.Parent = game:GetService("CoreGui")
 	
@@ -397,22 +395,7 @@ function draw(show)
 				local value = Instance.new("StringValue")
 				value.Name = name
 				value.Value = name
-				local tl = ServerStorage:FindFirstChild("TagList")
-				if not tl then
-					tl = Instance.new("Folder")
-					tl.Name = "TagList"
-					tl.Parent = ServerStorage
-					tl.ChildAdded:Connect(function()
-						if ui then
-							draw(true)
-						end
-					end)
-					tl.ChildRemoved:Connect(function()
-						if ui then
-							draw(true)
-						end
-					end)
-				end
+				local tl = getTagListObj('create')
 				value.Parent = tl
 			end
 			for _,selected in pairs(Selection:Get()) do
@@ -422,13 +405,13 @@ function draw(show)
 					Collections:RemoveTag(selected, name)
 				end
 			end
-			draw(true)
+			draw()
 		end)
 		row.RemoveTag.MouseButton1Click:Connect(function()
 			for _,selected in pairs(Selection:Get()) do
 				Collections:RemoveTag(selected, name)
 			end
-			local tl = ServerStorage:FindFirstChild("TagList")
+			local tl = getTagListObj()
 			if tl then
 				for _,tag in pairs(tl:GetChildren()) do
 					if tag.Value == name then
@@ -436,7 +419,7 @@ function draw(show)
 					end
 				end
 			end
-			draw(true)
+			draw()
 		end)
 	end
 
@@ -516,21 +499,21 @@ plugin = plugin
 local toolbar = plugin:CreateToolbar("Tag Editor")
 local button = toolbar:CreateButton("Tag Editor", "Opens the tag editing menu", "rbxasset://textures/ui/TixIcon.png")
 button.Click:Connect(function()
-	if not ui.Parent then
-		draw(true)
-	else
-		draw(false)
-	end
+	isVisible = not isVisible
+	draw()
 end)
 
 ServerStorage.ChildAdded:Connect(function(child)
 	if ui.Parent and child.Name == "TagList" then
-		draw(true)
+		getTagListObj()
+		draw()
 	end
 end)
 ServerStorage.ChildRemoved:Connect(function(child)
 	if ui.Parent and child.Name == "TagList" then
-		draw(true)
+		taglistObj = nil
+		getTagListObj()
+		draw()
 	end
 end)
 
@@ -538,7 +521,7 @@ getTagListObj()
 
 Selection.SelectionChanged:Connect(function()
 	if ui.Parent then
-		draw(true)
+		draw()
 	end
 end)
 
@@ -550,7 +533,7 @@ local function addcamera()
 	cameraChangedConn = workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):Connect(function()
 		if ui.Parent and time() > debounce then
 			debounce = time() + 0.1
-			draw(true)
+			draw()
 		elseif ui.Parent then
 			tooltip()
 		end
