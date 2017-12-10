@@ -70,19 +70,22 @@ local function getTagListObj(create)
 		tl.Parent = ServerStorage
 	end
 
-	tl.ChildAdded:Connect(function()
-		if draw then
-			draw(true)
-		end
-	end)
+	if tl then
+		tl.ChildAdded:Connect(function()
+			if draw then
+				draw(true)
+			end
+		end)
 
-	tl.ChildRemoved:Connect(function()
-		if draw then
-			draw(true)
-		end
-	end)
+		tl.ChildRemoved:Connect(function()
+			if draw then
+				draw(true)
+			end
+		end)
 
-	taglistObj = tl
+		taglistObj = tl
+	end
+
 	return taglistObj
 end
 
