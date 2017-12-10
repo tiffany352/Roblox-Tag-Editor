@@ -1,0 +1,10 @@
+{
+  "name": "Roblox-Tag-Editor",
+  "servePort": 8000,
+  "partitions": {
+    "src": {
+      "path": "src",
+      "target": "ServerStorage.TagEditor"
+    }
+  }
+}

@@ -54,12 +54,43 @@ if game.StarterGui:FindFirstChild("TagEditorMenu") then
 	game.StarterGui.TagEditorMenu.Enabled = false
 end
 
+local draw
+
+local taglistObj
+local function getTagListObj(create)
+	if taglistObj then
+		return taglistObj
+	end
+
+	local tl = ServerStorage:FindFirstChild("TagList")
+
+	if create and not tl then
+		tl = Instance.new("Folder")
+		tl.Name = "Folder"
+		tl.Parent = ServerStorage
+	end
+
+	tl.ChildAdded:Connect(function()
+		if draw then
+			draw(true)
+		end
+	end)
+
+	tl.ChildRemoved:Connect(function()
+		if draw then
+			draw(true)
+		end
+	end)
+
+	taglistObj = tl
+	return taglistObj
+end
+
 local function getTaglist()
 	local taglist = {}
 	
-	local tl = ServerStorage:FindFirstChild("TagList")
-	if tl then
-		for _,tag in pairs(tl:GetChildren()) do
+	if taglistObj then
+		for _,tag in pairs(taglistObj:GetChildren()) do
 			if tag:IsA("StringValue") then
 				taglist[#taglist+1] = tag.Value
 			end
@@ -69,8 +100,6 @@ local function getTaglist()
 	
 	return taglist
 end
-
-local draw
 
 local function createUi()
 	local ui = Instance.new("ScreenGui")
@@ -119,27 +148,11 @@ local function createUi()
 	end)
 	textbox.FocusLost:Connect(function(enterPressed)
 		if enterPressed then
-			local text = textbox.Text 
+			local text = textbox.Text
 			local value = Instance.new("StringValue")
 			value.Name = text
 			value.Value = text
-			local tl = ServerStorage:FindFirstChild("TagList")
-			if not tl then
-				tl = Instance.new("Folder")
-				tl.Name = "TagList"
-				tl.Parent = ServerStorage
-				tl.ChildAdded:Connect(function()
-					if ui.Parent then
-						draw(true)
-					end
-				end)
-				tl.ChildRemoved:Connect(function()
-					if ui.Parent then
-						draw(true)
-					end
-				end)
-			end
-			value.Parent = tl
+			value.Parent = getTagListObj('create')
 			textbox.Text = ''
 		end
 		if #textbox.Text == 0 then
@@ -322,7 +335,7 @@ local function tooltip()
 end
 
 local rows = {}
-local function draw(show)
+function draw(show)
 	for _,sel in pairs(selections) do
 		sel:Destroy()
 	end
@@ -518,19 +531,7 @@ ServerStorage.ChildRemoved:Connect(function(child)
 	end
 end)
 
-local tl = ServerStorage:FindFirstChild("TagList")
-if tl then
-	tl.ChildAdded:Connect(function()
-		if ui.Parent then
-			draw(true)
-		end
-	end)
-	tl.ChildRemoved:Connect(function()
-		if ui.Parent then
-			draw(true)
-		end
-	end)
-end
+getTagListObj()
 
 Selection.SelectionChanged:Connect(function()
 	if ui.Parent then
