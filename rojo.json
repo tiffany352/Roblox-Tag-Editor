@@ -4,7 +4,19 @@
   "partitions": {
     "src": {
       "path": "src",
-      "target": "ServerStorage.TagEditor"
+      "target": "ServerStorage.TagEditor.Plugin"
+    },
+    "roact": {
+      "path": "roact/lib",
+      "target": "ServerStorage.TagEditor.Roact"
+    },
+    "rodux": {
+      "path": "rodux/lib",
+      "target": "ServerStorage.TagEditor.Rodux"
+    },
+    "roactrodux": {
+      "path": "roact-rodux/lib",
+      "target": "ServerStorage.TagEditor.RoactRodux"
     }
   }
 }
