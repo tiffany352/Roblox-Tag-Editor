@@ -6,23 +6,98 @@ local Actions = require(script.Parent.Actions)
 local TagManager = {}
 TagManager.__index = TagManager
 
+TagManager._global = nil
+
+local propTypes = {
+    Icon = {
+        Type = "StringValue",
+        Default = "tag_green",
+    },
+    Visible = {
+        Type = "BoolValue",
+        Default = true,
+    },
+    Color = {
+        Type = "Color3Value",
+    },
+    DrawType = {
+        Type = "StringValue",
+        Default = "Box",
+    },
+    AlwaysOnTop = {
+        Type = "BoolValue",
+        Default = false,
+    }
+}
+
+function genColor(name)
+    local hash = 2166136261
+    local prime = 16777619
+    local base = math.pow(2, 32)
+    for i = 1, #name do
+        hash = (hash * prime) % base
+        hash = (hash + name:byte(i)) % base
+    end
+    local h = (hash / math.pow(2, 16)) % 256 / 255
+    local s = (hash / math.pow(2, 8)) % 256 / 255
+    local v = (hash / math.pow(2, 0)) % 256 / 255
+
+    local function lerp(start, stop, t)
+        return (stop - start) * t + start
+    end
+
+    v = lerp(0.3, 1.0, v)
+    s = lerp(0.5, 1.0, s)
+
+    return Color3.fromHSV(h, s, v)
+end
+
 function TagManager.new(store)
     local self = setmetatable({}, TagManager)
 
     self.store = store
     self.tags = {}
+    self.onTagAddedFuncs = {}
+    self.onTagRemovedFuncs = {}
+    self.onTagChangedFuncs = {}
+
     self.tagsFolder = Collection:FindFirstChild("Tags")
     if self.tagsFolder then
         for _,child in pairs(self.tagsFolder:GetChildren()) do
-            local iconValue = child:FindFirstChild("Icon")
-            self.tags[child.Name] = {
+            local tag = {
                 Folder = child,
-                Icon = iconValue and iconValue.Value,
             }
+            for name, prop in pairs(propTypes) do
+                local obj = child:FindFirstChild(name)
+                if obj then
+                    tag[name] = obj.Value
+                else
+                    tag[name] = prop.Default
+                end
+            end
+            if not tag.Color then
+                tag.Color = genColor(child.Name)
+                local colorValue = Instance.new("Color3Value")
+                colorValue.Name = "Color"
+                colorValue.Value = tag.Color
+                colorValue.Parent = child
+            end
+            self.tags[child.Name] = tag
         end
     end
 
+    self:_updateStore()
+    TagManager._global = self
+
+    self.selectionChanged = Selection.SelectionChanged:Connect(function()
+        self:_updateStore()
+    end)
+
     return self
+end
+
+function TagManager.Get()
+    return TagManager._global
 end
 
 function TagManager:_updateStore()
@@ -35,6 +110,10 @@ function TagManager:_updateStore()
         local entry = {
             Name = name,
             Icon = tag.Icon,
+            Visible = tag.Visible,
+            DrawType = tag.DrawType,
+            Color = tag.Color,
+            AlwaysOnTop = tag.AlwaysOnTop,
         }
         for i = 1, #sel do
             local obj = sel[i]
@@ -53,7 +132,7 @@ function TagManager:_updateStore()
         return a.Name < b.Name
     end)
 
-    self.store:Dispatch(Actions.SetTagData(data))
+    self.store:dispatch(Actions.SetTagData(data))
 end
 
 function TagManager:GetTags()
@@ -70,42 +149,155 @@ function TagManager:_tagsFolder()
     return self.tagsFolder
 end
 
+function TagManager:_folderOf(name, tag)
+    tag = tag or self.tags[name]
+    if tag.Folder then
+        return tag.Folder
+    end
+    local folder = Instance.new("Folder")
+    folder.Name = name
+    folder.Parent = self:_tagsFolder()
+    tag.Folder = folder
+
+    for k,v in pairs(tag) do
+        if propTypes[k] then
+            local obj = Instance.new(propTypes[k])
+            obj.Name = k
+            obj.Value = v
+            obj.Parent = folder
+        end
+    end
+    return folder
+end
+
+function TagManager:_setProp(tagName, key, value)
+    local tag = self.tags[tagName]
+    if not tag then
+        assert(false)
+        return false
+    end
+    if tag[key] == value then
+        return false
+    end
+    tag[key] = value
+    local folder = self:_folderOf(tagName, tag)
+    local valueObj = folder:FindFirstChild(key)
+    if not valueObj then
+        valueObj = Instance.new(propTypes[key].Type)
+        valueObj.Name = key
+        valueObj.Parent = folder
+    end
+    valueObj.Value = value
+    self:_updateStore()
+    for func,_ in pairs(self.onTagChangedFuncs) do
+        func(tagName, key, value)
+    end
+    return true
+end
+
 function TagManager:AddTag(name)
     if self.tags[name] then
         return
     end
     local folder = Instance.new("Folder")
     folder.Name = name
-    folder.Parent = self._tagsFolder()
-    self.tags[name] = {
+    folder.Parent = self:_tagsFolder()
+    local tag = {
         Folder = folder,
     }
+    for name, prop in pairs(propTypes) do
+        tag[name] = prop.Default
+    end
+    tag.Color = genColor(name)
+    local colorValue = Instance.new("Color3Value")
+    colorValue.Value = tag.Color
+    colorValue.Name = "Color"
+    colorValue.Parent = folder
+    self.tags[name] = tag
     self:_updateStore()
+    for func,_ in pairs(self.onTagAddedFuncs) do
+        func(name)
+    end
 end
 
 function TagManager:SetIcon(name, icon)
+    self:_setProp(name, "Icon", icon)
+end
+
+function TagManager:SetVisible(name, visible)
+    self:_setProp(name, "Visible", visible)
+end
+
+function TagManager:SetDrawType(name, type)
+    self:_setProp(name, "DrawType", type)
+end
+
+function TagManager:SetColor(name, color)
+    self:_setProp(name, "Color", color)
+end
+
+function TagManager:SetAlwaysOnTop(name, value)
+    self:_setProp(name, "AlwaysOnTop", value)
+end
+
+function TagManager:DelTag(name)
     local tag = self.tags[name]
     if not tag then
         return
     end
-    tag.Icon = icon
-    local folder = tag.Folder
-    local iconValue = folder:FindFirstChild("Icon")
-    if not iconValue then
-        iconValue = Instance.new("StringValue")
-        iconValue.Name = "Icon"
-        iconValue.Parent = folder
+    if tag.Folder then
+        tag.Folder:Destroy()
     end
-    iconValue.Value = icon
+    self.tags[name] = nil
+    for _,inst in pairs(Collection:GetTagged(name)) do
+        Collection:RemoveTag(inst, name)
+    end
     self:_updateStore()
+    for func,_ in pairs(self.onTagRemovedFuncs) do
+        func(name)
+    end
 end
 
-function TagManager:DelTag(name)
-    if not self.tags[name] then
-        return
+function TagManager:OnTagAdded(func)
+    self.onTagAddedFuncs[func] = true
+
+    return {
+        Disconnect = function(_self)
+            self.onTagAddedFuncs[func] = nil
+        end,
+    }
+end
+
+function TagManager:OnTagRemoved(func)
+    self.onTagRemovedFuncs[func] = true
+
+    return {
+        Disconnect = function(_self)
+            self.onTagRemovedFuncs[func] = nil
+        end
+    }
+end
+
+function TagManager:OnTagChanged(func)
+    self.onTagChangedFuncs[func] = true
+
+    return {
+        Disconnect = function(_self)
+            self.onTagChangedFuncs[func] = nil
+        end
+    }
+end
+
+function TagManager:SetTag(name, value)
+    local sel = Selection:Get()
+    for _,obj in pairs(sel) do
+        if value then
+            Collection:AddTag(obj, name)
+        else
+            Collection:RemoveTag(obj, name)
+        end
     end
-    self.tags[name].Folder:Destroy()
-    self.tags[name] = nil
+
     self:_updateStore()
 end
 

@@ -16,7 +16,16 @@ function Action:__call(...)
     return t
 end
 
-return {
+return setmetatable({
     SetSearch = Action.new("SetSearch", require(script.SetSearch)),
     SetTagData = Action.new("SetTagData", require(script.SetTagData)),
-}
+    OpenTagMenu = Action.new("OpenTagMenu", require(script.OpenTagMenu)),
+    ToggleIconPicker = Action.new("ToggleIconPicker", require(script.ToggleIconPicker)),
+    ToggleColorPicker = Action.new("ToggleColorPicker", require(script.ToggleColorPicker)),
+    ToggleWorldView = Action.new("ToggleWorldView", require(script.ToggleWorldView)),
+    OpenDropdown = Action.new("OpenDropdown", require(script.OpenDropdown)),
+}, {
+    __index = function(self, k)
+        error("No such key `"..tostring(k).."` in Actions")
+    end,
+})

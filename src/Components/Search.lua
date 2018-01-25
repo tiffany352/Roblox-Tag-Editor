@@ -3,6 +3,7 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 
 local Actions = require(script.Parent.Parent.Actions)
+local Constants = require(script.Parent.Parent.Constants)
 
 local function Search(props)
     return Roact.createElement("Frame", {
@@ -11,15 +12,17 @@ local function Search(props)
     }, {
         SearchBarContainer = Roact.createElement("ImageLabel", {
             BackgroundTransparency = 1.0,
-            Size = UDim2.new(1, 0, 1, 0),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.new(0.5, 0, 0.5, 0),
+            Size = UDim2.new(1, -10, 1, -10),
             ScaleType = Enum.ScaleType.Slice,
-            SliceCenter = Rect.new(48, 48, 48, 48),
-            Image = "rbxasset://textures/ui/Menu/buttonHover.png", -- rbxassetid://1353028396
+            SliceCenter = Rect.new(32, 32, 32, 32),
+            Image = "rbxasset://textures/ui/Keyboard/key_selection_9slice.png", -- rbxassetid://1353028396
         }, {
             SearchBar = Roact.createElement("TextBox", {
                 AnchorPoint = Vector2.new(.5, .5),
                 Position = UDim2.new(0.5, 0, 0.5, 0),
-                Size = UDim2.new(1, -40, 1, -20),
+                Size = UDim2.new(1, -20, 0, 20),
                 BackgroundTransparency = 1.0,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Font = Enum.Font.SourceSans,
