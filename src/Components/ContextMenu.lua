@@ -121,7 +121,7 @@ function ContextMenu.Item:render()
                 TextColor3 = Constants.Black,
                 LayoutOrder = 2,
                 TextXAlignment = Enum.TextXAlignment.Right,
-                
+
                 [Roact.Ref] = function(rbx)
                     if not rbx then return end
                     local function update()
@@ -238,6 +238,7 @@ function ContextMenu.Dropdown:render()
             })
             props.openDropdown(self.state.open)
         end,
+        ZIndex = 2,
     }
     local blacklist = {
         Options = true,
@@ -376,7 +377,7 @@ function ContextMenu.Dropdown:render()
                     BackgroundTransparency = 1.0,
                     Size = UDim2.new(1, -10000, 1, -10000),
                     Position = UDim2.new(0, 5000, 0, 5000),
-                    
+
                     [Roact.Event.MouseLeave] = function(rbx)
                         self:setState({
                             hover = false,

@@ -10,6 +10,7 @@ local ColorPicker = require(script.Parent.ColorPicker)
 local DisplayOptions = require(script.Parent.DisplayOptions)
 local WorldView = require(script.Parent.WorldView)
 local InstanceView = require(script.Parent.InstanceView)
+local GroupPicker = require(script.Parent.GroupPicker)
 
 return function(props)
     return Roact.createElement("Frame", {
@@ -37,6 +38,7 @@ return function(props)
             Search = Roact.createElement(Search),
         }),
         InstanceView = Roact.createElement(InstanceView),
+        GroupPicker = Roact.createElement(GroupPicker),
 
         TagMenu = Roact.createElement(TagMenu),
         IconPicker = Roact.createElement(IconPicker),

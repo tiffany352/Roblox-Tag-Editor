@@ -39,9 +39,16 @@ local function TagMenu(props)
                 props.instanceView()
             end,
         }),
+        Group = Roact.createElement(ContextMenu.Item, {
+            Text = "Change Group...",
+            LayoutOrder = 5,
+            onClick = function()
+                props.groupPicker()
+            end,
+        }),
         Color = Roact.createElement(ContextMenu.Color, {
             Text = "Color...",
-            LayoutOrder = 5,
+            LayoutOrder = 6,
             Color = props.tagColor,
 
             onClick = function()
@@ -59,7 +66,7 @@ local function TagMenu(props)
                 Sphere = "Sphere",
                 Text = "Label",
             },
-            LayoutOrder = 6,
+            LayoutOrder = 7,
 
             onSubmit = function(value)
                 TagManager.Get():SetDrawType(props.tagMenu, value)
@@ -67,7 +74,7 @@ local function TagMenu(props)
         }),
         AlwaysOnTop = Roact.createElement(ContextMenu.Checkbox, {
             Text = "Always On Top",
-            LayoutOrder = 7,
+            LayoutOrder = 8,
             Last = true,
             Value = props.tagAlwaysOnTop,
 
@@ -113,6 +120,9 @@ TagMenu = RoactRodux.connect(function(store)
         end,
         colorPicker = function()
             store:dispatch(Actions.ToggleColorPicker(state.TagMenu))
+        end,
+        groupPicker = function()
+            store:dispatch(Actions.ToggleGroupPicker(state.TagMenu))
         end,
         instanceView = function()
             store:dispatch(Actions.OpenInstanceView(state.TagMenu))

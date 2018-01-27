@@ -27,10 +27,14 @@ local propTypes = {
     AlwaysOnTop = {
         Type = "BoolValue",
         Default = false,
-    }
+    },
+    Group = {
+        Type = "StringValue",
+        Default = nil,
+    },
 }
 
-function genColor(name)
+local function genColor(name)
     local hash = 2166136261
     local prime = 16777619
     local base = math.pow(2, 32)
@@ -57,6 +61,7 @@ function TagManager.new(store)
 
     self.store = store
     self.tags = {}
+    self.groups = {}
     self.onTagAddedFuncs = {}
     self.onTagRemovedFuncs = {}
     self.onTagChangedFuncs = {}
@@ -86,6 +91,16 @@ function TagManager.new(store)
         end
     end
 
+    self.groupsFolder = Collection:FindFirstChild("Groups")
+    if self.groupsFolder then
+        for _,child in pairs(self.groupsFolder:GetChildren()) do
+            local group = {
+                Folder = child,
+            }
+            self.groups[child.Name] = group
+        end
+    end
+
     self:_updateStore()
     TagManager._global = self
 
@@ -94,6 +109,9 @@ function TagManager.new(store)
     end)
 
     return self
+end
+
+function TagManager:Destroy()
 end
 
 function TagManager.Get()
@@ -114,6 +132,7 @@ function TagManager:_updateStore()
             DrawType = tag.DrawType,
             Color = tag.Color,
             AlwaysOnTop = tag.AlwaysOnTop,
+            Group = tag.Group,
         }
         for i = 1, #sel do
             local obj = sel[i]
@@ -133,6 +152,16 @@ function TagManager:_updateStore()
     end)
 
     self.store:dispatch(Actions.SetTagData(data))
+
+    local data = {}
+
+    for name,group in pairs(self.groups) do
+        data[#data+1] = {
+            Name = name,
+        }
+    end
+
+    self.store:dispatch(Actions.SetGroupData(data))
 end
 
 function TagManager:GetTags()
@@ -182,12 +211,16 @@ function TagManager:_setProp(tagName, key, value)
     tag[key] = value
     local folder = self:_folderOf(tagName, tag)
     local valueObj = folder:FindFirstChild(key)
-    if not valueObj then
-        valueObj = Instance.new(propTypes[key].Type)
-        valueObj.Name = key
-        valueObj.Parent = folder
+    if value then
+        if not valueObj then
+            valueObj = Instance.new(propTypes[key].Type)
+            valueObj.Name = key
+            valueObj.Parent = folder
+        end
+        valueObj.Value = value
+    elseif valueObj then
+        valueObj:Destroy()
     end
-    valueObj.Value = value
     self:_updateStore()
     for func,_ in pairs(self.onTagChangedFuncs) do
         func(tagName, key, value)
@@ -238,6 +271,10 @@ end
 
 function TagManager:SetAlwaysOnTop(name, value)
     self:_setProp(name, "AlwaysOnTop", value)
+end
+
+function TagManager:SetGroup(name, value)
+    self:_setProp(name, "Group", value)
 end
 
 function TagManager:DelTag(name)
@@ -301,7 +338,46 @@ function TagManager:SetTag(name, value)
     self:_updateStore()
 end
 
-function TagManager:Destroy()
+function TagManager:_groupsFolder()
+    if self.groupsFolder then
+        return self.groupsFolder
+    end
+    self.groupsFolder = Instance.new("Folder")
+    self.groupsFolder.Name = "Groups"
+    self.groupsFolder.Parent = Collection
+    return self.groupsFolder
+end
+
+function TagManager:AddGroup(name)
+    if self.groups[name] then
+        return
+    end
+    local folder = Instance.new("Folder")
+    folder.Name = name
+    folder.Parent = self:_groupsFolder()
+
+    self.groups[name] = {
+        Folder = folder,
+    }
+
+    self:_updateStore()
+end
+
+function TagManager:DelGroup(name)
+    local group = self.groups[name]
+    if not group then
+        return
+    end
+    group.Folder:Destroy()
+    self.groups[name] = nil
+
+    for _,tag in pairs(self.tags) do
+        if tag.Group == name then
+            tag.Group = nil
+        end
+    end
+
+    self:_updateStore()
 end
 
 return TagManager
