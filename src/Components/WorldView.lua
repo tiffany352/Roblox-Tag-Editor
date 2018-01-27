@@ -32,6 +32,7 @@ local function SphereAdorn(props)
         Adornee = props.Adornee,
         Color3 = props.Color,
         AlwaysOnTop = props.AlwaysOnTop,
+        Transparency = 0.3,
         ZIndex = props.AlwaysOnTop and 1 or nil,
     })
 end
@@ -405,8 +406,6 @@ function WorldView:render()
             elt = SphereAdorn
         elseif entry.DrawType == 'Icon' then
             elt = IconAdorn
-        elseif entry.DrawType == 'OutlineIcon' then
-            elt = BoxIconAdorn
         elseif entry.DrawType == 'Text' then
             elt = TextAdorn
         else
