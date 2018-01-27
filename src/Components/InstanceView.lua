@@ -286,7 +286,7 @@ function InstanceView:render()
     }, {
         Topbar = Roact.createElement("Frame", {
             Size = UDim2.new(1, 0, 0, 32),
-            BackgroundColor3 = Constants.RobloxRed,
+            BackgroundColor3 = Constants.RobloxBlue,
             BorderSizePixel = 0,
         }, {
             Back = Roact.createElement("TextButton", {

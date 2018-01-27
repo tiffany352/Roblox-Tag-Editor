@@ -69,7 +69,7 @@ local ColorPicker = Roact.Component:extend("ColorPicker")
 
 function ColorPicker:init()
     self.state = {
-        color = Constants.RobloxBlue,
+        color = Constants.RobloxRed,
     }
 end
 
@@ -104,7 +104,7 @@ function ColorPicker:render()
                 Image = "rbxasset://textures/ui/btn_newWhite.png",
                 ScaleType = Enum.ScaleType.Slice,
                 SliceCenter = Rect.new(10, 10, 10, 10),
-                ImageColor3 = Constants.RobloxRed,
+                ImageColor3 = Constants.RobloxBlue,
             }, {
                 UISizeConstraint = Roact.createElement("UISizeConstraint", {
                     MaxSize = Vector2.new(300, 128+30+16+4+32),
@@ -225,8 +225,8 @@ function ColorPicker:render()
                         Size = UDim2.new(0, 80, 0, 24),
                         TextSize = 20,
                         Font = Enum.Font.SourceSansBold,
-                        BackgroundColor3 = Constants.RobloxRed,
-                        BorderColor3 = Constants.RobloxRed:lerp(Constants.Black, .3333),
+                        BackgroundColor3 = Constants.RobloxBlue,
+                        BorderColor3 = Constants.RobloxBlue:lerp(Constants.Black, .3333),
                         Position = UDim2.new(.25, 0, 1, 0),
                         AnchorPoint = Vector2.new(.5, 1),
                         TextColor3 = Constants.White,
@@ -240,8 +240,8 @@ function ColorPicker:render()
                         Size = UDim2.new(0, 80, 0, 24),
                         TextSize = 20,
                         Font = Enum.Font.SourceSansBold,
-                        BackgroundColor3 = Constants.RobloxRed,
-                        BorderColor3 = Constants.RobloxRed:lerp(Constants.Black, .3333),
+                        BackgroundColor3 = Constants.RobloxBlue,
+                        BorderColor3 = Constants.RobloxBlue:lerp(Constants.Black, .3333),
                         Position = UDim2.new(.75, 0, 1, 0),
                         AnchorPoint = Vector2.new(.5, 1),
                         TextColor3 = Constants.White,

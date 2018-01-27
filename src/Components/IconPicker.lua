@@ -101,7 +101,7 @@ local function IconPicker(props)
                 Image = "rbxasset://textures/ui/btn_newWhite.png",
                 ScaleType = Enum.ScaleType.Slice,
                 SliceCenter = Rect.new(10, 10, 10, 10),
-                ImageColor3 = Constants.RobloxRed,
+                ImageColor3 = Constants.RobloxBlue,
             }, {
                 UISizeConstraint = Roact.createElement("UISizeConstraint", {
                     MaxSize = Vector2.new(300, 300),

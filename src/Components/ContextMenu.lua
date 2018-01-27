@@ -206,7 +206,7 @@ function ContextMenu.Header(props)
     local newProps = {
         First = true,
         Last = false,
-        ImageColor3 = Constants.RobloxRed,
+        ImageColor3 = Constants.RobloxBlue,
         TextProps = {
             TextColor3 = Constants.White,
             Font = Enum.Font.SourceSansSemibold,
@@ -282,14 +282,14 @@ function ContextMenu.Dropdown:render()
             size = Vector2.new(20, 1)
             off = Vector2.new(0, 10)
         end
-        
+
         local isHover = self.state.hover == key
-        local veryLight = Constants.RobloxRed:lerp(Constants.White, .3)
+        local veryLight = Constants.RobloxBlue:lerp(Constants.White, .3)
         children[key] = Roact.createElement("ImageButton", {
             Size = UDim2.new(1, 0, 0, h),
             BackgroundTransparency = 1.0,
             Image = "rbxasset://textures/ui/btn_newWhite.png",
-            ImageColor3 = isHover and veryLight or Constants.RobloxRed,
+            ImageColor3 = isHover and veryLight or Constants.RobloxBlue,
             ScaleType = Enum.ScaleType.Slice,
             SliceCenter = center,
             ImageRectSize = size,
@@ -341,7 +341,7 @@ function ContextMenu.Dropdown:render()
     return Roact.createElement(ContextMenu.Item, newProps, {
         Button = Roact.createElement("ImageLabel", {
             Image = "rbxasset://textures/ui/btn_newWhite.png",
-            ImageColor3 = Constants.RobloxRed,
+            ImageColor3 = Constants.RobloxBlue,
             ScaleType = Enum.ScaleType.Slice,
             SliceCenter = Rect.new(10, 10, 10, 10),
             Size = UDim2.new(0, 88, 1, 5),
@@ -460,7 +460,7 @@ function ContextMenu.Confirm:render()
             AnchorPoint = Vector2.new(1, 0),
             Position = UDim2.new(1, 0, 0, 0),
             BorderSizePixel = 0,
-            BackgroundColor3 = Constants.RobloxRed,
+            BackgroundColor3 = Constants.RobloxBlue,
 
             [Roact.Event.MouseButton1Click] = function(rbx)
                 if props.onClick then
