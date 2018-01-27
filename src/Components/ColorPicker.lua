@@ -40,7 +40,7 @@ local function TextBox(props)
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 Position = UDim2.new(.5, 0, .5, 0),
                 BackgroundTransparency = 1.0,
-    
+
                 [Roact.Ref] = function(rbx)
                     if not rbx then return end
                     local oldText = rbx.Text
@@ -142,24 +142,25 @@ function ColorPicker:render()
 
                         [Roact.Event.MouseButton1Down] = function(rbx)
                             self:setState({
-                                mouseDown = true,
+                                wheelMouseDown = true,
                             })
                         end,
 
                         [Roact.Event.InputEnded] = function(rbx, input)
-                            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                            if input.UserInputType == Enum.UserInputType.MouseButton1 and self.state.wheelMouseDown then
                                 local x, y = input.Position.X, input.Position.Y
                                 local pos = Vector2.new(x, y) - rbx.AbsolutePosition
                                 pos = pos / rbx.AbsoluteSize
+                                pos = Vector2.new(math.clamp(pos.x, 0, 1), math.clamp(pos.y, 0, 1))
                                 self:setState({
                                     color = Color3.fromHSV(pos.x, 1 - pos.y, val),
-                                    mouseDown = false,
+                                    wheelMouseDown = false,
                                 })
                             end
                         end,
 
                         [Roact.Event.InputChanged] = function(rbx, input)
-                            if self.state.mouseDown and input.UserInputType == Enum.UserInputType.MouseMovement then
+                            if self.state.wheelMouseDown and input.UserInputType == Enum.UserInputType.MouseMovement then
                                 local pos = Vector2.new(input.Position.X, input.Position.Y) - rbx.AbsolutePosition
                                 pos = pos / rbx.AbsoluteSize
 
@@ -184,22 +185,25 @@ function ColorPicker:render()
 
                         [Roact.Event.MouseButton1Down] = function(rbx)
                             self:setState({
-                                mouseDown = true,
+                                valueMouseDown = true,
                             })
                         end,
 
                         [Roact.Event.MouseButton1Up] = function(rbx, x, y)
-                            local pos = x - rbx.AbsolutePosition.X
-                            pos = pos / rbx.AbsoluteSize.X
+                            if self.state.valueMouseDown then
+                                local pos = x - rbx.AbsolutePosition.X
+                                pos = pos / rbx.AbsoluteSize.X
+                                pos = math.clamp(pos, 0, 1)
 
-                            self:setState({
-                                mouseDown = false,
-                                color = Color3.fromHSV(hue, sat, pos),
-                            })
+                                self:setState({
+                                    valueMouseDown = false,
+                                    color = Color3.fromHSV(hue, sat, pos),
+                                })
+                            end
                         end,
 
                         [Roact.Event.InputChanged] = function(rbx, input)
-                            if self.state.mouseDown and input.UserInputType == Enum.UserInputType.MouseMovement then
+                            if self.state.valueMouseDown and input.UserInputType == Enum.UserInputType.MouseMovement then
                                 local pos = input.Position.X - rbx.AbsolutePosition.X
                                 pos = pos / rbx.AbsoluteSize.x
 
