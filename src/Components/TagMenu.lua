@@ -36,7 +36,7 @@ local function TagMenu(props)
             Text = "Instances with this tag...",
             LayoutOrder = 4,
             onClick = function()
-
+                props.instanceView()
             end,
         }),
         Color = Roact.createElement(ContextMenu.Color, {
@@ -113,6 +113,9 @@ TagMenu = RoactRodux.connect(function(store)
         end,
         colorPicker = function()
             store:dispatch(Actions.ToggleColorPicker(state.TagMenu))
+        end,
+        instanceView = function()
+            store:dispatch(Actions.OpenInstanceView(state.TagMenu))
         end,
     }
 end)(TagMenu)

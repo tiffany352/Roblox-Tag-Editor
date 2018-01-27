@@ -5,6 +5,7 @@ local IconPicker = require(script.IconPicker)
 local ColorPicker = require(script.ColorPicker)
 local WorldView = require(script.WorldView)
 local Dropdown = require(script.Dropdown)
+local InstanceView = require(script.InstanceView)
 
 return function(state, action)
     state = state or {}
@@ -16,5 +17,6 @@ return function(state, action)
         ColorPicker = ColorPicker(state.ColorPicker, action),
         WorldView = WorldView(state.WorldView, action),
         Dropdown = Dropdown(state.Dropdown, action),
+        InstanceView = InstanceView(state.InstanceView, action),
     }
 end

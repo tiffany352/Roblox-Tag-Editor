@@ -24,6 +24,7 @@ return setmetatable({
     ToggleColorPicker = Action.new("ToggleColorPicker", require(script.ToggleColorPicker)),
     ToggleWorldView = Action.new("ToggleWorldView", require(script.ToggleWorldView)),
     OpenDropdown = Action.new("OpenDropdown", require(script.OpenDropdown)),
+    OpenInstanceView = Action.new("OpenInstanceView", require(script.OpenInstanceView)),
 }, {
     __index = function(self, k)
         error("No such key `"..tostring(k).."` in Actions")

@@ -4,7 +4,7 @@ local Roact = require(Modules.Roact)
 local Icons = require(script.Parent.Parent.FamFamFam)
 
 local function Icon(props)
-    local data = Icons.Lookup(props.Name) or Icons.Lookup("computer_error")
+    local data = typeof(props.Name) == 'string' and Icons.Lookup(props.Name) or Icons.Lookup("computer_error")
     local newProps = {
         Size = props.Size or UDim2.new(0, 16, 0, 16),
         BackgroundTransparency = props.BackgroundTransparency or 1.0,
