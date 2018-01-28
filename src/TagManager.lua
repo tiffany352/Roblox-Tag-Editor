@@ -89,6 +89,44 @@ function TagManager.new(store)
             end
             self.tags[child.Name] = tag
         end
+    else
+        local ServerStorage = game:GetService("ServerStorage")
+        local legacyTagsFolder = ServerStorage:FindFirstChild("TagList")
+        if legacyTagsFolder then
+            print("Migrating legacy tags format...")
+            local legacyTags = {}
+            for _,child in pairs(legacyTagsFolder:GetChildren()) do
+                if child:IsA("StringValue") then
+                    legacyTags[#legacyTags+1] = child.Name
+                end
+            end
+            table.sort(legacyTags)
+            for i = 1, #legacyTags do
+                local name = legacyTags[i]
+                if not self.tags[name] then
+                    local color = Color3.fromHSV(i / #legacyTags, 1, 1)
+
+                    local folder = Instance.new("Folder")
+                    folder.Name = legacyTags[i]
+
+                    local colorValue = Instance.new("Color3Value")
+                    colorValue.Name = "Color"
+                    colorValue.Value = color
+                    colorValue.Parent = folder
+
+                    folder.Parent = self:_tagsFolder()
+                    local tag = {
+                        Folder = folder,
+                        Color = color,
+                        DrawType = 'Box',
+                    }
+                    for propName, prop in pairs(propTypes) do
+                        tag[propName] = tag[propName] or prop.Default
+                    end
+                    self.tags[name] = tag
+                end
+            end
+        end
     end
 
     self.groupsFolder = Collection:FindFirstChild("Groups")
@@ -238,8 +276,8 @@ function TagManager:AddTag(name)
     local tag = {
         Folder = folder,
     }
-    for name, prop in pairs(propTypes) do
-        tag[name] = prop.Default
+    for propName, prop in pairs(propTypes) do
+        tag[propName] = prop.Default
     end
     tag.Color = genColor(name)
     local colorValue = Instance.new("Color3Value")
