@@ -24,6 +24,15 @@ return function(props)
         }, {
             UIListLayout = Roact.createElement("UIListLayout", {
                 SortOrder = Enum.SortOrder.LayoutOrder,
+
+                -- hack :(
+                [Roact.Ref] = function(rbx)
+                    spawn(function()
+                        wait()
+                        wait()
+                        rbx:ApplyLayout()
+                    end)
+                end,
             }),
 
             UIPadding = Roact.createElement("UIPadding", {
