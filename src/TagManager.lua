@@ -93,7 +93,6 @@ function TagManager.new(store)
         local ServerStorage = game:GetService("ServerStorage")
         local legacyTagsFolder = ServerStorage:FindFirstChild("TagList")
         if legacyTagsFolder then
-            print("Migrating legacy tags format...")
             local legacyTags = {}
             for _,child in pairs(legacyTagsFolder:GetChildren()) do
                 if child:IsA("StringValue") then
