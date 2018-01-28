@@ -12,6 +12,8 @@ local function TextLabel(props)
         Size = props.Size,
         LayoutOrder = props.LayoutOrder,
         Text = props.Text or "<Text Not Set>",
+        TextWrapped = props.TextWrapped,
+        TextXAlignment = props.TextXAlignment or Enum.TextXAlignment.Left,
 
         [Roact.Ref] = not props.Size and function(rbx)
             if not rbx then return end
