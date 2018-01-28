@@ -15,14 +15,14 @@ return function(plugin, savedState)
 		toolbar,
 		"Tag Window",
 		"Manipulate CollectionService tags",
-		"rbxasset://textures/ui/TixIcon.png"
+		"http://www.roblox.com/asset/?id=1367281857"
 	)
 
 	local worldViewButton = plugin:button(
 		toolbar,
 		"World View",
 		"Visualize tagged objects in the 3D view",
-		""
+		"http://www.roblox.com/asset/?id=1367285594"
 	)
 
 	local store = Rodux.Store.new(Reducer, savedState)
@@ -84,9 +84,6 @@ return function(plugin, savedState)
 			gui:Destroy()
 		end
 		manager:Destroy()
-		if worldView then
-			worldView:Destroy()
-		end
         return store:getState()
 	end)
 
