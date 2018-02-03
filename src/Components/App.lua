@@ -27,11 +27,13 @@ return function(props)
 
                 -- hack :(
                 [Roact.Ref] = function(rbx)
-                    spawn(function()
-                        wait()
-                        wait()
-                        rbx:ApplyLayout()
-                    end)
+                    if rbx then
+                        spawn(function()
+                            wait()
+                            wait()
+                            rbx:ApplyLayout()
+                        end)
+                    end
                 end,
             }),
 

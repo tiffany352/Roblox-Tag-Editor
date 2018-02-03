@@ -36,17 +36,238 @@ return function(plugin, savedState)
 		worldViewButton:SetActive(newValue)
 	end)
 
+	local TitlebarButton = Roact.Component:extend("TitlebarButton")
+
+	function TitlebarButton:render()
+		local props = self.props
+
+		return Roact.createElement("ImageButton", {
+			Size = UDim2.new(0, 15, 0, 15),
+			Position = props.Position,
+			BorderSizePixel = 0,
+			BackgroundColor3 = Color3.fromRGB(228, 228, 254),
+			Image = props.Image,
+			BackgroundTransparency = self.state.hover and 0.0 or 1.0,
+			AutoButtonColor = false,
+
+			[Roact.Event.MouseEnter] = function(rbx)
+				self:setState({
+					hover = true,
+				})
+			end,
+
+			[Roact.Event.MouseLeave] = function(rbx)
+				self:setState({
+					hover = false,
+				})
+			end,
+
+			[Roact.Event.MouseButton1Click] = function(rbx)
+				props.onClick()
+				self:setState({
+					hover = false,
+				})
+			end,
+		})
+	end
+
+	local gui
+	local pluginGuiRef
+	local savedSize
+	local savedPos
+	local startMousePos
+	local startSize
+	local startPos
+	local clickCount = 0
+
 	local function FakePluginGui(props)
-		return Roact.createElement("Frame", {
-			Position = UDim2.new(0, 32, 0, 32),
-			Size = UDim2.new(0, 400, 0, 300),
-			BorderColor3 = Color3.fromRGB(142, 142, 142),
-			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-		}, props[Roact.Children])
+		return Roact.createElement("ImageButton", {
+			BorderSizePixel = 0,
+			BackgroundColor3 = Color3.fromRGB(208, 208, 208),
+			AutoButtonColor = false,
+
+			[Roact.Ref] = function(rbx)
+				if rbx then
+					rbx.Size = UDim2.new(0, 400, 0, 300)
+				end
+				pluginGuiRef = rbx
+			end,
+
+			[Roact.Event.MouseButton1Click] = function(rbx, x, y)
+				if clickCount > 0 then
+					if savedPos then
+						pluginGuiRef.Position = savedPos
+						pluginGuiRef.Size = savedSize
+						savedPos = nil
+						savedSize = nil
+					else
+						savedPos = pluginGuiRef.Position
+						savedSize = pluginGuiRef.Size
+						pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
+						pluginGuiRef.Size = UDim2.new(1, 0, 1, 0)
+					end
+				else
+					clickCount = clickCount + 1
+					print(clickCount)
+					wait(.3)
+					clickCount = clickCount - 1
+				end
+			end,
+
+			[Roact.Event.MouseButton1Down] = function(rbx, x, y)
+				if savedPos then
+					pluginGuiRef.Position = savedPos
+					pluginGuiRef.Size = savedSize
+					savedPos = nil
+					savedSize = nil
+				end
+				startMousePos = Vector2.new(x, y)
+				startPos = Vector2.new(pluginGuiRef.Position.X.Offset, pluginGuiRef.Position.Y.Offset)
+				local UserInputService = game:GetService("UserInputService")
+				local inset = game:GetService("GuiService"):GetGuiInset()
+
+				local changedConn = UserInputService.InputChanged:Connect(function(input)
+					if input.UserInputType == Enum.UserInputType.MouseMovement then
+						local mousePos = Vector2.new(input.Position.X, input.Position.Y)
+						local newPos = startPos + (mousePos - startMousePos + inset)
+						local max = gui.AbsoluteSize - pluginGuiRef.AbsoluteSize
+						newPos = Vector2.new(math.clamp(newPos.x, 0, max.x), math.clamp(newPos.y, 0, max.y))
+						if mousePos.x < 40 then
+							-- left side
+							savedPos = UDim2.new(0, newPos.x, 0, newPos.y)
+							if not savedSize then
+								savedSize = pluginGuiRef.Size
+							end
+							pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
+							pluginGuiRef.Size = UDim2.new(pluginGuiRef.Size.X, UDim.new(1, 0))
+						elseif mousePos.x > gui.AbsoluteSize.x - 40 then
+							-- right side
+							savedPos = UDim2.new(0, newPos.x, 0, newPos.y)
+							if not savedSize then
+								savedSize = pluginGuiRef.Size
+							end
+							pluginGuiRef.Position = UDim2.new(1, -pluginGuiRef.AbsoluteSize.X, 0, 0)
+							pluginGuiRef.Size = UDim2.new(pluginGuiRef.Size.X, UDim.new(1, 0))
+						elseif mousePos.y > gui.AbsoluteSize.y - 40 then
+							-- bottom
+							savedPos = UDim2.new(0, newPos.x, 0, newPos.y)
+							if not savedSize then
+								savedSize = pluginGuiRef.Size
+							end
+							pluginGuiRef.Position = UDim2.new(0, 0, 1, -pluginGuiRef.AbsoluteSize.Y)
+							pluginGuiRef.Size = UDim2.new(UDim.new(1, 0), pluginGuiRef.Size.Y)
+						else
+							if savedSize then
+								pluginGuiRef.Size = savedSize
+								savedSize = nil
+							end
+							pluginGuiRef.Position = UDim2.new(0, newPos.x, 0, newPos.y)
+						end
+					end
+				end)
+
+				local endedConn
+				endedConn = UserInputService.InputEnded:Connect(function(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 then
+						changedConn:Disconnect()
+						endedConn:Disconnect()
+
+						local mousePos = Vector2.new(input.Position.X, input.Position.Y)
+						local newPos = startPos + (mousePos - startMousePos + inset)
+						local max = gui.AbsoluteSize - pluginGuiRef.AbsoluteSize
+						newPos = Vector2.new(math.clamp(newPos.x, 0, max.x), math.clamp(newPos.y, 0, max.y))
+						pluginGuiRef.Position = UDim2.new(0, newPos.x, 0, newPos.y)
+					end
+				end)
+			end,
+		}, {
+			Title = Roact.createElement("TextLabel", {
+				Text = "Tag Editor",
+				Font = Enum.Font.SourceSans,
+				TextSize = 14,
+				Size = UDim2.new(1, -32, 0, 23),
+				BackgroundTransparency = 1.0,
+				TextColor3 = Color3.fromRGB(0, 0, 0),
+			}),
+			Close = Roact.createElement(TitlebarButton, {
+				Position = UDim2.new(1, -16, 0, 4),
+				Image = 'rbxassetid://1384217206',
+				onClick = function()
+					gui.Enabled = false
+				end,
+			}),
+			Maximize = Roact.createElement(TitlebarButton, {
+				Position = UDim2.new(1, -32, 0, 4),
+				Image = 'rbxassetid://1384227954',
+				onClick = function()
+					if pluginGuiRef then
+						if savedPos then
+							pluginGuiRef.Position = savedPos
+							pluginGuiRef.Size = savedSize
+							savedPos = nil
+							savedSize = nil
+						else
+							savedPos = pluginGuiRef.Position
+							savedSize = pluginGuiRef.Size
+							pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
+							pluginGuiRef.Size = UDim2.new(1, 0, 1, 0)
+						end
+					end
+				end,
+			}),
+			Resize = Roact.createElement("ImageButton", {
+				Size = UDim2.new(0, 8, 0, 8),
+				Position = UDim2.new(1, 0, 1, 0),
+				AnchorPoint = Vector2.new(1, 1),
+				BackgroundTransparency = 1.0,
+				ZIndex = 2,
+
+				[Roact.Event.MouseButton1Down] = function(rbx, x, y)
+					if savedPos then
+						pluginGuiRef.Position = savedPos
+						pluginGuiRef.Size = savedSize
+						savedPos = nil
+						savedSize = nil
+					end
+					startMousePos = Vector2.new(x, y)
+					startSize = Vector2.new(pluginGuiRef.Size.X.Offset, pluginGuiRef.Size.Y.Offset)
+					local UserInputService = game:GetService("UserInputService")
+					local inset = game:GetService("GuiService"):GetGuiInset()
+
+					local changedConn = UserInputService.InputChanged:Connect(function(input)
+						if input.UserInputType == Enum.UserInputType.MouseMovement then
+							local mousePos = Vector2.new(input.Position.X, input.Position.Y)
+							local newSize = startSize + (mousePos - startMousePos + inset)
+							newSize = Vector2.new(math.max(300, newSize.x), math.max(250, newSize.y))
+							pluginGuiRef.Size = UDim2.new(0, newSize.x, 0, newSize.y)
+						end
+					end)
+
+					local endedConn
+					endedConn = UserInputService.InputEnded:Connect(function(input)
+						if input.UserInputType == Enum.UserInputType.MouseButton1 then
+							changedConn:Disconnect()
+							endedConn:Disconnect()
+
+							local mousePos = Vector2.new(input.Position.X, input.Position.Y)
+							local newSize = startSize + (mousePos - startMousePos + inset)
+							newSize = Vector2.new(math.max(300, newSize.x), math.max(250, newSize.y))
+							pluginGuiRef.Size = UDim2.new(0, newSize.x, 0, newSize.y)
+						end
+					end)
+				end,
+			}),
+			Body = Roact.createElement("ImageButton", {
+				Size = UDim2.new(1, -2, 1, -24),
+				Position = UDim2.new(0, 1, 0, 24),
+				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+				BorderColor3 = Color3.fromRGB(122, 122, 122),
+				ClipsDescendants = true,
+			}, props[Roact.Children])
+		})
 	end
 
 	local usePluginGui = false
-	local gui
 	if usePluginGui then
 		gui = plugin:createPluginGui("Tag Editor")
 		gui.Name = "Tag Editor"
