@@ -145,7 +145,32 @@ function WorldView:updateParts()
 
     for obj,_ in pairs(self.trackedParts) do
         if obj:IsA("BasePart") then
-            newList[#newList+1] = obj
+            newList[#newList+1] = {
+                Position = obj.Position,
+                Instance = obj,
+            }
+        elseif obj:IsA("Model") then
+            local primary = obj.PrimaryPart
+            if not primary then
+                local largest
+                local largest_by = 0
+                for _,part in pairs(obj:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        local size = part.Size.Magnitude
+                        if size > largest_by then
+                            largest_by = size
+                            largest = part
+                        end
+                    end
+                end
+                primary = largest
+            end
+            if primary then
+                newList[#newList+1] = {
+                    Position = primary.Position,
+                    Instance = obj,
+                }
+            end
         end
     end
 
@@ -164,7 +189,7 @@ function WorldView:updateParts()
     local newList2 = {}
     local nl2Index = 1
     for i = 1, #newList do
-        local tags = Collection:GetTags(newList[i])
+        local tags = Collection:GetTags(newList[i].Instance)
         local outlines = {}
         local boxes = {}
         local icons = {}
@@ -192,7 +217,7 @@ function WorldView:updateParts()
             end
         end
 
-        local partId = self.partIds[newList[i]]
+        local partId = self.partIds[newList[i].Instance]
 
         if #outlines > 0 then
             local r, g, b = 0, 0, 0
@@ -207,7 +232,7 @@ function WorldView:updateParts()
             local avg = Color3.new(r, g, b)
             newList2[nl2Index] = {
                 Id = partId,
-                Part = newList[i],
+                Part = newList[i].Instance,
                 DrawType = 'Outline',
                 Color = avg,
                 AlwaysOnTop = anyAlwaysOnTop,
@@ -228,7 +253,7 @@ function WorldView:updateParts()
             local avg = Color3.new(r, g, b)
             newList2[nl2Index] = {
                 Id = partId,
-                Part = newList[i],
+                Part = newList[i].Instance,
                 DrawType = 'Box',
                 Color = avg,
                 AlwaysOnTop = anyAlwaysOnTop,
@@ -239,7 +264,7 @@ function WorldView:updateParts()
         if #icons > 0 then
             newList2[nl2Index] = {
                 Id = partId,
-                Part = newList[i],
+                Part = newList[i].Instance,
                 DrawType = 'Icon',
                 Icon = icons,
                 AlwaysOnTop = anyAlwaysOnTop,
@@ -254,7 +279,7 @@ function WorldView:updateParts()
             end
             newList2[nl2Index] = {
                 Id = partId,
-                Part = newList[i],
+                Part = newList[i].Instance,
                 DrawType = 'Text',
                 TagName = labels,
                 AlwaysOnTop = anyAlwaysOnTop,
@@ -275,7 +300,7 @@ function WorldView:updateParts()
             local avg = Color3.new(r, g, b)
             newList2[nl2Index] = {
                 Id = partId,
-                Part = newList[i],
+                Part = newList[i].Instance,
                 DrawType = 'Sphere',
                 Color = avg,
                 AlwaysOnTop = anyAlwaysOnTop,
