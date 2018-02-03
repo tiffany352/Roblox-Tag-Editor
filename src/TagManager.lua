@@ -2,9 +2,11 @@ local Collection = game:GetService("CollectionService")
 local Selection = game:GetService("Selection")
 
 local Actions = require(script.Parent.Actions)
+local Watcher = require(script.Parent.Watcher)
 
 local TagManager = {}
 TagManager.__index = TagManager
+setmetatable(TagManager, Watcher)
 
 TagManager._global = nil
 
@@ -57,7 +59,7 @@ local function genColor(name)
 end
 
 function TagManager.new(store)
-    local self = setmetatable({}, TagManager)
+    local self = setmetatable(Watcher.new(Collection), TagManager)
 
     self.store = store
     self.tags = {}
@@ -65,31 +67,14 @@ function TagManager.new(store)
     self.onTagAddedFuncs = {}
     self.onTagRemovedFuncs = {}
     self.onTagChangedFuncs = {}
+    self.updateTriggered = false
 
-    self.tagsFolder = Collection:FindFirstChild("Tags")
-    if self.tagsFolder then
-        for _,child in pairs(self.tagsFolder:GetChildren()) do
-            local tag = {
-                Folder = child,
-            }
-            for name, prop in pairs(propTypes) do
-                local obj = child:FindFirstChild(name)
-                if obj then
-                    tag[name] = obj.Value
-                else
-                    tag[name] = prop.Default
-                end
-            end
-            if not tag.Color then
-                tag.Color = genColor(child.Name)
-                local colorValue = Instance.new("Color3Value")
-                colorValue.Name = "Color"
-                colorValue.Value = tag.Color
-                colorValue.Parent = child
-            end
-            self.tags[child.Name] = tag
-        end
-    else
+    TagManager._global = self
+
+    self:WatcherStart()
+
+    -- attempt legacy data import
+    if not self.tagsFolder then
         local ServerStorage = game:GetService("ServerStorage")
         local legacyTagsFolder = ServerStorage:FindFirstChild("TagList")
         if legacyTagsFolder then
@@ -113,7 +98,6 @@ function TagManager.new(store)
                     colorValue.Value = color
                     colorValue.Parent = folder
 
-                    folder.Parent = self:_tagsFolder()
                     local tag = {
                         Folder = folder,
                         Color = color,
@@ -123,23 +107,13 @@ function TagManager.new(store)
                         tag[propName] = tag[propName] or prop.Default
                     end
                     self.tags[name] = tag
+                    folder.Parent = self:_tagsFolder()
                 end
             end
         end
     end
 
-    self.groupsFolder = Collection:FindFirstChild("Groups")
-    if self.groupsFolder then
-        for _,child in pairs(self.groupsFolder:GetChildren()) do
-            local group = {
-                Folder = child,
-            }
-            self.groups[child.Name] = group
-        end
-    end
-
     self:_updateStore()
-    TagManager._global = self
 
     self.selectionChanged = Selection.SelectionChanged:Connect(function()
         self:_updateStore()
@@ -149,6 +123,8 @@ function TagManager.new(store)
 end
 
 function TagManager:Destroy()
+    self.selectionChanged:Disconnect()
+    Watcher.Destroy(self)
 end
 
 function TagManager.Get()
@@ -156,6 +132,16 @@ function TagManager.Get()
 end
 
 function TagManager:_updateStore()
+    if not self.updateTriggered then
+        self.updateTriggered = true
+        spawn(function()
+            self:_doUpdateStore()
+        end)
+    end
+end
+
+function TagManager:_doUpdateStore()
+    self.updateTriggered = false
     local data = {}
     local sel = Selection:Get()
 
@@ -215,53 +201,38 @@ function TagManager:_tagsFolder()
     return self.tagsFolder
 end
 
-function TagManager:_folderOf(name, tag)
-    tag = tag or self.tags[name]
-    if tag.Folder then
-        return tag.Folder
-    end
-    local folder = Instance.new("Folder")
-    folder.Name = name
-    folder.Parent = self:_tagsFolder()
-    tag.Folder = folder
-
-    for k,v in pairs(tag) do
-        if propTypes[k] then
-            local obj = Instance.new(propTypes[k])
-            obj.Name = k
-            obj.Value = v
-            obj.Parent = folder
-        end
-    end
-    return folder
-end
-
 function TagManager:_setProp(tagName, key, value)
     local tag = self.tags[tagName]
     if not tag then
-        assert(false)
-        return false
+        error("Setting property of non-existent tag `"..tostring(tagName).."`")
     end
+    assert(tag.Folder)
+
+    -- don't do unnecessary updates
     if tag[key] == value then
         return false
     end
+
+    -- update entry first
     tag[key] = value
-    local folder = self:_folderOf(tagName, tag)
+    local folder = tag.Folder
     local valueObj = folder:FindFirstChild(key)
     if value then
         if not valueObj then
             valueObj = Instance.new(propTypes[key].Type)
             valueObj.Name = key
-            valueObj.Parent = folder
         end
         valueObj.Value = value
+
+        valueObj.Parent = folder
     elseif valueObj then
         valueObj:Destroy()
     end
-    self:_updateStore()
     for func,_ in pairs(self.onTagChangedFuncs) do
-        func(tagName, key, value)
+        func(tagName)
     end
+
+    self:_updateStore()
     return true
 end
 
@@ -271,7 +242,7 @@ function TagManager:AddTag(name)
     end
     local folder = Instance.new("Folder")
     folder.Name = name
-    folder.Parent = self:_tagsFolder()
+
     local tag = {
         Folder = folder,
     }
@@ -284,6 +255,9 @@ function TagManager:AddTag(name)
     colorValue.Name = "Color"
     colorValue.Parent = folder
     self.tags[name] = tag
+
+    folder.Parent = self:_tagsFolder()
+
     self:_updateStore()
     for func,_ in pairs(self.onTagAddedFuncs) do
         func(name)
@@ -319,17 +293,22 @@ function TagManager:DelTag(name)
     if not tag then
         return
     end
-    if tag.Folder then
-        tag.Folder:Destroy()
-    end
-    self.tags[name] = nil
-    for _,inst in pairs(Collection:GetTagged(name)) do
-        Collection:RemoveTag(inst, name)
-    end
-    self:_updateStore()
+
     for func,_ in pairs(self.onTagRemovedFuncs) do
         func(name)
     end
+
+    self.tags[name] = nil
+
+    if tag.Folder then
+        tag.Folder:Destroy()
+    end
+
+    for _,inst in pairs(Collection:GetTagged(name)) do
+        Collection:RemoveTag(inst, name)
+    end
+
+    self:_updateStore()
 end
 
 function TagManager:OnTagAdded(func)
@@ -391,11 +370,12 @@ function TagManager:AddGroup(name)
     end
     local folder = Instance.new("Folder")
     folder.Name = name
-    folder.Parent = self:_groupsFolder()
 
     self.groups[name] = {
         Folder = folder,
     }
+
+    folder.Parent = self:_groupsFolder()
 
     self:_updateStore()
 end
@@ -405,16 +385,136 @@ function TagManager:DelGroup(name)
     if not group then
         return
     end
-    group.Folder:Destroy()
-    self.groups[name] = nil
 
+    self.groups[name] = nil
     for _,tag in pairs(self.tags) do
         if tag.Group == name then
             tag.Group = nil
         end
     end
 
+    group.Folder:Destroy()
+
     self:_updateStore()
+end
+
+-- Watcher overrides
+
+function TagManager:InstanceAdded(instance)
+    if not self.tagsFolder and instance.Parent == Collection and instance.Name == 'Tags' then
+        self.tagsFolder = instance
+    end
+
+    if not self.groupsFolder and instance.Parent == Collection and instance.Name == 'Groups' then
+        self.groupsFolder = instance
+    end
+
+    if instance.Parent == self.tagsFolder and not self.tags[instance.Name] then
+        -- deserialize tag
+        local tag = {
+            Folder = instance,
+        }
+        for name, prop in pairs(propTypes) do
+            local obj = instance:FindFirstChild(name)
+            if obj then
+                tag[name] = obj.Value
+            else
+                tag[name] = prop.Default
+            end
+        end
+        if not tag.Color then
+            tag.Color = genColor(instance.Name)
+            local colorValue = Instance.new("Color3Value")
+            colorValue.Name = "Color"
+            colorValue.Value = tag.Color
+            colorValue.Parent = instance
+        end
+        self.tags[instance.Name] = tag
+
+        for func,_ in pairs(self.onTagAddedFuncs) do
+            func(instance.Name)
+        end
+
+        self:_updateStore()
+    end
+
+    if instance.Parent == self.groupsFolder and not self.groups[instance.Name] then
+        -- deserialize group
+        local group = {
+            Folder = instance,
+        }
+        self.groups[instance.Name] = group
+        self:_updateStore()
+    end
+
+    if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] then
+        -- set property
+        self.tags[instance.Parent.Name][instance.Name] = instance.Value
+
+        for func,_ in pairs(self.onTagChangedFuncs) do
+            func(instance.Parent.Name)
+        end
+
+        self:_updateStore()
+    end
+end
+
+function TagManager:InstanceRemoved(instance)
+    if instance.Parent == Collection and instance == self.tagsFolder then
+        self.tagsFolder = nil
+        for name,_ in pairs(self.tags) do
+            for func,_ in pairs(self.onTagRemovedFuncs) do
+                func(instance.Name)
+            end
+        end
+        self.tags = {}
+        self:_updateStore()
+    end
+
+    if instance.Parent == Collection and instance == self.groupsFolder then
+        self.groupsFolder = nil
+        self.groups = {}
+        self:_updateStore()
+    end
+
+    if instance.Parent == self.tagsFolder and self.tags[instance.Name] then
+        for func,_ in pairs(self.onTagRemovedFuncs) do
+            func(instance.Name)
+        end
+        self.tags[instance.Name] = nil
+        self:_updateStore()
+    end
+
+    if instance.Parent == self.groupsFolder and self.groups[instance.Name] then
+        self.groups[instance.Name] = nil
+        for tagName,tag in pairs(self.tags) do
+            if tag.Group == instance.Name then
+                tag.Group = nil
+                for func,_ in pairs(self.onTagChangedFuncs) do
+                    func(tagName)
+                end
+            end
+        end
+        self:_updateStore()
+    end
+
+    if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] then
+        self.tags[instance.Parent.Name][instance.Name] = nil
+        for func,_ in pairs(self.onTagChangedFuncs) do
+            func(instance.Parent.Name)
+        end
+        self:_updateStore()
+    end
+end
+
+function TagManager:InstanceChanged(instance, oldValue, newValue)
+    if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value then
+        self.tags[instance.Parent.Name][instance.Name] = newValue
+        for func,_ in pairs(self.onTagChangedFuncs) do
+            func(instance.Parent.Name)
+        end
+        self:_updateStore()
+    end
 end
 
 return TagManager
