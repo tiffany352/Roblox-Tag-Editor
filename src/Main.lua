@@ -54,8 +54,9 @@ return function(plugin, savedState)
 	else
 		gui = Instance.new("ScreenGui")
 		gui.Name = "TagEditor"
+		gui.Enabled = false
 		gui.Parent = game:GetService("CoreGui")
-		toggleButton:SetActive(true)
+		toggleButton:SetActive(false)
 	end
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
