@@ -12,6 +12,7 @@ local WorldView = require(script.Parent.WorldView)
 local InstanceView = require(script.Parent.InstanceView)
 local GroupPicker = require(script.Parent.GroupPicker)
 local TooltipView = require(script.Parent.TooltipView)
+local MigrationDialog = require(script.Parent.MigrationDialog)
 
 return function(props)
     return Roact.createElement("Frame", {
@@ -57,5 +58,6 @@ return function(props)
         ColorPicker = Roact.createElement(ColorPicker),
         WorldView = Roact.createElement(WorldView),
         TooltipView = Roact.createElement(TooltipView),
+        MigrationDialog = Roact.createElement(MigrationDialog),
     })
 end

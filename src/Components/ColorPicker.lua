@@ -80,7 +80,7 @@ function ColorPicker:render()
     local red, grn, blu = color.r, color.g, color.b
     return Roact.createElement("ImageButton", {
         Size = UDim2.new(1, 0, 1, 0),
-        ZIndex = 2,
+        ZIndex = 3,
         BackgroundTransparency = 0.5,
         BackgroundColor3 = Constants.Black,
         AutoButtonColor = false,

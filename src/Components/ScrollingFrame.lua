@@ -12,7 +12,7 @@ local function ScrollingFrame(props)
             if not rbx then return end
             local function update()
                 local cs = rbx.AbsoluteContentSize
-                rbx.Parent.CanvasSize = UDim2.new(0, cs.x, 0, cs.y)
+                rbx.Parent.CanvasSize = UDim2.new(0, 0, 0, cs.y)
             end
             rbx:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
             update()

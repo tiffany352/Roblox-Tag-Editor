@@ -110,6 +110,11 @@ function TagManager.new(store)
                     folder.Parent = self:_tagsFolder()
                 end
             end
+
+            local RunService = game:GetService("RunService")
+            if not RunService:IsRunning() then
+                self.store:dispatch(Actions.OpenMigrationDialog(true))
+            end
         end
     end
 
