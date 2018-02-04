@@ -120,7 +120,7 @@ function ContextMenu.Item:render()
                 TextSize = 20,
                 TextColor3 = Constants.Black,
                 LayoutOrder = 2,
-                TextXAlignment = Enum.TextXAlignment.Right,
+                TextXAlignment = Enum.TextXAlignment.Left,
 
                 [Roact.Ref] = function(rbx)
                     if not rbx then return end
@@ -130,6 +130,7 @@ function ContextMenu.Item:render()
                     end
                     rbx:GetPropertyChangedSignal("TextBounds"):Connect(update)
                     update()
+                    spawn(update)
                 end,
             }, props.TextProps)) or nil,
         })
@@ -213,6 +214,9 @@ function ContextMenu.Header(props)
         },
         NoDivider = true,
         Text = props.Text,
+
+        onClick = function()
+        end,
     }
     local blacklist = {
         Text = true,
@@ -390,8 +394,6 @@ function ContextMenu.Dropdown:render()
 end
 
 ContextMenu.Dropdown = RoactRodux.connect(function(store)
-    local state = store:getState()
-
     return {
         openDropdown = function(value)
             store:dispatch(Actions.OpenDropdown(value))
