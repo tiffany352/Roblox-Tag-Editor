@@ -38,6 +38,7 @@ local function ScrollingFrame(props)
         BottomImage = 'rbxasset://textures/ui/Gear.png',
         TopImage = 'rbxasset://textures/ui/Gear.png',
         VerticalScrollBarInset = Enum.ScrollBarInset.Always,
+        LayoutOrder = props.LayoutOrder,
     }, children)
 end
 

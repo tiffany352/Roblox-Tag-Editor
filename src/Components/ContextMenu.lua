@@ -37,7 +37,7 @@ function ContextMenu.Container(props)
         end,
     }, {
         Window = Roact.createElement("ImageButton", {
-            Size = UDim2.new(.9, 0, .9, 0),
+            Size = UDim2.new(.95, 0, .95, 0),
             AnchorPoint = Vector2.new(.5, 1),
             Position = UDim2.new(.5, 0, 1, -10),
             BackgroundTransparency = 1.0,

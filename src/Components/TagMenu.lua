@@ -6,6 +6,7 @@ local Constants = require(script.Parent.Parent.Constants)
 local ContextMenu = require(script.Parent.ContextMenu)
 local Actions = require(script.Parent.Parent.Actions)
 local TagManager = require(script.Parent.Parent.TagManager)
+local ScrollingFrame = require(script.Parent.ScrollingFrame)
 
 local function TagMenu(props)
     return Roact.createElement(ContextMenu.Container, {
@@ -17,70 +18,85 @@ local function TagMenu(props)
             Icon = props.tagIcon,
             LayoutOrder = 1,
         }),
-        Delete = Roact.createElement(ContextMenu.Confirm, {
-            Text = "Delete...",
+        Scroll = Roact.createElement(ScrollingFrame, {
+            List = true,
             LayoutOrder = 2,
-            onClick = function()
-                TagManager.Get():DelTag(props.tagMenu)
-                props.close()
-            end,
+            -- header = 32, footer = 8, close = 36
+            Size = UDim2.new(1, 4, 1, 0 - 32 - 8 - 36),
+        }, {
+            UISizeConstraint = Roact.createElement("UISizeConstraint", {
+                MaxSize = Vector2.new(math.huge, 28 * 7),
+            }),
+            Delete = Roact.createElement(ContextMenu.Confirm, {
+                Text = "Delete...",
+                LayoutOrder = 2,
+                onClick = function()
+                    TagManager.Get():DelTag(props.tagMenu)
+                    props.close()
+                end,
+            }),
+            ChangeIcon = Roact.createElement(ContextMenu.Item, {
+                Text = "Change Icon...",
+                LayoutOrder = 3,
+                onClick = function()
+                    props.iconPicker()
+                end,
+            }),
+            Instances = Roact.createElement(ContextMenu.Item, {
+                Text = "Instances with this tag...",
+                LayoutOrder = 4,
+                onClick = function()
+                    props.instanceView()
+                end,
+            }),
+            Group = Roact.createElement(ContextMenu.Item, {
+                Text = "Change Group...",
+                LayoutOrder = 5,
+                onClick = function()
+                    props.groupPicker()
+                end,
+            }),
+            Color = Roact.createElement(ContextMenu.Color, {
+                Text = "Color...",
+                LayoutOrder = 6,
+                Color = props.tagColor,
+
+                onClick = function()
+                    props.colorPicker()
+                end,
+            }),
+            DrawType = Roact.createElement(ContextMenu.Dropdown, {
+                Text = "Visualization Type",
+                Value = props.tagDrawType,
+                Options = {
+                    None = "None",
+                    Icon = "Icon",
+                    Outline = "Outline",
+                    Box = "Box",
+                    Sphere = "Sphere",
+                    Text = "Label",
+                },
+                LayoutOrder = 7,
+
+                onSubmit = function(value)
+                    TagManager.Get():SetDrawType(props.tagMenu, value)
+                end,
+            }),
+            AlwaysOnTop = Roact.createElement(ContextMenu.Checkbox, {
+                Text = "Always On Top",
+                LayoutOrder = 8,
+                Value = props.tagAlwaysOnTop,
+
+                onSubmit = function(value)
+                    TagManager.Get():SetAlwaysOnTop(props.tagMenu, value)
+                end,
+            }),
         }),
-        ChangeIcon = Roact.createElement(ContextMenu.Item, {
-            Text = "Change Icon...",
+        Footer = Roact.createElement(ContextMenu.Item, {
             LayoutOrder = 3,
-            onClick = function()
-                props.iconPicker()
-            end,
-        }),
-        Instances = Roact.createElement(ContextMenu.Item, {
-            Text = "Instances with this tag...",
-            LayoutOrder = 4,
-            onClick = function()
-                props.instanceView()
-            end,
-        }),
-        Group = Roact.createElement(ContextMenu.Item, {
-            Text = "Change Group...",
-            LayoutOrder = 5,
-            onClick = function()
-                props.groupPicker()
-            end,
-        }),
-        Color = Roact.createElement(ContextMenu.Color, {
-            Text = "Color...",
-            LayoutOrder = 6,
-            Color = props.tagColor,
-
-            onClick = function()
-                props.colorPicker()
-            end,
-        }),
-        DrawType = Roact.createElement(ContextMenu.Dropdown, {
-            Text = "Visualization Type",
-            Value = props.tagDrawType,
-            Options = {
-                None = "None",
-                Icon = "Icon",
-                Outline = "Outline",
-                Box = "Box",
-                Sphere = "Sphere",
-                Text = "Label",
-            },
-            LayoutOrder = 7,
-
-            onSubmit = function(value)
-                TagManager.Get():SetDrawType(props.tagMenu, value)
-            end,
-        }),
-        AlwaysOnTop = Roact.createElement(ContextMenu.Checkbox, {
-            Text = "Always On Top",
-            LayoutOrder = 8,
             Last = true,
-            Value = props.tagAlwaysOnTop,
-
-            onSubmit = function(value)
-                TagManager.Get():SetAlwaysOnTop(props.tagMenu, value)
-            end,
+            Size = UDim2.new(1, 0, 0, 8),
+            ImageColor3 = Constants.RobloxBlue,
         }),
         Close = Roact.createElement(ContextMenu.Cancel, {
             LayoutOrder = 99,
