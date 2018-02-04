@@ -183,6 +183,13 @@ function InstanceView:render()
 
     local children = {}
 
+    children.UIPadding = Roact.createElement("UIPadding", {
+        PaddingTop = UDim.new(0, 2),
+        PaddingBottom = UDim.new(0, 2),
+        PaddingLeft = UDim.new(0, 2),
+        PaddingRight = UDim.new(0, 2),
+    })
+
     -- begin hack
     if props.instanceView then
         if self.instanceAddedConn then
