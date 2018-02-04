@@ -142,6 +142,13 @@ function Item:render()
 
             onClick = props.onSetVisible,
         }) or nil,
+        Settings = props.onSettings and Roact.createElement(Icon, {
+            Name = 'cog',
+            Position = UDim2.new(1, -24, .5, 0),
+            AnchorPoint = Vector2.new(1, .5),
+
+            onClick = props.onSettings,
+        }) or nil,
         Delete = props.onDelete and Roact.createElement(Icon, {
             Name = "cancel",
             Position = UDim2.new(1, -4, .5, 0),

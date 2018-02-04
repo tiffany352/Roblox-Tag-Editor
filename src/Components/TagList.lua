@@ -33,6 +33,10 @@ local function Tag(props)
             TagManager.Get():SetVisible(props.Tag, not props.Visible)
         end,
 
+        onSettings = function()
+            props.openTagMenu(props.Tag)
+        end,
+
         leftClick = function(rbx)
             TagManager.Get():SetTag(props.Tag, not props.HasAll)
         end,
