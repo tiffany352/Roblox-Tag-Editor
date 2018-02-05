@@ -108,7 +108,6 @@ return function(plugin, savedState)
 					end
 				else
 					clickCount = clickCount + 1
-					print(clickCount)
 					wait(.3)
 					clickCount = clickCount - 1
 				end
