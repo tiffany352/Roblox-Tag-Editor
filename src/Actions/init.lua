@@ -28,6 +28,7 @@ return setmetatable({
     OpenDropdown = Action.new("OpenDropdown", require(script.OpenDropdown)),
     OpenInstanceView = Action.new("OpenInstanceView", require(script.OpenInstanceView)),
     OpenMigrationDialog = Action.new("OpenMigrationDialog", require(script.OpenMigrationDialog)),
+    SetHoveredIcon = Action.new("SetHoveredIcon", require(script.SetHoveredIcon)),
 }, {
     __index = function(self, k)
         error("No such key `"..tostring(k).."` in Actions")

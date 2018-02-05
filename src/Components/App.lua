@@ -48,7 +48,9 @@ return function(props)
             TagList = Roact.createElement(TagList, {
                 Size = UDim2.new(1, 0, 1, -40),
             }),
-            Search = Roact.createElement(Search),
+            Search = Roact.createElement(Search, {
+                Size = UDim2.new(1, 0, 0, 40),
+            }),
         }),
         InstanceView = Roact.createElement(InstanceView),
         GroupPicker = Roact.createElement(GroupPicker),

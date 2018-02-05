@@ -7,7 +7,7 @@ local Constants = require(script.Parent.Parent.Constants)
 
 local function Search(props)
     return Roact.createElement("Frame", {
-        Size = UDim2.new(1, 0, 0, 40),
+        Size = props.Size,
         BackgroundTransparency = 1.0,
     }, {
         SearchBarContainer = Roact.createElement("ImageLabel", {

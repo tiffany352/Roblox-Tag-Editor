@@ -7,66 +7,215 @@ local Icons = require(script.Parent.Parent.FamFamFam)
 local Constants = require(script.Parent.Parent.Constants)
 local TagManager = require(script.Parent.Parent.TagManager)
 local Actions = require(script.Parent.Parent.Actions)
+local Search = require(script.Parent.Search)
+local TextLabel = require(script.Parent.TextLabel)
+local ScrollingFrame = require(script.Parent.ScrollingFrame)
+local IconCategories = require(script.Parent.Parent.IconCategories)
 
-local iconsWhitelist = {}
-local blacklisted = {
-    "_add$",
-    "_edit$",
-    "_delete$",
-    "_error$",
-    "_go$",
-    "_link$",
-    "^application_",
-    "_form_",
-    "^page_white_",
-    "^control_",
-    "^bullet_",
-    "^resultset_",
-    "^text_",
-}
-
-for name,_ in pairs(Icons.Table) do
-    local pass = true
-    for _,pat in pairs(blacklisted) do
-        if name:match(pat) then
-            pass = false
-            break
-        end
-    end
-    if pass then
-        iconsWhitelist[#iconsWhitelist+1] = name
-    end
+local function matchesSearch(term, subject)
+    if not term then return true end
+    return subject:find(term) ~= nil
 end
 
-table.sort(iconsWhitelist)
-
-local function IconPicker(props)
+local function Category(props)
     local children = {}
-    for _,name in pairs(iconsWhitelist) do
-        children[name] = Roact.createElement(Icon, {
-            Name = name,
+    children.UIGridLayout = Roact.createElement("UIGridLayout", {
+        CellSize = UDim2.new(0, 16, 0, 16),
+        CellPadding = UDim2.new(0, 4, 0, 4),
+        SortOrder = Enum.SortOrder.LayoutOrder,
+
+        [Roact.Ref] = function(rbx)
+            if not rbx then return end
+
+            local function update()
+                local cs = rbx.AbsoluteContentSize
+                if rbx.Parent then
+                    rbx.Parent.Size = UDim2.new(1, 0, 0, cs.y)
+                    if rbx.Parent.Parent then
+                        rbx.Parent.Parent.Size = UDim2.new(1, 0, 0, cs.y + 28)
+                    end
+                end
+            end
+            update()
+            rbx:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
+        end
+    })
+
+    local numMatched = 0
+    for i,icon in pairs(props.Icons) do
+        local matches = matchesSearch(props.search, icon)
+        if matches then
+            numMatched = numMatched + 1
+        end
+        children[icon] = Roact.createElement(Icon, {
+            Name = icon,
+            LayoutOrder = i,
+            Visible = matches,
 
             onClick = function(rbx)
-                TagManager.Get():SetIcon(props.tagName, name)
+                TagManager.Get():SetIcon(props.tagName, icon)
                 props.close()
+            end,
+
+            onHover = function(value)
+                props.onHover(value and icon or nil)
             end,
         })
     end
 
-    children.UIGridLayout = Roact.createElement("UIGridLayout", {
-        CellSize = UDim2.new(0, 16, 0, 16),
-        CellPadding = UDim2.new(0, 4, 0, 4),
-
-        [Roact.Ref] = function(rbx)
-            if not rbx then return end
-            local function update()
-                local cs = rbx.AbsoluteContentSize
-                rbx.Parent.CanvasSize = UDim2.new(0, 0, 0, cs.y + 8)
-            end
-            update()
-            rbx:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
-        end,
+    return Roact.createElement("Frame", {
+        LayoutOrder = props.LayoutOrder,
+        BackgroundTransparency = 1.0,
+        Visible = numMatched > 0,
+    }, {
+        Label = Roact.createElement(TextLabel, {
+            Text = props.CategoryName,
+            Size = UDim2.new(1, 0, 0, 20),
+            Font = Enum.Font.SourceSansSemibold,
+        }),
+        Body = Roact.createElement("Frame", {
+            Position = UDim2.new(0, 0, 0, 20),
+            BackgroundTransparency = 1.0,
+        }, children)
     })
+end
+
+local IconPreview = Roact.Component:extend("IconPreview")
+
+function IconPreview:render()
+    local function update()
+        local Vector2new = Vector2.new
+        local image = self.props.icon and Icons.Lookup(self.props.icon)
+        local rect = image and image.ImageRectOffset or Vector2.new(10000, 10000)
+        for y = 0, 16-1 do
+            for x = 0, 16-1 do
+                local pixel = self.pixels[x * 16 + y]
+                pixel.ImageRectOffset = rect + Vector2new(x + 0.5, y + 0.5)
+            end
+        end
+    end
+
+    --[[local function update()
+        if not self.updateTriggered then
+            self.updateTriggered = true
+            local lastUpdate = self.lastUpdate or 0
+            local cooldown = 0--0.3
+            spawn(function()
+                if lastUpdate + cooldown > tick() then
+                    wait(lastUpdate + cooldown - tick())
+                end
+                self.updateTriggered = false
+                self.lastUpdate = tick()
+                doUpdate()
+            end)
+        end
+    end]]
+
+    if self.pixels then
+        update()
+    end
+
+    return Roact.createElement("Frame", {
+        Size = UDim2.new(0, 64, 0, 72+20*3),
+        Position = UDim2.new(1, -8, 0, 8),
+        BackgroundTransparency = 1.0,
+        AnchorPoint = Vector2.new(1, 0),
+    }, {
+        IconName = Roact.createElement(TextLabel, {
+            TextSize = 14,
+            TextColor3 = Constants.DarkGrey,
+            Size = UDim2.new(0, 64, 0, 20*3),
+            Position = UDim2.new(0, 0, 0, 72),
+            TextWrapped = true,
+            Text = self.props.icon or "",
+            TextYAlignment = Enum.TextYAlignment.Top,
+        }),
+        IconMagnify = Roact.createElement("Frame", {
+            Size = UDim2.new(0, 64, 0, 64),
+            BorderColor3 = Constants.DarkGrey,
+            BackgroundColor3 = Constants.White,
+
+            [Roact.Ref] = function(rbx)
+                if not rbx then return end
+
+                self.pixels = {}
+                for x = 0, 15 do
+                    for y = 0, 15 do
+                        local image = Instance.new("ImageLabel")
+                        image.Name = string.format("Pixel [%d, %d]", x, y)
+                        image.Image = Icons.Asset
+                        image.ImageRectSize = Vector2.new(0, 0)
+                        image.Size = UDim2.new(0, 4, 0, 4)
+                        image.Position = UDim2.new(0, x*4, 0, y*4)
+                        image.BackgroundTransparency = 1.0
+                        image.Parent = rbx
+                        self.pixels[x * 16 + y] = image
+                    end
+                end
+
+                update()
+            end,
+        })
+    })
+end
+
+IconPreview = RoactRodux.connect(function(store)
+    local state = store:getState()
+
+    return {
+        icon = state.HoveredIcon,
+    }
+end)(IconPreview)
+
+local IconPicker = Roact.Component:extend("IconPicker")
+
+function IconPicker:init()
+    self.closeFunc = function()
+        self.props.close()
+    end
+    self.onHoverFunc = function(icon)
+        self.props.setHoveredIcon(icon)
+    end
+end
+
+function IconPicker:shouldUpdate(newProps)
+    return self.props.tagName ~= newProps.tagName or self.props.search ~= newProps.search
+end
+
+function IconPicker:render()
+    local props = self.props
+    local children = {}
+    local cats = {}
+    for name,icons in pairs(IconCategories) do
+        cats[#cats+1] = {
+            Name = name,
+            Icons = icons,
+        }
+    end
+
+    table.sort(cats, function(a,b)
+        local aIsUncat = a.Name == 'Uncategorized' and 1 or 0
+        local bIsUncat = b.Name == 'Uncategorized' and 1 or 0
+
+        if aIsUncat < bIsUncat then return true end
+        if bIsUncat < aIsUncat then return false end
+
+        return a.Name < b.Name
+    end)
+
+    for i = 1, #cats do
+        local name = cats[i].Name
+        local icons = cats[i].Icons
+        children[name] = Roact.createElement(Category, {
+            LayoutOrder = i,
+            CategoryName = name,
+            Icons = icons,
+            tagName = props.tagName,
+            search = props.search,
+            close = self.closeFunc,
+            onHover = self.onHoverFunc,
+        })
+    end
 
     children.UIPadding = Roact.createElement("UIPadding", {
         PaddingLeft = UDim.new(0, 4),
@@ -77,69 +226,91 @@ local function IconPicker(props)
 
     return Roact.createElement("ImageButton", {
         Size = UDim2.new(1, 0, 1, 0),
-        ZIndex = 2,
-        BackgroundTransparency = 0.5,
-        BackgroundColor3 = Constants.Black,
-        AutoButtonColor = false,
+        BackgroundColor3 = Constants.White,
+        ZIndex = 10,
         Visible = props.tagName ~= nil,
-
-        [Roact.Event.MouseButton1Click] = function(rbx)
-            props.close()
-        end,
+        AutoButtonColor = false,
     }, {
-        Container = Roact.createElement("Frame", {
-            BackgroundTransparency = 1.0,
-            Size = UDim2.new(1, -20, 1, -20),
-            AnchorPoint = Vector2.new(.5, 1),
-            Position = UDim2.new(.5, 0, 1, -10),
+        Topbar = Roact.createElement("Frame", {
+            Size = UDim2.new(1, 0, 0, 32),
+            BackgroundColor3 = Constants.RobloxBlue,
+            BorderSizePixel = 0,
         }, {
-            Window = Roact.createElement("ImageLabel", {
-                Size = UDim2.new(1, 0, 1, 0),
-                AnchorPoint = Vector2.new(0.5, 1),
-                Position = UDim2.new(0.5, 0, 1, 0),
+            Back = Roact.createElement("TextButton", {
+                Size = UDim2.new(0, 48, 0, 32),
+                Text = "Back",
+                TextSize = 20,
+                Font = Enum.Font.SourceSansBold,
                 BackgroundTransparency = 1.0,
-                Image = "rbxasset://textures/ui/btn_newWhite.png",
-                ScaleType = Enum.ScaleType.Slice,
-                SliceCenter = Rect.new(10, 10, 10, 10),
-                ImageColor3 = Constants.RobloxBlue,
+                TextColor3 = Constants.White,
+
+                [Roact.Event.MouseButton1Click] = function(rbx)
+                    props.close()
+                end,
+            }),
+            Title = Roact.createElement("Frame", {
+                Size = UDim2.new(1, 0, 1, 0),
+                BackgroundTransparency = 1.0,
             }, {
-                UISizeConstraint = Roact.createElement("UISizeConstraint", {
-                    MaxSize = Vector2.new(300, 300),
+                UIListLayout = Roact.createElement("UIListLayout", {
+                    HorizontalAlignment = Enum.HorizontalAlignment.Center,
+                    VerticalAlignment = Enum.VerticalAlignment.Center,
+                    FillDirection = Enum.FillDirection.Horizontal,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    Padding = UDim.new(0, 4),
                 }),
-                Title = Roact.createElement("TextLabel", {
-                    Size = UDim2.new(1, 0, 0, 20),
-                    Position = UDim2.new(0, 0, 0, 4),
-                    Text = "Pick an Icon",
-                    Font = Enum.Font.SourceSansSemibold,
+                Icon = Roact.createElement(Icon, {
+                    Name = props.tagIcon,
+                    LayoutOrder = 1,
+                }),
+                Label = Roact.createElement(TextLabel, {
+                    Text = tostring(props.tagName).." - Select an Icon",
+                    LayoutOrder = 2,
                     TextColor3 = Constants.White,
-                    TextSize = 20,
-                    BackgroundTransparency = 1.0,
+                    Font = Enum.Font.SourceSansSemibold,
                 }),
-                IconList = Roact.createElement("ScrollingFrame", {
-                    Size = UDim2.new(1, -10, 1, -30),
-                    Position = UDim2.new(.5, 0, 1, -5),
-                    AnchorPoint = Vector2.new(.5, 1),
-                    ScrollBarThickness = 4,
-                    BorderSizePixel = 0,
-                    MidImage = 'rbxasset://textures/ui/Gear.png',
-                    BottomImage = 'rbxasset://textures/ui/Gear.png',
-                    TopImage = 'rbxasset://textures/ui/Gear.png',
-                    VerticalScrollBarInset = Enum.ScrollBarInset.Always,
-                    BackgroundColor3 = Constants.White,
-                }, children)
             })
         }),
+        Body = Roact.createElement("Frame", {
+            Size = UDim2.new(1, 0, 1, -32),
+            Position = UDim2.new(0, 0, 0, 32),
+            BackgroundTransparency = 1.0,
+        }, {
+            IconList = Roact.createElement(ScrollingFrame, {
+                Size = UDim2.new(1, -80, 1, -40),
+                Position = UDim2.new(0, 0, 0, 40),
+                List = true,
+            }, children),
+            Search = Roact.createElement(Search, {
+                Size = UDim2.new(1, -80, 0, 40),
+            }),
+            Preview = Roact.createElement(IconPreview),
+        })
     })
 end
 
 IconPicker = RoactRodux.connect(function(store)
     local state = store:getState()
 
+    local tagName = state.IconPicker
+    local tagIcon
+    for _,tag in pairs(state.TagData) do
+        if tag.Name == tagName then
+            tagIcon = tag.Icon
+            break
+        end
+    end
+
     return {
         close = function()
             store:dispatch(Actions.ToggleIconPicker(nil))
         end,
-        tagName = state.IconPicker,
+        tagName = tagName,
+        tagIcon = tagIcon,
+        search = state.Search,
+        setHoveredIcon = function(icon)
+            store:dispatch(Actions.SetHoveredIcon(icon))
+        end
     }
 end)(IconPicker)
 

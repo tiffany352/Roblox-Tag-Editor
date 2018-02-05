@@ -30,8 +30,9 @@ local function ScrollingFrame(props)
     return Roact.createElement("ScrollingFrame", {
         Size = props.Size or UDim2.new(1, 0, 1, 0),
         Position = props.Position,
+        AnchorPoint = props.AnchorPoint,
         BackgroundColor3 = Constants.DarkGrey,
-        BackgroundTransparency = 1,
+        BackgroundTransparency = 1.0,
         ScrollBarThickness = 4,
         BorderSizePixel = 0,
         MidImage = 'rbxasset://textures/ui/Gear.png',

@@ -12,10 +12,12 @@ local function TextLabel(props)
         TextSize = props.TextSize or 20,
         TextColor3 = props.TextColor3 or Constants.Black,
         Size = props.Size or props.TextWrapped and UDim2.new(1, 0, 0, 0) or nil,
+        Position = props.Position,
         LayoutOrder = props.LayoutOrder,
         Text = props.Text or "<Text Not Set>",
         TextWrapped = props.TextWrapped,
         TextXAlignment = props.TextXAlignment or Enum.TextXAlignment.Left,
+        TextYAlignment = props.TextYAlignment,
 
         [Roact.Ref] = not props.Size and function(rbx)
             if not rbx then return end
