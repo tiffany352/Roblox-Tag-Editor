@@ -103,6 +103,7 @@ function WorldView:init()
     self.nextId = 0
     self.partIds = {}
     self.trackedParts = {}
+    self.trackedTags = {}
     self.instanceAddedConns = {}
     self.instanceRemovedConns = {}
 end
@@ -127,7 +128,7 @@ function WorldView:didMount()
     end)
     self.onTagChangedConn = manager:OnTagChanged(function(name, prop, value)
         local tag = manager.tags[name]
-        local wasVisible = (self.instanceAddedConns[name] ~= nil)
+        local wasVisible = (self.trackedTags[name] ~= nil)
         local nowVisible = tag.DrawType ~= 'None' and tag.Visible ~= false
         if nowVisible and not wasVisible then
             self:tagAdded(name)
@@ -199,7 +200,7 @@ function WorldView:updateParts()
         for j = 1, #tags do
             local tagName = tags[j]
             local tag = TagManager.Get().tags[tagName]
-            if tag then
+            if self.trackedTags[tagName] and tag then
                 if tag.DrawType == 'Outline' then
                     outlines[#outlines+1] = tag.Color
                 elseif tag.DrawType == 'Box' then
@@ -373,6 +374,8 @@ function WorldView:instanceRemoved(inst)
 end
 
 function WorldView:tagAdded(tagName)
+    assert(not self.trackedTags[tagName])
+    self.trackedTags[tagName] = true
     assert(not self.instanceAddedConns[tagName])
     assert(not self.instanceRemovedConns[tagName])
     for _,obj in pairs(Collection:GetTagged(tagName)) do
@@ -389,6 +392,8 @@ function WorldView:tagAdded(tagName)
 end
 
 function WorldView:tagRemoved(tagName)
+    assert(self.trackedTags[tagName])
+    self.trackedTags[tagName] = nil
     for _,obj in pairs(Collection:GetTagged(tagName)) do
         self:instanceRemoved(obj)
     end
