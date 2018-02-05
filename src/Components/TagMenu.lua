@@ -86,6 +86,7 @@ local function TagMenu(props)
                 Text = "Always On Top",
                 LayoutOrder = 8,
                 Value = props.tagAlwaysOnTop,
+                NoDivider = true,
 
                 onSubmit = function(value)
                     TagManager.Get():SetAlwaysOnTop(props.tagMenu, value)
