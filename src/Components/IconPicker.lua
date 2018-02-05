@@ -117,7 +117,7 @@ function IconPreview:render()
 
     return Roact.createElement("Frame", {
         Size = UDim2.new(0, 64, 0, 72+20*3),
-        Position = UDim2.new(1, -8, 0, 8),
+        Position = self.props.Position,
         BackgroundTransparency = 1.0,
         AnchorPoint = Vector2.new(1, 0),
     }, {
@@ -284,7 +284,16 @@ function IconPicker:render()
             Search = Roact.createElement(Search, {
                 Size = UDim2.new(1, -80, 0, 40),
             }),
-            Preview = Roact.createElement(IconPreview),
+            Sidebar = Roact.createElement("Frame", {
+                BackgroundColor3 = Constants.LightGrey,
+                BorderColor3 = Constants.DarkGrey,
+                Size = UDim2.new(0, 80, 1, 0),
+                Position = UDim2.new(1, -80, 0, 0),
+            }, {
+                Preview = Roact.createElement(IconPreview, {
+                    Position = UDim2.new(1, -8, 0, 8),
+                }),
+            }),
         })
     })
 end
