@@ -45,6 +45,13 @@ end)(Group)
 local function GroupPicker(props)
     local children = {}
 
+    children.UIPadding = Roact.createElement("UIPadding", {
+        PaddingTop = UDim.new(0, 2),
+        PaddingBottom = UDim.new(0, 2),
+        PaddingLeft = UDim.new(0, 2),
+        PaddingRight = UDim.new(0, 2),
+    })
+
     children.Default = Roact.createElement(Group, {
         Name = "Default",
         Group = nil,
