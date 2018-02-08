@@ -405,7 +405,10 @@ end
 
 -- Watcher overrides
 
+local doLog = false
+
 function TagManager:InstanceAdded(instance)
+    if doLog then print("TagManager:InstanceAdded(",instance,")") end
     if not self.tagsFolder and instance.Parent == Collection and instance.Name == 'Tags' then
         self.tagsFolder = instance
     end
@@ -464,12 +467,13 @@ function TagManager:InstanceAdded(instance)
     end
 end
 
-function TagManager:InstanceRemoved(instance)
+function TagManager:InstanceRemoving(instance, instanceName)
+    if doLog then print("TagManager:InstanceRemoved(",instance,", ",instanceName,")") end
     if instance.Parent == Collection and instance == self.tagsFolder then
         self.tagsFolder = nil
         for name,_ in pairs(self.tags) do
             for func,_ in pairs(self.onTagRemovedFuncs) do
-                func(instance.Name)
+                func(instanceName)
             end
         end
         self.tags = {}
@@ -482,18 +486,18 @@ function TagManager:InstanceRemoved(instance)
         self:_updateStore()
     end
 
-    if instance.Parent == self.tagsFolder and self.tags[instance.Name] then
+    if instance.Parent == self.tagsFolder and self.tags[instanceName] then
         for func,_ in pairs(self.onTagRemovedFuncs) do
-            func(instance.Name)
+            func(instanceName)
         end
-        self.tags[instance.Name] = nil
+        self.tags[instanceName] = nil
         self:_updateStore()
     end
 
-    if instance.Parent == self.groupsFolder and self.groups[instance.Name] then
-        self.groups[instance.Name] = nil
+    if instance.Parent == self.groupsFolder and self.groups[instanceName] then
+        self.groups[instanceName] = nil
         for tagName,tag in pairs(self.tags) do
-            if tag.Group == instance.Name then
+            if tag.Group == instanceName then
                 tag.Group = nil
                 for func,_ in pairs(self.onTagChangedFuncs) do
                     func(tagName, 'Group', nil)
@@ -504,15 +508,16 @@ function TagManager:InstanceRemoved(instance)
     end
 
     if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] then
-        self.tags[instance.Parent.Name][instance.Name] = nil
+        self.tags[instance.Parent.Name][instanceName] = nil
         for func,_ in pairs(self.onTagChangedFuncs) do
-            func(instance.Parent.Name, instance.Name, nil)
+            func(instance.Parent.Name, instanceName, nil)
         end
         self:_updateStore()
     end
 end
 
 function TagManager:InstanceChanged(instance, oldValue, newValue)
+    if doLog then print("TagManager:InstanceChanged(",instance,", ",oldValue,", ",newValue,")") end
     if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value then
         self.tags[instance.Parent.Name][instance.Name] = newValue
         for func,_ in pairs(self.onTagChangedFuncs) do

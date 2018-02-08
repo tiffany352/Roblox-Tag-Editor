@@ -44,13 +44,15 @@ function Watcher:WatcherStart()
                 oldValue = newValue
             end)
         end
+        local oldName = instance.Name
         self.nameChangedConns[instance] = instance:GetPropertyChangedSignal("Name"):Connect(function()
             local descendants = instance:GetDescendants()
 
             for i = #descendants, 1, -1 do
-                self:InstanceRemoving(descendants[i])
+                self:InstanceRemoving(descendants[i], descendants[i].Name)
             end
-            self:InstanceRemoving(instance)
+            self:InstanceRemoving(instance, oldName)
+            oldName = instance.Name
 
             self:InstanceAdded(instance)
             for i = 1, #descendants do
@@ -62,7 +64,7 @@ function Watcher:WatcherStart()
 
     self.descendantAddedConn = self.root.DescendantAdded:Connect(instanceAdded)
     self.descendantRemovingConn = self.root.DescendantRemoving:Connect(function(instance)
-        self:InstanceRemoving(instance)
+        self:InstanceRemoving(instance, instance.Name)
         if self.nameChangedConns[instance] then
             self.nameChangedConns[instance]:Disconnect()
             self.nameChangedConns[instance] = nil
