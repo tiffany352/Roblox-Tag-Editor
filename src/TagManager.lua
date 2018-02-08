@@ -234,7 +234,7 @@ function TagManager:_setProp(tagName, key, value)
         valueObj:Destroy()
     end
     for func,_ in pairs(self.onTagChangedFuncs) do
-        func(tagName)
+        func(tagName, key, value)
     end
 
     self:_updateStore()
@@ -452,12 +452,12 @@ function TagManager:InstanceAdded(instance)
         self:_updateStore()
     end
 
-    if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] then
+    if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value then
         -- set property
         self.tags[instance.Parent.Name][instance.Name] = instance.Value
 
         for func,_ in pairs(self.onTagChangedFuncs) do
-            func(instance.Parent.Name)
+            func(instance.Parent.Name, instance.Name, instance.Value)
         end
 
         self:_updateStore()
@@ -496,7 +496,7 @@ function TagManager:InstanceRemoved(instance)
             if tag.Group == instance.Name then
                 tag.Group = nil
                 for func,_ in pairs(self.onTagChangedFuncs) do
-                    func(tagName)
+                    func(tagName, 'Group', nil)
                 end
             end
         end
@@ -506,7 +506,7 @@ function TagManager:InstanceRemoved(instance)
     if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] then
         self.tags[instance.Parent.Name][instance.Name] = nil
         for func,_ in pairs(self.onTagChangedFuncs) do
-            func(instance.Parent.Name)
+            func(instance.Parent.Name, instance.Name, nil)
         end
         self:_updateStore()
     end
@@ -516,7 +516,7 @@ function TagManager:InstanceChanged(instance, oldValue, newValue)
     if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value then
         self.tags[instance.Parent.Name][instance.Name] = newValue
         for func,_ in pairs(self.onTagChangedFuncs) do
-            func(instance.Parent.Name)
+            func(instance.Parent.Name, instance.Name, newValue)
         end
         self:_updateStore()
     end
