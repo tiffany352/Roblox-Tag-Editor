@@ -268,7 +268,8 @@ return function(plugin, savedState)
 
 	local usePluginGui = false
 	if usePluginGui then
-		gui = plugin:createPluginGui("Tag Editor")
+		local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 0, 0)
+		gui = plugin:createDockWidgetPluginGui("Tag Editor", info)
 		gui.Name = "Tag Editor"
 		toggleButton:SetActive(gui.Enabled)
 	else

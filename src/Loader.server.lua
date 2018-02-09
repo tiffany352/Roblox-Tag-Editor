@@ -59,12 +59,12 @@ end
 --[[
 	Wrapper around plugin:CreatePluginGui
 ]]
-function PluginFacade:createPluginGui(name, ...)
+function PluginFacade:createDockWidgetPluginGui(name, ...)
 	if self._pluginGuis[name] then
 		return self._pluginGuis[name]
 	end
 
-	local gui = plugin:CreatePluginGui(name, ...)
+	local gui = plugin:CreateDockWidgetPluginGui(name, ...)
 	self._pluginGuis[name] = gui
 
 	return gui
