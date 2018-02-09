@@ -44,6 +44,7 @@ globals = {
     "Vector2",
     "Vector3",
     "Vector3int16",
+    "DockWidgetPluginGuiInfo",
 
     -- math library
     "math.clamp",

@@ -10,7 +10,6 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 
 local Constants = require(script.Parent.Parent.Constants)
-local TagManager = require(script.Parent.Parent.TagManager)
 local Icon = require(script.Parent.Icon)
 local TextLabel = require(script.Parent.TextLabel)
 

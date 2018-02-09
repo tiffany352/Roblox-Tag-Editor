@@ -140,7 +140,8 @@ PluginFacade:_load()
 PluginFacade:_watch(source)
 
 -- development
-if false then
+local development = false
+if development then
 	local toolbar = PluginFacade:toolbar("Plugin Facade Debugger")
 
 	local button = PluginFacade:button(toolbar, "Reload", "Reload the Plugin Facade Debugger", "")

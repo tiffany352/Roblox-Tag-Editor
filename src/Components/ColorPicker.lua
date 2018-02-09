@@ -6,7 +6,6 @@ local Constants = require(script.Parent.Parent.Constants)
 local TagManager = require(script.Parent.Parent.TagManager)
 local Actions = require(script.Parent.Parent.Actions)
 local TextLabel = require(script.Parent.TextLabel)
-local ScrollingFrame = require(script.Parent.ScrollingFrame)
 local Icon = require(script.Parent.Icon)
 
 local function TextBox(props)

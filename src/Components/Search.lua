@@ -3,7 +3,6 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 
 local Actions = require(script.Parent.Parent.Actions)
-local Constants = require(script.Parent.Parent.Constants)
 
 local function Search(props)
     return Roact.createElement("Frame", {
