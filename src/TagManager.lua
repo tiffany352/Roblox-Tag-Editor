@@ -1,5 +1,6 @@
 local Collection = game:GetService("CollectionService")
 local Selection = game:GetService("Selection")
+local ChangeHistory = game:GetService("ChangeHistoryService")
 
 local Actions = require(script.Parent.Actions)
 local Watcher = require(script.Parent.Watcher)
@@ -75,6 +76,7 @@ function TagManager.new(store)
 
     -- attempt legacy data import
     if not self.tagsFolder then
+        ChangeHistory:SetWaypoint("Migrating legacy tag format")
         local ServerStorage = game:GetService("ServerStorage")
         local legacyTagsFolder = ServerStorage:FindFirstChild("TagList")
         if legacyTagsFolder then
@@ -218,6 +220,7 @@ function TagManager:_setProp(tagName, key, value)
         return false
     end
 
+    ChangeHistory:SetWaypoint(string.format("Setting property %q of tag %q", key, tagName))
     -- update entry first
     tag[key] = value
     local folder = tag.Folder
@@ -245,6 +248,7 @@ function TagManager:AddTag(name)
     if self.tags[name] then
         return
     end
+    ChangeHistory:SetWaypoint(string.format("Creating tag %q", name))
     local folder = Instance.new("Folder")
     folder.Name = name
 
@@ -298,6 +302,7 @@ function TagManager:DelTag(name)
     if not tag then
         return
     end
+    ChangeHistory:SetWaypoint(string.format("Deleting tag %q", name))
 
     for func,_ in pairs(self.onTagRemovedFuncs) do
         func(name)
@@ -348,6 +353,11 @@ end
 
 function TagManager:SetTag(name, value)
     local sel = Selection:Get()
+    if value then
+        ChangeHistory:SetWaypoint(string.format("Apply tag %q to selection", name))
+    else
+        ChangeHistory:SetWaypoint(string.format("Remove tag %q from selection", name))
+    end
     for _,obj in pairs(sel) do
         if value then
             Collection:AddTag(obj, name)
@@ -373,6 +383,7 @@ function TagManager:AddGroup(name)
     if self.groups[name] then
         return
     end
+    ChangeHistory:SetWaypoint(string.format("Create tag group %q", name))
     local folder = Instance.new("Folder")
     folder.Name = name
 
@@ -390,6 +401,7 @@ function TagManager:DelGroup(name)
     if not group then
         return
     end
+    ChangeHistory:SetWaypoint(string.format("Delete tag group %q", name))
 
     self.groups[name] = nil
     for _,tag in pairs(self.tags) do
