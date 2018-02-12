@@ -73,12 +73,47 @@ return function(plugin, savedState)
 
 	local gui
 	local pluginGuiRef
-	local savedSize
-	local savedPos
+	-- dragging params
 	local startMousePos
 	local startSize
 	local startPos
 	local clickCount = 0
+
+	local States = setmetatable({
+		Float = 'Float',
+		Left = 'Left',
+		Right = 'Right',
+		Bottom = 'Bottom',
+		Fullscreen = 'Fullscreen',
+	}, {
+		__index = function(t, k)
+			error("No such enum item "..tostring(k).." in States")
+		end
+	})
+	local state = States.Float
+	local floatPos, floatSize = Vector2.new(0, 0), Vector2.new(400, 300)
+
+	local function setState(newState)
+		state = newState
+		if state == States.Fullscreen then
+			pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
+			pluginGuiRef.Size = UDim2.new(1, 0, 1, 0)
+		elseif state == States.Left then
+			pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
+			pluginGuiRef.Size = UDim2.new(0, floatSize.x, 1, 0)
+		elseif state == States.Right then
+			pluginGuiRef.Position = UDim2.new(1, -floatSize.x, 0, 0)
+			pluginGuiRef.Size = UDim2.new(0, floatSize.x, 1, 0)
+		elseif state == States.Bottom then
+			pluginGuiRef.Position = UDim2.new(0, 0, 1, -floatSize.y)
+			pluginGuiRef.Size = UDim2.new(1, 0, 0, floatSize.y)
+		elseif state == States.Float then
+			pluginGuiRef.Position = UDim2.new(0, floatPos.x, 0, floatPos.y)
+			pluginGuiRef.Size = UDim2.new(0, floatSize.x, 0, floatSize.y)
+		else
+			assert(false)
+		end
+	end
 
 	local function FakePluginGui(props)
 		return Roact.createElement("ImageButton", {
@@ -87,24 +122,18 @@ return function(plugin, savedState)
 			AutoButtonColor = false,
 
 			[Roact.Ref] = function(rbx)
-				if rbx then
-					rbx.Size = UDim2.new(0, 400, 0, 300)
-				end
 				pluginGuiRef = rbx
+				if rbx then
+					setState(States.Float)
+				end
 			end,
 
 			[Roact.Event.MouseButton1Click] = function(rbx, x, y)
 				if clickCount > 0 then
-					if savedPos then
-						pluginGuiRef.Position = savedPos
-						pluginGuiRef.Size = savedSize
-						savedPos = nil
-						savedSize = nil
+					if state == States.Float then
+						setState(States.Fullscreen)
 					else
-						savedPos = pluginGuiRef.Position
-						savedSize = pluginGuiRef.Size
-						pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
-						pluginGuiRef.Size = UDim2.new(1, 0, 1, 0)
+						setState(States.Float)
 					end
 				else
 					clickCount = clickCount + 1
@@ -114,54 +143,41 @@ return function(plugin, savedState)
 			end,
 
 			[Roact.Event.MouseButton1Down] = function(rbx, x, y)
-				if savedPos then
-					pluginGuiRef.Position = savedPos
-					pluginGuiRef.Size = savedSize
-					savedPos = nil
-					savedSize = nil
-				end
 				startMousePos = Vector2.new(x, y)
-				startPos = Vector2.new(pluginGuiRef.Position.X.Offset, pluginGuiRef.Position.Y.Offset)
+				startPos = pluginGuiRef.AbsolutePosition
+				if startPos.x + floatSize.x < startMousePos.x then
+					startPos = Vector2.new(startMousePos.x - floatSize.x, startPos.y)
+				end
+				if startPos.x > startMousePos.x + floatSize.x then
+					startPos = Vector2.new(startMousePos.x, startPos.y)
+				end
 				local UserInputService = game:GetService("UserInputService")
 				local inset = game:GetService("GuiService"):GetGuiInset()
 
+				local function update(input)
+					local mousePos = Vector2.new(input.Position.X, input.Position.Y)
+					if (mousePos - startMousePos + inset).Magnitude < 4 then return end
+					local newPos = startPos + (mousePos - startMousePos + inset)
+					local max = gui.AbsoluteSize - pluginGuiRef.AbsoluteSize
+					newPos = Vector2.new(math.clamp(newPos.x, 0, max.x), math.clamp(newPos.y, 0, max.y))
+					if mousePos.x < 40 then
+						-- left side
+						setState(States.Left)
+					elseif mousePos.x > gui.AbsoluteSize.x - 40 then
+						-- right side
+						setState(States.Right)
+					elseif mousePos.y > gui.AbsoluteSize.y - 40 then
+						-- bottom
+						setState(States.Bottom)
+					else
+						floatPos = newPos
+						setState(States.Float)
+					end
+				end
+
 				local changedConn = UserInputService.InputChanged:Connect(function(input)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
-						local mousePos = Vector2.new(input.Position.X, input.Position.Y)
-						local newPos = startPos + (mousePos - startMousePos + inset)
-						local max = gui.AbsoluteSize - pluginGuiRef.AbsoluteSize
-						newPos = Vector2.new(math.clamp(newPos.x, 0, max.x), math.clamp(newPos.y, 0, max.y))
-						if mousePos.x < 40 then
-							-- left side
-							savedPos = UDim2.new(0, newPos.x, 0, newPos.y)
-							if not savedSize then
-								savedSize = pluginGuiRef.Size
-							end
-							pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
-							pluginGuiRef.Size = UDim2.new(pluginGuiRef.Size.X, UDim.new(1, 0))
-						elseif mousePos.x > gui.AbsoluteSize.x - 40 then
-							-- right side
-							savedPos = UDim2.new(0, newPos.x, 0, newPos.y)
-							if not savedSize then
-								savedSize = pluginGuiRef.Size
-							end
-							pluginGuiRef.Position = UDim2.new(1, -pluginGuiRef.AbsoluteSize.X, 0, 0)
-							pluginGuiRef.Size = UDim2.new(pluginGuiRef.Size.X, UDim.new(1, 0))
-						elseif mousePos.y > gui.AbsoluteSize.y - 40 then
-							-- bottom
-							savedPos = UDim2.new(0, newPos.x, 0, newPos.y)
-							if not savedSize then
-								savedSize = pluginGuiRef.Size
-							end
-							pluginGuiRef.Position = UDim2.new(0, 0, 1, -pluginGuiRef.AbsoluteSize.Y)
-							pluginGuiRef.Size = UDim2.new(UDim.new(1, 0), pluginGuiRef.Size.Y)
-						else
-							if savedSize then
-								pluginGuiRef.Size = savedSize
-								savedSize = nil
-							end
-							pluginGuiRef.Position = UDim2.new(0, newPos.x, 0, newPos.y)
-						end
+						update(input)
 					end
 				end)
 
@@ -170,12 +186,7 @@ return function(plugin, savedState)
 					if input.UserInputType == Enum.UserInputType.MouseButton1 then
 						changedConn:Disconnect()
 						endedConn:Disconnect()
-
-						local mousePos = Vector2.new(input.Position.X, input.Position.Y)
-						local newPos = startPos + (mousePos - startMousePos + inset)
-						local max = gui.AbsoluteSize - pluginGuiRef.AbsoluteSize
-						newPos = Vector2.new(math.clamp(newPos.x, 0, max.x), math.clamp(newPos.y, 0, max.y))
-						pluginGuiRef.Position = UDim2.new(0, newPos.x, 0, newPos.y)
+						update(input)
 					end
 				end)
 			end,
@@ -199,18 +210,10 @@ return function(plugin, savedState)
 				Position = UDim2.new(1, -32, 0, 4),
 				Image = 'rbxassetid://1384227954',
 				onClick = function()
-					if pluginGuiRef then
-						if savedPos then
-							pluginGuiRef.Position = savedPos
-							pluginGuiRef.Size = savedSize
-							savedPos = nil
-							savedSize = nil
-						else
-							savedPos = pluginGuiRef.Position
-							savedSize = pluginGuiRef.Size
-							pluginGuiRef.Position = UDim2.new(0, 0, 0, 0)
-							pluginGuiRef.Size = UDim2.new(1, 0, 1, 0)
-						end
+					if state == States.Fullscreen then
+						setState(States.Float)
+					else
+						setState(States.Fullscreen)
 					end
 				end,
 			}),
@@ -222,23 +225,22 @@ return function(plugin, savedState)
 				ZIndex = 2,
 
 				[Roact.Event.MouseButton1Down] = function(rbx, x, y)
-					if savedPos then
-						pluginGuiRef.Position = savedPos
-						pluginGuiRef.Size = savedSize
-						savedPos = nil
-						savedSize = nil
-					end
 					startMousePos = Vector2.new(x, y)
-					startSize = Vector2.new(pluginGuiRef.Size.X.Offset, pluginGuiRef.Size.Y.Offset)
+					startSize = floatSize
 					local UserInputService = game:GetService("UserInputService")
 					local inset = game:GetService("GuiService"):GetGuiInset()
 
+					local function update(input)
+						local mousePos = Vector2.new(input.Position.X, input.Position.Y)
+						local newSize = startSize + (mousePos - startMousePos + inset)
+						newSize = Vector2.new(math.max(300, newSize.x), math.max(250, newSize.y))
+						floatSize = newSize
+						setState(state)
+					end
+
 					local changedConn = UserInputService.InputChanged:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseMovement then
-							local mousePos = Vector2.new(input.Position.X, input.Position.Y)
-							local newSize = startSize + (mousePos - startMousePos + inset)
-							newSize = Vector2.new(math.max(300, newSize.x), math.max(250, newSize.y))
-							pluginGuiRef.Size = UDim2.new(0, newSize.x, 0, newSize.y)
+							update(input)
 						end
 					end)
 
@@ -247,11 +249,7 @@ return function(plugin, savedState)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 then
 							changedConn:Disconnect()
 							endedConn:Disconnect()
-
-							local mousePos = Vector2.new(input.Position.X, input.Position.Y)
-							local newSize = startSize + (mousePos - startMousePos + inset)
-							newSize = Vector2.new(math.max(300, newSize.x), math.max(250, newSize.y))
-							pluginGuiRef.Size = UDim2.new(0, newSize.x, 0, newSize.y)
+							update(input)
 						end
 					end)
 				end,
