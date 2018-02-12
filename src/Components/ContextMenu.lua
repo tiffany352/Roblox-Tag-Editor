@@ -15,7 +15,7 @@ function ContextMenu.Container(props)
     })
     children.UIListLayout = Roact.createElement("UIListLayout", {
         SortOrder = Enum.SortOrder.LayoutOrder,
-        VerticalAlignment = Enum.VerticalAlignment.Bottom,
+        VerticalAlignment = Enum.VerticalAlignment.Center,
     })
 
     for k,v in pairs(props[Roact.Children] or {}) do
@@ -108,6 +108,7 @@ function ContextMenu.Item:render()
                 FillDirection = Enum.FillDirection.Horizontal,
                 HorizontalAlignment = Enum.HorizontalAlignment.Left,--Center,
                 VerticalAlignment = Enum.VerticalAlignment.Center,
+                Padding = UDim.new(0, 4),
             }),
             Icon = props.Icon and Roact.createElement(Icon, {
                 Name = props.Icon,
@@ -117,7 +118,7 @@ function ContextMenu.Item:render()
                 BackgroundTransparency = 1.0,
                 Text = props.Text,
                 Font = Enum.Font.SourceSans,
-                TextSize = 20,
+                TextSize = 18,
                 TextColor3 = Constants.Black,
                 LayoutOrder = 2,
                 TextXAlignment = Enum.TextXAlignment.Left,
@@ -126,7 +127,7 @@ function ContextMenu.Item:render()
                     if not rbx then return end
                     local function update()
                         local tb = rbx.TextBounds
-                        rbx.Size = UDim2.new(0, tb.x + 4, 0, 20)
+                        rbx.Size = UDim2.new(0, tb.x + 4, 0, 18)
                     end
                     rbx:GetPropertyChangedSignal("TextBounds"):Connect(update)
                     update()
@@ -329,7 +330,7 @@ function ContextMenu.Dropdown:render()
                 Size = UDim2.new(1, 0, 1, 0),
                 Text = text,
                 Font = Enum.Font.SourceSansSemibold,
-                TextSize = 20,
+                TextSize = 18,
                 TextColor3 = Constants.White,
                 BackgroundTransparency = 1.0,
             }),
@@ -349,10 +350,10 @@ function ContextMenu.Dropdown:render()
             ImageColor3 = Constants.RobloxBlue,
             ScaleType = Enum.ScaleType.Slice,
             SliceCenter = Rect.new(10, 10, 10, 10),
-            Size = UDim2.new(0, 88, 1, 5),
+            Size = UDim2.new(0, 88, 1, 3),
             BackgroundTransparency = 1.0,
             AnchorPoint = Vector2.new(1, .5),
-            Position = UDim2.new(1, 0, .5, -1),
+            Position = UDim2.new(1, -8, .5, -1),
             ZIndex = 2,
         }, {
             Label = Roact.createElement("TextLabel", {
@@ -360,7 +361,7 @@ function ContextMenu.Dropdown:render()
                 Size = UDim2.new(1, 0, 1, 0),
                 Text = props.Options[props.Value],
                 Font = Enum.Font.SourceSansSemibold,
-                TextSize = 20,
+                TextSize = 18,
                 TextColor3 = Constants.White,
             }),
             Menu = Roact.createElement("ImageButton", {
@@ -413,8 +414,8 @@ function ContextMenu.Color(props)
     return Roact.createElement(ContextMenu.Item, newProps, {
         Color = Roact.createElement("ImageLabel", {
             Visible = props.Color ~= nil,
-            Position = UDim2.new(1, -24, .5, 0),
-            Size = UDim2.new(0, 32, 0, 32),
+            Position = UDim2.new(1, -24, .5, -1),
+            Size = UDim2.new(0, 30, 0, 30),
             AnchorPoint = Vector2.new(.5, .5),
             BackgroundTransparency = 1.0,
             Image = "rbxasset://textures/ui/btn_newWhite.png",
@@ -509,7 +510,7 @@ function ContextMenu.Cancel(props)
             Text = props.Text or "Cancel",
             Size = UDim2.new(1, 0, 1, 0),
             BackgroundTransparency = 1.0,
-            TextSize = 21,
+            TextSize = 19,
             Font = Enum.Font.SourceSansSemibold,
             TextColor3 = Constants.Black,
         })
@@ -537,15 +538,24 @@ function ContextMenu.Checkbox(props)
     end
 
     return Roact.createElement(ContextMenu.Item, newProps, {
-        Checkbox = Roact.createElement("Frame", {
-            Size = UDim2.new(0, 20, 0, 20),
+        Checkbox = Roact.createElement("ImageLabel", {
+            Image = 'rbxasset://textures/ui/LuaChat/9-slice/input-default.png',
+            ScaleType = Enum.ScaleType.Slice,
+            SliceCenter = Rect.new(4, 4, 4, 4),
+            Size = UDim2.new(0, 24, 0, 24),
+            BackgroundTransparency = 1.0,
             BorderSizePixel = 1,
             BackgroundColor3 = Constants.White,
             BorderColor3 = Constants.DarkGrey,
             Position = UDim2.new(1, -24, 0.5, 0),
             AnchorPoint = Vector2.new(.5, .5),
         }, {
-            Checked = Roact.createElement("Frame", {
+            Checked = Roact.createElement("ImageLabel", {
+                Image = 'rbxasset://textures/ui/LuaChat/9-slice/input-default.png',
+                ScaleType = Enum.ScaleType.Slice,
+                SliceCenter = Rect.new(4, 4, 4, 4),
+                ImageColor3 = Constants.RobloxBlue,
+                BackgroundTransparency = 1.0,
                 BorderSizePixel = 0,
                 BackgroundColor3 = Constants.RobloxBlue,
                 Visible = props.Value,
