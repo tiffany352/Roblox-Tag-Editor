@@ -225,7 +225,7 @@ function TagManager:_setProp(tagName, key, value)
     tag[key] = value
     local folder = tag.Folder
     local valueObj = folder:FindFirstChild(key)
-    if value then
+    if value ~= nil then
         if not valueObj then
             valueObj = Instance.new(propTypes[key].Type)
             valueObj.Name = key

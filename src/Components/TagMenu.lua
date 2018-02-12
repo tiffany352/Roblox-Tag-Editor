@@ -113,7 +113,7 @@ TagMenu = RoactRodux.connect(function(store)
     local icon
     local drawType
     local color
-    local alwaysOnTop
+    local alwaysOnTop = false
     for _,v in pairs(state.TagData) do
         if v.Name == state.TagMenu then
             icon = v.Icon
