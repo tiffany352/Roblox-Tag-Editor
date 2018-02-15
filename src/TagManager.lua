@@ -76,10 +76,10 @@ function TagManager.new(store)
 
     -- attempt legacy data import
     if not self.tagsFolder then
-        ChangeHistory:SetWaypoint("Migrating legacy tag format")
         local ServerStorage = game:GetService("ServerStorage")
         local legacyTagsFolder = ServerStorage:FindFirstChild("TagList")
         if legacyTagsFolder then
+            ChangeHistory:SetWaypoint("Migrating legacy tag format")
             local legacyTags = {}
             for _,child in pairs(legacyTagsFolder:GetChildren()) do
                 if child:IsA("StringValue") then
@@ -117,6 +117,7 @@ function TagManager.new(store)
             if not RunService:IsRunning() then
                 self.store:dispatch(Actions.OpenMigrationDialog(true))
             end
+            ChangeHistory:SetWaypoint("Migrated legacy tag format")
         end
     end
 
@@ -241,6 +242,7 @@ function TagManager:_setProp(tagName, key, value)
     end
 
     self:_updateStore()
+    ChangeHistory:SetWaypoint(string.format("Set property %q of tag %q", key, tagName))
     return true
 end
 
@@ -271,6 +273,7 @@ function TagManager:AddTag(name)
     for func,_ in pairs(self.onTagAddedFuncs) do
         func(name)
     end
+    ChangeHistory:SetWaypoint(string.format("Created tag %q", name))
 end
 
 function TagManager:SetIcon(name, icon)
@@ -302,8 +305,8 @@ function TagManager:DelTag(name)
     if not tag then
         return
     end
-    ChangeHistory:SetWaypoint(string.format("Deleting tag %q", name))
 
+    ChangeHistory:SetWaypoint(string.format("Deleting tag %q", name))
     for func,_ in pairs(self.onTagRemovedFuncs) do
         func(name)
     end
@@ -319,6 +322,7 @@ function TagManager:DelTag(name)
     end
 
     self:_updateStore()
+    ChangeHistory:SetWaypoint(string.format("Deleted tag %q", name))
 end
 
 function TagManager:OnTagAdded(func)
@@ -354,9 +358,9 @@ end
 function TagManager:SetTag(name, value)
     local sel = Selection:Get()
     if value then
-        ChangeHistory:SetWaypoint(string.format("Apply tag %q to selection", name))
+        ChangeHistory:SetWaypoint(string.format("Applying tag %q to selection", name))
     else
-        ChangeHistory:SetWaypoint(string.format("Remove tag %q from selection", name))
+        ChangeHistory:SetWaypoint(string.format("Removing tag %q from selection", name))
     end
     for _,obj in pairs(sel) do
         if value then
@@ -367,6 +371,11 @@ function TagManager:SetTag(name, value)
     end
 
     self:_updateStore()
+    if value then
+        ChangeHistory:SetWaypoint(string.format("Applied tag %q to selection", name))
+    else
+        ChangeHistory:SetWaypoint(string.format("Removed tag %q from selection", name))
+    end
 end
 
 function TagManager:_groupsFolder()
@@ -383,7 +392,7 @@ function TagManager:AddGroup(name)
     if self.groups[name] then
         return
     end
-    ChangeHistory:SetWaypoint(string.format("Create tag group %q", name))
+    ChangeHistory:SetWaypoint(string.format("Creating tag group %q", name))
     local folder = Instance.new("Folder")
     folder.Name = name
 
@@ -394,6 +403,7 @@ function TagManager:AddGroup(name)
     folder.Parent = self:_groupsFolder()
 
     self:_updateStore()
+    ChangeHistory:SetWaypoint(string.format("Created tag group %q", name))
 end
 
 function TagManager:DelGroup(name)
@@ -401,7 +411,7 @@ function TagManager:DelGroup(name)
     if not group then
         return
     end
-    ChangeHistory:SetWaypoint(string.format("Delete tag group %q", name))
+    ChangeHistory:SetWaypoint(string.format("Deleting tag group %q", name))
 
     self.groups[name] = nil
     for _,tag in pairs(self.tags) do
@@ -413,6 +423,7 @@ function TagManager:DelGroup(name)
     group.Folder:Destroy()
 
     self:_updateStore()
+    ChangeHistory:SetWaypoint(string.format("Deleted tag group %q", name))
 end
 
 -- Watcher overrides
