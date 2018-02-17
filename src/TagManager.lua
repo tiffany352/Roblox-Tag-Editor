@@ -5,6 +5,10 @@ local ChangeHistory = game:GetService("ChangeHistoryService")
 local Actions = require(script.Parent.Actions)
 local Watcher = require(script.Parent.Watcher)
 
+local TagsRoot = game:GetService("ServerStorage")
+local TagsFolderName = "TagList"
+local GroupsFolderName = "TagGroupList"
+
 local TagManager = {}
 TagManager.__index = TagManager
 setmetatable(TagManager, Watcher)
@@ -60,7 +64,7 @@ local function genColor(name)
 end
 
 function TagManager.new(store)
-    local self = setmetatable(Watcher.new(Collection), TagManager)
+    local self = setmetatable(Watcher.new(TagsRoot), TagManager)
 
     self.store = store
     self.tags = {}
@@ -74,50 +78,52 @@ function TagManager.new(store)
 
     self:WatcherStart()
 
-    -- attempt legacy data import
-    if not self.tagsFolder then
-        local ServerStorage = game:GetService("ServerStorage")
-        local legacyTagsFolder = ServerStorage:FindFirstChild("TagList")
-        if legacyTagsFolder then
-            ChangeHistory:SetWaypoint("Migrating legacy tag format")
-            local legacyTags = {}
-            for _,child in pairs(legacyTagsFolder:GetChildren()) do
-                if child:IsA("StringValue") then
-                    legacyTags[#legacyTags+1] = child.Name
-                end
+    -- move tags folder back from CollectionService from editor beta version
+    if not self.tagsFolder and Collection:FindFirstChild("Tags") then
+        local tagsList = Collection:FindFirstChild("Tags")
+        tagsList.Name = TagsFolderName
+        tagsList.Parent = TagsRoot
+        self.tagsFolder = tagsList
+    end
+    if not self.groupsFolder and Collection:FindFirstChild("Groups") then
+        local groupsList = Collection:FindFirstChild("Groups")
+        groupsList.Name = GroupsFolderName
+        groupsList.Parent = TagsRoot
+        self.groupsFolder = groupsList
+    end
+
+    -- migrate legacy format in backwards compatible fashion
+    if self.tagsFolder then
+        local oldTags = {}
+
+        for _,child in pairs(self.tagsFolder:GetChildren()) do
+            if child:IsA("StringValue") then
+                oldTags[#oldTags+1] = child
             end
-            table.sort(legacyTags)
-            for i = 1, #legacyTags do
-                local name = legacyTags[i]
-                if not self.tags[name] then
-                    local color = Color3.fromHSV(i / #legacyTags, 1, 1)
+        end
 
-                    local folder = Instance.new("Folder")
-                    folder.Name = legacyTags[i]
+        table.sort(oldTags, function(a,b) return a.Name < b.Name end)
 
-                    local colorValue = Instance.new("Color3Value")
-                    colorValue.Name = "Color"
-                    colorValue.Value = color
-                    colorValue.Parent = folder
-
-                    local tag = {
-                        Folder = folder,
-                        Color = color,
-                        DrawType = 'Box',
-                    }
-                    for propName, prop in pairs(propTypes) do
-                        tag[propName] = tag[propName] or prop.Default
-                    end
-                    self.tags[name] = tag
-                    folder.Parent = self:_tagsFolder()
-                end
+        for i = 1, #oldTags do
+            local oldTag = oldTags[i]
+            local folder = Instance.new("Folder")
+            folder.Name = oldTag.Name
+            local color = Color3.fromHSV(i / #oldTags, 1, 1)
+            local newTag = {
+                Folder = folder,
+            }
+            for propName, prop in pairs(propTypes) do
+                newTag[propName] = prop.Default
             end
+            newTag.Color = color
+            local colorValue = Instance.new("Color3Value")
+            colorValue.Name = "Color"
+            colorValue.Value = color
+            colorValue.Parent = folder
 
-            local RunService = game:GetService("RunService")
-            if not RunService:IsRunning() then
-                self.store:dispatch(Actions.OpenMigrationDialog(true))
-            end
-            ChangeHistory:SetWaypoint("Migrated legacy tag format")
+            oldTag:Destroy()
+            self.tags[folder.Name] = newTag
+            folder.Parent = self.tagsFolder
         end
     end
 
@@ -204,8 +210,8 @@ function TagManager:_tagsFolder()
         return self.tagsFolder
     end
     self.tagsFolder = Instance.new("Folder")
-    self.tagsFolder.Name = "Tags"
-    self.tagsFolder.Parent = Collection
+    self.tagsFolder.Name = TagsFolderName
+    self.tagsFolder.Parent = TagsRoot
     return self.tagsFolder
 end
 
@@ -383,8 +389,8 @@ function TagManager:_groupsFolder()
         return self.groupsFolder
     end
     self.groupsFolder = Instance.new("Folder")
-    self.groupsFolder.Name = "Groups"
-    self.groupsFolder.Parent = Collection
+    self.groupsFolder.Name = GroupsFolderName
+    self.groupsFolder.Parent = TagsRoot
     return self.groupsFolder
 end
 
@@ -432,11 +438,11 @@ local doLog = false
 
 function TagManager:InstanceAdded(instance)
     if doLog then print("TagManager:InstanceAdded(",instance,")") end
-    if not self.tagsFolder and instance.Parent == Collection and instance.Name == 'Tags' then
+    if not self.tagsFolder and instance.Parent == TagsRoot and instance.Name == TagsFolderName then
         self.tagsFolder = instance
     end
 
-    if not self.groupsFolder and instance.Parent == Collection and instance.Name == 'Groups' then
+    if not self.groupsFolder and instance.Parent == TagsRoot and instance.Name == GroupsFolderName then
         self.groupsFolder = instance
     end
 
@@ -492,7 +498,7 @@ end
 
 function TagManager:InstanceRemoving(instance, instanceName)
     if doLog then print("TagManager:InstanceRemoved(",instance,", ",instanceName,")") end
-    if instance.Parent == Collection and instance == self.tagsFolder then
+    if instance.Parent == TagsRoot and instance == self.tagsFolder then
         self.tagsFolder = nil
         for name,_ in pairs(self.tags) do
             for func,_ in pairs(self.onTagRemovedFuncs) do
@@ -503,7 +509,7 @@ function TagManager:InstanceRemoving(instance, instanceName)
         self:_updateStore()
     end
 
-    if instance.Parent == Collection and instance == self.groupsFolder then
+    if instance.Parent == TagsRoot and instance == self.groupsFolder then
         self.groupsFolder = nil
         self.groups = {}
         self:_updateStore()
