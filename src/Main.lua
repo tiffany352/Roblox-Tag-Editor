@@ -264,13 +264,14 @@ return function(plugin, savedState)
 		})
 	end
 
-	local usePluginGui = false
-	if usePluginGui then
+	local usePluginGui = pcall(function()
 		local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 0, 0)
 		gui = plugin:createDockWidgetPluginGui("Tag Editor", info)
 		gui.Name = "Tag Editor"
+		gui.Title = "Tag Editor"
 		toggleButton:SetActive(gui.Enabled)
-	else
+	end)
+	if not usePluginGui then
 		gui = Instance.new("ScreenGui")
 		gui.Name = "TagEditor"
 		gui.Enabled = false
