@@ -92,9 +92,7 @@ local function getTaglist(create)
 	local tl = getTagListObj(create)
 	if tl then
 		for _,tag in pairs(tl:GetChildren()) do
-			if tag:IsA("StringValue") then
-				taglist[#taglist+1] = tag.Value
-			end
+			taglist[#taglist+1] = tag.Name
 		end
 	end
 	table.sort(taglist)
