@@ -3,6 +3,13 @@ if not plugin then
 	return
 end
 
+local RunService = game:GetService("RunService")
+
+-- RenderStepped errors out in Start Server, so we consider it a hostile environment even though it has a 3D view that we could potentially be using.
+if not RunService:IsClient() then
+	return
+end
+
 -- currentRoot will not be the same as source
 local source = script.Parent.Parent
 local currentRoot = script.Parent.Parent
