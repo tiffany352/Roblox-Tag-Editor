@@ -8,8 +8,18 @@ local RoactRodux = require(Modules.RoactRodux)
 local Constants = require(script.Parent.Parent.Constants)
 local TagManager = require(script.Parent.Parent.TagManager)
 local Icon = require(script.Parent.Icon)
+local Maid = require(script.Parent.Parent.Maid)
 
 local function BoxAdorn(props)
+    if props.Adornee.ClassName == 'Attachment' then
+        return Roact.createElement("BoxHandleAdornment", {
+            Adornee = props.Adornee.Parent,
+            CFrame = props.Adornee.CFrame,
+            Size = Vector3.new(1.2, 1.2, 1.2),
+            Transparency = 0.3,
+            Color3 = props.Color,
+        })
+    end
     return Roact.createElement("SelectionBox", {
         LineThickness = 0.03,
         SurfaceTransparency = 0.7,
@@ -20,6 +30,15 @@ local function BoxAdorn(props)
 end
 
 local function OutlineAdorn(props)
+    if props.Adornee.ClassName == 'Attachment' then
+        return Roact.createElement("BoxHandleAdornment", {
+            Adornee = props.Adornee.Parent,
+            CFrame = props.Adornee.CFrame,
+            Size = Vector3.new(1.5, 1.5, 1.5),
+            Transparency = 0.3,
+            Color3 = props.Color,
+        })
+    end
     return Roact.createElement("SelectionBox", {
         LineThickness = 0.05,
         Adornee = props.Adornee,
@@ -28,8 +47,16 @@ local function OutlineAdorn(props)
 end
 
 local function SphereAdorn(props)
+    local adorn, cframe
+    if props.Adornee.ClassName == 'Attachment' then
+        adorn = props.Adornee.Parent
+        cframe = props.Adornee.CFrame
+    else
+        adorn = props.Adornee
+    end
     return Roact.createElement("SphereHandleAdornment", {
-        Adornee = props.Adornee,
+        Adornee = adorn,
+        CFrame = cframe,
         Color3 = props.Color,
         AlwaysOnTop = props.AlwaysOnTop,
         Transparency = 0.3,
@@ -104,8 +131,26 @@ function WorldView:init()
     self.partIds = {}
     self.trackedParts = {}
     self.trackedTags = {}
-    self.instanceAddedConns = {}
-    self.instanceRemovedConns = {}
+    self.instanceAddedConns = Maid.new()
+    self.instanceRemovedConns = Maid.new()
+    self.instanceAncestryChangedConns = Maid.new()
+    self.maid = Maid.new()
+
+    local function cameraAdded(camera)
+        self.maid.cameraMovedConn = nil
+        if camera then
+            local origPos = camera.CFrame.p
+            self.maid.cameraMovedConn = camera:GetPropertyChangedSignal("CFrame"):Connect(function()
+                local newPos = camera.CFrame.p
+                if (origPos - newPos).Magnitude > 50 then
+                    origPos = newPos
+                    self:updateParts()
+                end
+            end)
+        end
+    end
+    self.maid.cameraChangedConn = workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(cameraAdded)
+    cameraAdded(workspace.CurrentCamera)
 end
 
 function WorldView:didMount()
@@ -141,54 +186,84 @@ function WorldView:didMount()
     self:updateParts()
 end
 
-function WorldView:updateParts()
-    local newList = {}
+local function sortedInsert(array, value, lessThan)
+    local start = 1
+    local stop = #array
 
-    for obj,_ in pairs(self.trackedParts) do
-        if obj:IsA("BasePart") then
-            newList[#newList+1] = {
-                Position = obj.Position,
-                Instance = obj,
-            }
-        elseif obj:IsA("Model") then
-            local primary = obj.PrimaryPart
-            if not primary then
-                local largest
-                local largest_by = 0
-                for _,part in pairs(obj:GetChildren()) do
-                    if part:IsA("BasePart") then
-                        local size = part.Size.Magnitude
-                        if size > largest_by then
-                            largest_by = size
-                            largest = part
-                        end
-                    end
-                end
-                primary = largest
-            end
-            if primary then
-                newList[#newList+1] = {
-                    Position = primary.Position,
-                    Instance = obj,
-                }
-            end
+    while stop - start > 1 do
+        local pivot = math.floor(start + (stop - start) / 2)
+        if lessThan(value, array[pivot]) then
+            stop = pivot
+        else
+            start = pivot + 1
         end
     end
 
-    local cam = workspace.CurrentCamera
-    if cam then
-        local pos = cam.Focus.p
-        table.sort(newList, function(a,b)
-            local ap = a.Position - pos
-            local ad = ap:Dot(ap)
-            local bp = b.Position - pos
-            local bd = bp:Dot(bp)
-            return ad < bd
-        end)
-    end
+    table.insert(array, start, value)
+end
 
-    local newList2 = {}
-    local nl2Index = 1
+function WorldView:updateParts()
+    debug.profilebegin("[Tag Editor] Update WorldView")
+    local startTime = tick()
+
+    local newList = {}
+
+    debug.profilebegin("[Tag Editor] Collecting initial part list")
+    local cam = workspace.CurrentCamera
+    if not cam then return end
+    local camPos = cam.CFrame.p
+
+    local function sortFunc(a, b)
+        return a.AngularSize > b.AngularSize
+    end
+    local function partAngularSize(pos, size)
+        local dist = (pos - camPos).Magnitude
+        local sizeM = size.Magnitude
+        return sizeM / dist
+    end
+    for obj,_ in pairs(self.trackedParts) do
+        local class = obj.ClassName
+        if class == 'Model' then
+            local primary = obj.PrimaryPart
+            if not primary then
+                local children = obj:GetChildren()
+                for i = 1, #children do
+                    if children[i]:IsA("BasePart") then
+                        primary = children[i]
+                        break
+                    end
+                end
+            end
+            if primary then
+                local entry = {
+                    AngularSize = partAngularSize(primary.Position, obj:GetExtentsSize()),
+                    Instance = obj,
+                }
+                sortedInsert(newList, entry, sortFunc)
+            end
+        elseif class == 'Attachment' then
+            local entry = {
+                AngularSize = partAngularSize(obj.WorldPosition, Vector3.new()),
+                Instance = obj,
+            }
+            sortedInsert(newList, entry, sortFunc)
+        else -- assume part
+            local entry = {
+                AngularSize = partAngularSize(obj.Position, obj.Size),
+                Instance = obj,
+            }
+            sortedInsert(newList, entry, sortFunc)
+        end
+        local size = #newList
+        while size > 500 do
+            newList[size] = nil
+            size = size - 1
+        end
+    end
+    debug.profileend()
+
+    debug.profilebegin("[Tag Editor] Accumulating adorns")
+    local adornMap = {}
     for i = 1, #newList do
         local tags = Collection:GetTags(newList[i].Instance)
         local outlines = {}
@@ -231,14 +306,13 @@ function WorldView:updateParts()
             g = g / #outlines
             b = b / #outlines
             local avg = Color3.new(r, g, b)
-            newList2[nl2Index] = {
+            adornMap['Outline:'..partId] = {
                 Id = partId,
                 Part = newList[i].Instance,
                 DrawType = 'Outline',
                 Color = avg,
                 AlwaysOnTop = anyAlwaysOnTop,
             }
-            nl2Index = nl2Index + 1
         end
 
         if #boxes > 0 then
@@ -252,25 +326,23 @@ function WorldView:updateParts()
             g = g / #boxes
             b = b / #boxes
             local avg = Color3.new(r, g, b)
-            newList2[nl2Index] = {
+            adornMap['Box:'..partId] = {
                 Id = partId,
                 Part = newList[i].Instance,
                 DrawType = 'Box',
                 Color = avg,
                 AlwaysOnTop = anyAlwaysOnTop,
             }
-            nl2Index = nl2Index + 1
         end
 
         if #icons > 0 then
-            newList2[nl2Index] = {
+            adornMap['Icon:'..partId] = {
                 Id = partId,
                 Part = newList[i].Instance,
                 DrawType = 'Icon',
                 Icon = icons,
                 AlwaysOnTop = anyAlwaysOnTop,
             }
-            nl2Index = nl2Index + 1
         end
 
         if #labels > 0 then
@@ -278,14 +350,13 @@ function WorldView:updateParts()
             if #icons > 0 then
                 labels[#labels+1] = ''
             end
-            newList2[nl2Index] = {
+            adornMap['Text:'..partId] = {
                 Id = partId,
                 Part = newList[i].Instance,
                 DrawType = 'Text',
                 TagName = labels,
                 AlwaysOnTop = anyAlwaysOnTop,
             }
-            nl2Index = nl2Index + 1
         end
 
         if #spheres > 0 then
@@ -299,59 +370,67 @@ function WorldView:updateParts()
             g = g / #spheres
             b = b / #spheres
             local avg = Color3.new(r, g, b)
-            newList2[nl2Index] = {
+            adornMap['Sphere:'..partId] = {
                 Id = partId,
                 Part = newList[i].Instance,
                 DrawType = 'Sphere',
                 Color = avg,
                 AlwaysOnTop = anyAlwaysOnTop,
             }
-            nl2Index = nl2Index + 1
-        end
-
-        if nl2Index >= 500 then
-            break
         end
     end
+    debug.profileend()
 
-    -- sort by part ID so the list remains stable in the view of roact
-    table.sort(newList2, function(a, b)
-        if a.Id < b.Id then return true end
-        if b.Id < a.Id then return false end
-
-        return a.DrawType < b.DrawType
-    end)
-
+    debug.profilebegin("Equality check")
     -- make sure it's not the same as the current list
     local isNew = false
-    if #newList2 ~= #self.state.partsList then
-        isNew = true
-    else
-        for i = 1, #newList2 do
-            local props = {
-                'Part',
-                'Icon',
-                'Id',
-                'DrawType',
-                'Color',
-                'TagName',
-                'AlwaysOnTop',
-            }
-            for j = 1, #props do
-                local prop = props[j]
-                if newList2[i][prop] ~= self.state.partsList[i][prop] then
+    local props = {
+        'Part',
+        'Icon',
+        'Id',
+        'DrawType',
+        'Color',
+        'TagName',
+        'AlwaysOnTop',
+    }
+    local oldMap = self.state.partsList
+    for key, newValue in pairs(adornMap) do
+        local oldValue = oldMap[key]
+        if not oldValue then
+            isNew = true
+            break
+        else
+            for i = 1, #props do
+                local prop = props[i]
+                if newValue[prop] ~= oldValue[prop] then
                     isNew = true
                     break
                 end
             end
         end
     end
+    if not isNew then
+        for key, oldValue in pairs(oldMap) do
+            if not adornMap[key] then
+                isNew = true
+                break
+            end
+        end
+    end
+    debug.profileend()
 
+    debug.profilebegin("setState()")
     if isNew then
         self:setState({
-            partsList = newList2,
+            partsList = adornMap,
         })
     end
+    debug.profileend()
+
+    debug.profileend()
+
+    local stopTime = tick()
+    print(string.format("[Tag Editor] Updated WorldView in %0.2f ms", (stopTime - startTime) * 1000.0))
 end
 
 function WorldView:instanceAdded(inst)
@@ -373,19 +452,56 @@ function WorldView:instanceRemoved(inst)
     end
 end
 
+local function isTypeAllowed(instance)
+    if instance.ClassName == 'Model' then return true end
+    if instance.ClassName == 'Attachment' then return true end
+    if instance:IsA("BasePart") then return true end
+    return false
+end
+
 function WorldView:tagAdded(tagName)
     assert(not self.trackedTags[tagName])
     self.trackedTags[tagName] = true
-    assert(not self.instanceAddedConns[tagName])
-    assert(not self.instanceRemovedConns[tagName])
     for _,obj in pairs(Collection:GetTagged(tagName)) do
-        self:instanceAdded(obj)
+        if isTypeAllowed(obj) then
+            if obj:IsDescendantOf(workspace) then
+                self:instanceAdded(obj)
+            end
+            if not self.instanceAncestryChangedConns[obj] then
+                self.instanceAncestryChangedConns[obj] = obj.AncestryChanged:Connect(function()
+                    if not self.trackedParts[obj] and obj:IsDescendantOf(workspace) then
+                        self:instanceAdded(obj)
+                        self:updateParts()
+                    elseif self.trackedParts[obj] and not obj:IsDescendantOf(workspace) then
+                        self:instanceRemoved(obj)
+                        self:updateParts()
+                    end
+                end)
+            end
+        end
     end
     self.instanceAddedConns[tagName] = Collection:GetInstanceAddedSignal(tagName):Connect(function(obj)
-        self:instanceAdded(obj)
-        self:updateParts()
+        if not isTypeAllowed(obj) then return end
+        if obj:IsDescendantOf(workspace) then
+            self:instanceAdded(obj)
+            self:updateParts()
+        else
+            print("outside workspace", obj)
+        end
+        if not self.instanceAncestryChangedConns[obj] then
+            self.instanceAncestryChangedConns[obj] = obj.AncestryChanged:Connect(function()
+                if not self.trackedParts[obj] and obj:IsDescendantOf(workspace) then
+                    self:instanceAdded(obj)
+                    self:updateParts()
+                elseif self.trackedParts[obj] and not obj:IsDescendantOf(workspace) then
+                    self:instanceRemoved(obj)
+                    self:updateParts()
+                end
+            end)
+        end
     end)
     self.instanceRemovedConns[tagName] = Collection:GetInstanceRemovedSignal(tagName):Connect(function(obj)
+        if not isTypeAllowed(obj) then return end
         self:instanceRemoved(obj)
         self:updateParts()
     end)
@@ -397,9 +513,7 @@ function WorldView:tagRemoved(tagName)
     for _,obj in pairs(Collection:GetTagged(tagName)) do
         self:instanceRemoved(obj)
     end
-    self.instanceAddedConns[tagName]:Disconnect()
     self.instanceAddedConns[tagName] = nil
-    self.instanceRemovedConns[tagName]:Disconnect()
     self.instanceRemovedConns[tagName] = nil
 end
 
@@ -407,12 +521,10 @@ function WorldView:willUnmount()
     self.onTagAddedConn:Disconnect()
     self.onTagRemovedConn:Disconnect()
     self.onTagChangedConn:Disconnect()
-    for _,conn in pairs(self.instanceAddedConns) do
-        conn:Disconnect()
-    end
-    for _,conn in pairs(self.instanceRemovedConns) do
-        conn:Disconnect()
-    end
+
+    self.instanceAddedConns:clean()
+    self.instanceRemovedConns:clean()
+    self.maid:clean()
 end
 
 function WorldView:render()
@@ -426,7 +538,7 @@ function WorldView:render()
 
     local children = {}
 
-    for i,entry in pairs(partsList) do
+    for key,entry in pairs(partsList) do
         local elt
         if entry.DrawType == 'Outline' then
             elt = OutlineAdorn
@@ -441,7 +553,7 @@ function WorldView:render()
         else
             error("Unknown DrawType: "..tostring(entry.DrawType))
         end
-        children[entry.DrawType.." "..tostring(entry.Id)] = Roact.createElement(elt, {
+        children[key] = Roact.createElement(elt, {
             Adornee = entry.Part,
             Icon = entry.Icon,
             Color = entry.Color,
@@ -456,6 +568,18 @@ function WorldView:render()
         TagEditorWorldView = Roact.createElement("Folder", {}, children),
     })
 end
+
+local function conditionalComponent(component, property)
+    return function(props)
+        if props[property] then
+            return Roact.createElement(component, props)
+        else
+            return nil
+        end
+    end
+end
+
+WorldView = conditionalComponent(WorldView, 'worldView')
 
 WorldView = RoactRodux.connect(function(store)
     local state = store:getState()
