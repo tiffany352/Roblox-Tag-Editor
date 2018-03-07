@@ -204,11 +204,9 @@ end
 
 function WorldView:updateParts()
     debug.profilebegin("[Tag Editor] Update WorldView")
-    local startTime = tick()
 
     local newList = {}
 
-    debug.profilebegin("[Tag Editor] Collecting initial part list")
     local cam = workspace.CurrentCamera
     if not cam then return end
     local camPos = cam.CFrame.p
@@ -260,9 +258,7 @@ function WorldView:updateParts()
             size = size - 1
         end
     end
-    debug.profileend()
 
-    debug.profilebegin("[Tag Editor] Accumulating adorns")
     local adornMap = {}
     for i = 1, #newList do
         local tags = Collection:GetTags(newList[i].Instance)
@@ -379,9 +375,7 @@ function WorldView:updateParts()
             }
         end
     end
-    debug.profileend()
 
-    debug.profilebegin("Equality check")
     -- make sure it's not the same as the current list
     local isNew = false
     local props = {
@@ -417,20 +411,14 @@ function WorldView:updateParts()
             end
         end
     end
-    debug.profileend()
 
-    debug.profilebegin("setState()")
     if isNew then
         self:setState({
             partsList = adornMap,
         })
     end
-    debug.profileend()
 
     debug.profileend()
-
-    local stopTime = tick()
-    print(string.format("[Tag Editor] Updated WorldView in %0.2f ms", (stopTime - startTime) * 1000.0))
 end
 
 function WorldView:instanceAdded(inst)
