@@ -3,6 +3,12 @@ A plugin for manipulating CollectionService in Roblox Studio.
 
 ## Changelog
 
+### v2.0.1
+
+- Visualizing tagged attachments.
+- Fix bug where objects outside the worldspace showed up in the world view.
+- WorldView performance improvements.
+
 ### **v2.0.0**
 
 - Completely rewritten plugin.
