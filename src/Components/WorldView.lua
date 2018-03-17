@@ -499,7 +499,9 @@ function WorldView:tagRemoved(tagName)
     assert(self.trackedTags[tagName])
     self.trackedTags[tagName] = nil
     for _,obj in pairs(Collection:GetTagged(tagName)) do
-        self:instanceRemoved(obj)
+        if obj:IsDescendantOf(workspace) then
+            self:instanceRemoved(obj)
+        end
     end
     self.instanceAddedConns[tagName] = nil
     self.instanceRemovedConns[tagName] = nil
