@@ -135,6 +135,20 @@ function TagList:render()
         }))
         j = j + 1
     end
+
+    if #tags == 0 then
+        children.NoResults = Roact.createElement(Item, {
+            LayoutOrder = j,
+            Text = "No search results found.",
+            Icon = "cancel",
+            TextProps = {
+                Font = Enum.Font.SourceSansItalic,
+                TextColor3 = Constants.VeryDarkGrey,
+            },
+        })
+        j = j + 1
+    end
+
     children.AddNew = Roact.createElement(Item, {
         LayoutOrder = j,
         Text = "Add new tag...",
