@@ -20,6 +20,7 @@ return setmetatable({
     SetSearch = Action.new("SetSearch", require(script.SetSearch)),
     SetTagData = Action.new("SetTagData", require(script.SetTagData)),
     SetGroupData = Action.new("SetGroupData", require(script.SetGroupData)),
+    SetUnknownTags = Action.new("SetUnknownTags", require(script.SetUnknownTags)),
     OpenTagMenu = Action.new("OpenTagMenu", require(script.OpenTagMenu)),
     ToggleIconPicker = Action.new("ToggleIconPicker", require(script.ToggleIconPicker)),
     ToggleColorPicker = Action.new("ToggleColorPicker", require(script.ToggleColorPicker)),

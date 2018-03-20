@@ -52,6 +52,16 @@ function Item:render()
         if isHover then
             flairColor = Constants.VeryDarkGrey
         end
+    elseif props.ButtonColor then
+        buttonStyle = {
+            Image = "rbxasset://textures/ui/dialog_white.png",
+            SliceCenter = Rect.new(10, 10, 10, 10),
+            ImageColor3 = props.ButtonColor,
+        }
+        showDivider = false
+        if isHover then
+            flairColor = Constants.VeryDarkGrey
+        end
     elseif isHover then
         buttonStyle = {
             Image = "rbxasset://textures/ui/dialog_white.png",

@@ -1,6 +1,7 @@
 local Search = require(script.Search)
 local TagMenu = require(script.TagMenu)
 local TagData = require(script.TagData)
+local UnknownTags = require(script.UnknownTags)
 local GroupData = require(script.GroupData)
 local IconPicker = require(script.IconPicker)
 local ColorPicker = require(script.ColorPicker)
@@ -17,6 +18,7 @@ return function(state, action)
         Search = Search(state.Search, action),
         TagMenu = TagMenu(state.TagMenu, action),
         TagData = TagData(state.TagData, action),
+        UnknownTags = UnknownTags(state.UnknownTags, action),
         GroupData = GroupData(state.GroupData, action),
         IconPicker = IconPicker(state.IconPicker, action),
         ColorPicker = ColorPicker(state.ColorPicker, action),

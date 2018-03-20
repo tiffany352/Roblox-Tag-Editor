@@ -190,6 +190,23 @@ function TagManager:_doUpdateStore()
 
     self.store:dispatch(Actions.SetTagData(data))
 
+    local unknownTagsMap = {}
+    for _,obj in pairs(sel) do
+        local tags = Collection:GetTags(obj)
+        for _,tag in pairs(tags) do
+            if not self.tags[tag] then
+                unknownTagsMap[tag] = true
+            end
+        end
+    end
+    local unknownTags = {}
+    for tag,_ in pairs(unknownTagsMap) do
+        unknownTags[#unknownTags+1] = tag
+    end
+    table.sort(unknownTags)
+
+    self.store:dispatch(Actions.SetUnknownTags(unknownTags))
+
     local data = {}
 
     for name,group in pairs(self.groups) do

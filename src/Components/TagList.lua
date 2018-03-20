@@ -136,6 +136,27 @@ function TagList:render()
         j = j + 1
     end
 
+    local unknownTags = props.unknownTags
+
+    for i = 1, #unknownTags do
+        local tag = unknownTags[i]
+        children[tag] = Roact.createElement(Item, {
+            Text = string.format("%s (click to import)", tag),
+            Icon = 'help',
+            ButtonColor = Constants.LightRed,
+            LayoutOrder = j,
+            TextProps = {
+                Font = Enum.Font.SourceSansItalic,
+                TextColor3 = Constants.White,
+            },
+
+            leftClick = function(rbx)
+                TagManager.Get():AddTag(tag)
+            end,
+        })
+        j = j + 1
+    end
+
     if #tags == 0 then
         children.NoResults = Roact.createElement(Item, {
             LayoutOrder = j,
@@ -206,10 +227,20 @@ TagList = RoactRodux.connect(function(store)
         end
     end
 
+    local unknownTags = {}
+    for _, tag in pairs(state.UnknownTags) do
+        -- todo: LCS
+        local passSearch = not state.Search or tag:lower():find(state.Search:lower())
+        if passSearch then
+            unknownTags[#unknownTags+1] = tag
+        end
+    end
+
     return {
         Tags = tags,
         searchTerm = state.Search,
         menuOpen = state.TagMenu,
+        unknownTags = unknownTags,
 
         setSearch = function(term)
             store:dispatch(Actions.SetSearch(term))
