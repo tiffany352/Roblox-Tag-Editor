@@ -149,16 +149,36 @@ function TagList:render()
         j = j + 1
     end
 
-    children.AddNew = Roact.createElement(Item, {
-        LayoutOrder = j,
-        Text = "Add new tag...",
-        Icon = "tag_blue_add",
-        IsInput = true,
+    local searchTagExists = false
+    for i = 1, #tags do
+        if tags[i] == props.searchTerm then
+            searchTagExists = true
+            break
+        end
+    end
+    if props.searchTerm and #props.searchTerm > 0 and not searchTagExists then
+        children.AddNew = Roact.createElement(Item, {
+            LayoutOrder = j,
+            Text = string.format("Add tag %q...", props.searchTerm),
+            Icon = "tag_blue_add",
 
-        onSubmit = function(rbx, text)
-            TagManager.Get():AddTag(text)
-        end,
-    })
+            leftClick = function(rbx)
+                TagManager.Get():AddTag(props.searchTerm)
+                props.setSearch("")
+            end,
+        })
+    else
+        children.AddNew = Roact.createElement(Item, {
+            LayoutOrder = j,
+            Text = "Add new tag...",
+            Icon = "tag_blue_add",
+            IsInput = true,
+
+            onSubmit = function(rbx, text)
+                TagManager.Get():AddTag(text)
+            end,
+        })
+    end
 
     return Roact.createElement("ScrollingFrame", {
         Size = props.Size or UDim2.new(1, 0, 1, 0),
@@ -188,7 +208,12 @@ TagList = RoactRodux.connect(function(store)
 
     return {
         Tags = tags,
+        searchTerm = state.Search,
         menuOpen = state.TagMenu,
+
+        setSearch = function(term)
+            store:dispatch(Actions.SetSearch(term))
+        end,
     }
 end)(TagList)
 
