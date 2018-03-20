@@ -283,6 +283,11 @@ function IconPicker:render()
             }, children),
             Search = Roact.createElement(Search, {
                 Size = UDim2.new(1, -80, 0, 40),
+
+                term = props.search,
+                setTerm = function(term)
+                    props.setTerm(term)
+                end,
             }),
             Sidebar = Roact.createElement("Frame", {
                 BackgroundColor3 = Constants.LightGrey,
@@ -316,7 +321,12 @@ IconPicker = RoactRodux.connect(function(store)
         end,
         tagName = tagName,
         tagIcon = tagIcon,
-        search = state.Search,
+        search = state.IconSearch,
+
+        setTerm = function(term)
+            store:dispatch(Actions.SetIconSearch(term))
+        end,
+
         setHoveredIcon = function(icon)
             store:dispatch(Actions.SetHoveredIcon(icon))
         end

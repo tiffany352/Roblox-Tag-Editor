@@ -1,8 +1,5 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local RoactRodux = require(Modules.RoactRodux)
-
-local Actions = require(script.Parent.Parent.Actions)
 
 local function Search(props)
     return Roact.createElement("Frame", {
@@ -29,34 +26,23 @@ local function Search(props)
                 PlaceholderText = "Search",
                 PlaceholderColor3 = Color3.fromRGB(100, 100, 100),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
-                Text = props.Search,
+                Text = props.term,
                 ClearTextOnFocus = false,
 
                 [Roact.Event.Changed] = function(rbx, prop)
                     if prop == 'Text' then
-                        props.SetSearch(rbx.Text)
+                        props.setTerm(rbx.Text)
                     end
                 end,
 
                 [Roact.Event.InputBegan] = function(rbx, input)
                     if input.UserInputType == Enum.UserInputType.MouseButton2 and input.UserInputState == Enum.UserInputState.Begin then
-                        props.SetSearch("")
+                        props.setTerm("")
                     end
                 end,
             }),
         })
     })
 end
-
-Search = RoactRodux.connect(function(store)
-    local state = store:getState()
-
-    return {
-        Search = state.Search,
-        SetSearch = function(text)
-            store:dispatch(Actions.SetSearch(text))
-        end
-    }
-end)(Search)
 
 return Search

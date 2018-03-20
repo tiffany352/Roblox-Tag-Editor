@@ -18,6 +18,7 @@ end
 
 return setmetatable({
     SetSearch = Action.new("SetSearch", require(script.SetSearch)),
+    SetIconSearch = Action.new("SetIconSearch", require(script.SetIconSearch)),
     SetTagData = Action.new("SetTagData", require(script.SetTagData)),
     SetGroupData = Action.new("SetGroupData", require(script.SetGroupData)),
     SetUnknownTags = Action.new("SetUnknownTags", require(script.SetUnknownTags)),

@@ -2,7 +2,7 @@ local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local TagList = require(script.Parent.TagList)
-local Search = require(script.Parent.Search)
+local TagSearch = require(script.Parent.TagSearch)
 local TagMenu = require(script.Parent.TagMenu)
 local IconPicker = require(script.Parent.IconPicker)
 local ColorPicker = require(script.Parent.ColorPicker)
@@ -46,7 +46,7 @@ return function(props)
             TagList = Roact.createElement(TagList, {
                 Size = UDim2.new(1, 0, 1, -40),
             }),
-            Search = Roact.createElement(Search, {
+            TagSearch = Roact.createElement(TagSearch, {
                 Size = UDim2.new(1, 0, 0, 40),
             }),
         }),

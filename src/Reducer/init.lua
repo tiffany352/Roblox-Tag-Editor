@@ -1,4 +1,5 @@
 local Search = require(script.Search)
+local IconSearch = require(script.IconSearch)
 local TagMenu = require(script.TagMenu)
 local TagData = require(script.TagData)
 local UnknownTags = require(script.UnknownTags)
@@ -15,6 +16,7 @@ local HoveredIcon = require(script.HoveredIcon)
 return function(state, action)
     state = state or {}
     return {
+        IconSearch = IconSearch(state.IconSearch, action),
         Search = Search(state.Search, action),
         TagMenu = TagMenu(state.TagMenu, action),
         TagData = TagData(state.TagData, action),
