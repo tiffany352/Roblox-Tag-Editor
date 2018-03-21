@@ -3,6 +3,14 @@ A plugin for manipulating CollectionService in Roblox Studio.
 
 ## Changelog
 
+### v2.0.2
+
+- Separate search state for tag list vs icon picker.
+- Show unknown tags on selected objects in tag list.
+- Provide option to create tag from search term when search turns up no results.
+- Show that there's no search results in tag list, this was a source of UX confusion.
+- Fix error when toggling visibility on intances outside the workspace.
+
 ### v2.0.1
 
 - Visualizing tagged attachments.
