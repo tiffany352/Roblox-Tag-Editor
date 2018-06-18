@@ -194,7 +194,8 @@ function TagManager:_doUpdateStore()
     for _,obj in pairs(sel) do
         local tags = Collection:GetTags(obj)
         for _,tag in pairs(tags) do
-            if not self.tags[tag] then
+            -- Ignore unknown tags that start with a dot.
+            if not self.tags[tag] and tag:sub(1,1) ~= '.' then
                 unknownTagsMap[tag] = true
             end
         end
