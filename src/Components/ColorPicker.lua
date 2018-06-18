@@ -75,6 +75,13 @@ function ColorPicker:init()
     }
 end
 
+function ColorPicker.getDerivedStateFromProps(nextProps, lastState)
+    return {
+        -- When we open a fresh color picker, it should default to the color that the tag already was
+        color = nextProps.tagColor,
+    }
+end
+
 function ColorPicker:render()
     local props = self.props
     local color = self.state.color
@@ -369,9 +376,11 @@ end
 local function mapStateToProps(state)
     local tag = state.ColorPicker
     local tagIcon
+    local tagColor
     for _,entry in pairs(state.TagData) do
         if entry.Name == tag then
             tagIcon = entry.Icon
+            tagColor = entry.Color
             break
         end
     end
@@ -379,6 +388,7 @@ local function mapStateToProps(state)
     return {
         tagName = tag,
         tagIcon = tagIcon,
+        tagColor = tagColor,
     }
 end
 
