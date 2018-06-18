@@ -1,5 +1,6 @@
 return function(data)
     return {
-        Data = data,
+        type = 'SetGroupData',
+        data = data,
     }
 end

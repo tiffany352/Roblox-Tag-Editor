@@ -1,5 +1,6 @@
 return function(value)
     return {
-        Open = value,
+        type = 'OpenDropdown',
+        open = value,
     }
 end

@@ -1,5 +1,6 @@
 return function(data)
     return {
-        Data = data,
+        type = 'SetTagData',
+        data = data,
     }
 end

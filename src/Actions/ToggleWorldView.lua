@@ -1,5 +1,6 @@
 return function(value)
     return {
-        Enabled = value,
+        type = 'ToggleWorldView',
+        enabled = value,
     }
 end

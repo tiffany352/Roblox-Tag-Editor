@@ -1,5 +1,6 @@
 return function(tagName)
     return {
-        View = tagName,
+        type = 'OpenInstanceView',
+        view = tagName,
     }
 end

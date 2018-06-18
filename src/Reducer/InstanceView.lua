@@ -3,8 +3,8 @@ local Actions = require(script.Parent.Parent.Actions)
 return function(state, action)
     state = state or nil
 
-    if action.Type == Actions.OpenInstanceView then
-        return action.View
+    if action.type == 'OpenInstanceView' then
+        return action.view
     end
 
     return state
