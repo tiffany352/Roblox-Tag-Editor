@@ -196,13 +196,13 @@ function ContextMenu.Item:render()
     return Roact.createElement("ImageButton", newProps, children)
 end
 
-ContextMenu.Item = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+function mapStateToProps(state)
     return {
         dropdownOpen = state.Dropdown,
     }
-end)(ContextMenu.Item)
+end
+
+ContextMenu.Item = RoactRodux.UNSTABLE_connect2(mapStateToProps)(ContextMenu.Item)
 
 function ContextMenu.Header(props)
     local newProps = {
@@ -394,13 +394,19 @@ function ContextMenu.Dropdown:render()
     })
 end
 
-ContextMenu.Dropdown = RoactRodux.connect(function(store)
+local function mapStateToProps(state)
+    return {}
+end
+
+local function mapDispatchToProps(dispatch)
     return {
         openDropdown = function(value)
-            store:dispatch(Actions.OpenDropdown(value))
+            dispatch(Actions.OpenDropdown(value))
         end
     }
-end)(ContextMenu.Dropdown)
+end
+
+ContextMenu.Dropdown = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(ContextMenu.Dropdown)
 
 function ContextMenu.Color(props)
     local newProps = {

@@ -159,13 +159,13 @@ function IconPreview:render()
     })
 end
 
-IconPreview = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     return {
         icon = state.HoveredIcon,
     }
-end)(IconPreview)
+end
+
+IconPreview = RoactRodux.UNSTABLE_connect2(mapStateToProps)(IconPreview)
 
 local IconPicker = Roact.Component:extend("IconPicker")
 
@@ -303,9 +303,7 @@ function IconPicker:render()
     })
 end
 
-IconPicker = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state, props)
     local tagName = state.IconPicker
     local tagIcon
     for _,tag in pairs(state.TagData) do
@@ -316,21 +314,28 @@ IconPicker = RoactRodux.connect(function(store)
     end
 
     return {
-        close = function()
-            store:dispatch(Actions.ToggleIconPicker(nil))
-        end,
         tagName = tagName,
         tagIcon = tagIcon,
         search = state.IconSearch,
+    }
+end
+
+local function mapDispatchToProps(dispatch)
+    return {
+        close = function()
+            dispatch(Actions.ToggleIconPicker(nil))
+        end,
 
         setTerm = function(term)
-            store:dispatch(Actions.SetIconSearch(term))
+            dispatch(Actions.SetIconSearch(term))
         end,
 
         setHoveredIcon = function(icon)
-            store:dispatch(Actions.SetHoveredIcon(icon))
-        end
+            dispatch(Actions.SetHoveredIcon(icon))
+        end,
     }
-end)(IconPicker)
+end
+
+IconPicker = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(IconPicker)
 
 return IconPicker

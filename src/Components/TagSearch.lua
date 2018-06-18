@@ -4,15 +4,20 @@ local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(script.Parent.Parent.Actions)
 local Search = require(script.Parent.Search)
 
-local TagSearch = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     return {
         term = state.Search,
+    }
+end
+
+local function mapDispatchToProps(dispatch)
+    return {
         setTerm = function(text)
-            store:dispatch(Actions.SetSearch(text))
+            dispatch(Actions.SetSearch(text))
         end
     }
-end)(Search)
+end
+
+local TagSearch = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(Search)
 
 return TagSearch

@@ -218,13 +218,13 @@ function TooltipView:render()
     })
 end
 
-TooltipView = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     return {
         tagData = state.TagData,
         worldView = state.WorldView,
     }
-end)(TooltipView)
+end
+
+TooltipView = RoactRodux.UNSTABLE_connect2(mapStateToProps)(TooltipView)
 
 return TooltipView

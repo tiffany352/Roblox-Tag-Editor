@@ -39,21 +39,21 @@ local function TagMenu(props)
                 Text = "Change Icon...",
                 LayoutOrder = 3,
                 onClick = function()
-                    props.iconPicker()
+                    props.iconPicker(props.tagMenu)
                 end,
             }),
             Instances = Roact.createElement(ContextMenu.Item, {
                 Text = "Instances with this tag...",
                 LayoutOrder = 4,
                 onClick = function()
-                    props.instanceView()
+                    props.instanceView(props.tagMenu)
                 end,
             }),
             Group = Roact.createElement(ContextMenu.Item, {
                 Text = "Change Group...",
                 LayoutOrder = 5,
                 onClick = function()
-                    props.groupPicker()
+                    props.groupPicker(props.tagMenu)
                 end,
             }),
             Color = Roact.createElement(ContextMenu.Color, {
@@ -62,7 +62,7 @@ local function TagMenu(props)
                 Color = props.tagColor,
 
                 onClick = function()
-                    props.colorPicker()
+                    props.colorPicker(props.tagMenu)
                 end,
             }),
             DrawType = Roact.createElement(ContextMenu.Dropdown, {
@@ -107,9 +107,7 @@ local function TagMenu(props)
     })
 end
 
-TagMenu = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     local icon
     local drawType
     local color
@@ -129,22 +127,29 @@ TagMenu = RoactRodux.connect(function(store)
         tagColor = color,
         tagDrawType = drawType,
         tagAlwaysOnTop = alwaysOnTop,
+    }
+end
+
+local function mapDispatchToProps(dispatch)
+    return {
         close = function()
-            store:dispatch(Actions.OpenTagMenu(nil))
+            dispatch(Actions.OpenTagMenu(nil))
         end,
-        iconPicker = function()
-            store:dispatch(Actions.ToggleIconPicker(state.TagMenu))
+        iconPicker = function(tagMenu)
+            dispatch(Actions.ToggleIconPicker(tagMenu))
         end,
-        colorPicker = function()
-            store:dispatch(Actions.ToggleColorPicker(state.TagMenu))
+        colorPicker = function(tagMenu)
+            dispatch(Actions.ToggleColorPicker(tagMenu))
         end,
-        groupPicker = function()
-            store:dispatch(Actions.ToggleGroupPicker(state.TagMenu))
+        groupPicker = function(tagMenu)
+            dispatch(Actions.ToggleGroupPicker(tagMenu))
         end,
-        instanceView = function()
-            store:dispatch(Actions.OpenInstanceView(state.TagMenu))
+        instanceView = function(tagMenu)
+            dispatch(Actions.OpenInstanceView(tagMenu))
         end,
     }
-end)(TagMenu)
+end
+
+TagMenu = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(TagMenu)
 
 return TagMenu

@@ -47,13 +47,19 @@ local function Tag(props)
     })
 end
 
-Tag = RoactRodux.connect(function(store)
+local function mapStateToProps(state)
+    return {}
+end
+
+local function mapDispatchToProps(dispatch)
     return {
         openTagMenu = function(tag)
-            store:dispatch(Actions.OpenTagMenu(tag))
+            dispatch(Actions.OpenTagMenu(tag))
         end
     }
-end)(Tag)
+end
+
+Tag = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(Tag)
 
 local function Group(props)
     return Roact.createElement(Item, {
@@ -214,9 +220,7 @@ function TagList:render()
     }, children)
 end
 
-TagList = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     local tags = {}
 
     for _, tag in pairs(state.TagData) do
@@ -241,11 +245,17 @@ TagList = RoactRodux.connect(function(store)
         searchTerm = state.Search,
         menuOpen = state.TagMenu,
         unknownTags = unknownTags,
+    }
+end
 
+local function mapDispatchToProps(dispatch)
+    return {
         setSearch = function(term)
-            store:dispatch(Actions.SetSearch(term))
+            dispatch(Actions.SetSearch(term))
         end,
     }
-end)(TagList)
+end
+
+TagList = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(TagList)
 
 return TagList

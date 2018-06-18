@@ -169,12 +169,12 @@ function Item:render()
     })
 end
 
-Item = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     return {
         menuOpen = state.TagMenu and not state.GroupPicker,
     }
-end)(Item)
+end
+
+Item = RoactRodux.UNSTABLE_connect2(mapStateToProps)(Item)
 
 return Item

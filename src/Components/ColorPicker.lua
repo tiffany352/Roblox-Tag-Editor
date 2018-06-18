@@ -366,9 +366,7 @@ function ColorPicker:render()
     })
 end
 
-ColorPicker = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     local tag = state.ColorPicker
     local tagIcon
     for _,entry in pairs(state.TagData) do
@@ -379,12 +377,19 @@ ColorPicker = RoactRodux.connect(function(store)
     end
 
     return {
-        close = function()
-            store:dispatch(Actions.ToggleColorPicker(nil))
-        end,
         tagName = tag,
         tagIcon = tagIcon,
     }
-end)(ColorPicker)
+end
+
+local function mapDispatchToProps(dispatch)
+    return {
+        close = function()
+            dispatch(Actions.ToggleColorPicker(nil))
+        end,
+    }
+end
+
+ColorPicker = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(ColorPicker)
 
 return ColorPicker

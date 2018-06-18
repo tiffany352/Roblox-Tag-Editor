@@ -339,18 +339,23 @@ function InstanceView:render()
     })
 end
 
-InstanceView = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     local tag = state.InstanceView and TagManager.Get().tags[state.InstanceView]
 
     return {
         instanceView = state.InstanceView,
         tagIcon = tag and tag.Icon or nil,
+    }
+end
+
+local function mapDispatchToProps(dispatch)
+    return {
         close = function()
-            store:dispatch(Actions.OpenInstanceView(nil))
+            dispatch(Actions.OpenInstanceView(nil))
         end,
     }
-end)(InstanceView)
+end
+
+InstanceView = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(InstanceView)
 
 return InstanceView

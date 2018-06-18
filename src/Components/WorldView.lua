@@ -571,13 +571,13 @@ end
 
 WorldView = conditionalComponent(WorldView, 'worldView')
 
-WorldView = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     return {
         worldView = state.WorldView,
         tags = state.TagData,
     }
-end)(WorldView)
+end
+
+WorldView = RoactRodux.UNSTABLE_connect2(mapStateToProps)(WorldView)
 
 return WorldView

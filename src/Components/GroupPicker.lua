@@ -28,19 +28,24 @@ local function Group(props)
     })
 end
 
-Group = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     return {
         Tag = state.GroupPicker,
+    }
+end
+
+local function mapDispatchToProps(dispatch)
+    return {
         close = function()
-            store:dispatch(Actions.ToggleGroupPicker(nil))
+            dispatch(Actions.ToggleGroupPicker(nil))
         end,
         delete = function(name)
             TagManager.Get():DelGroup(name)
         end,
     }
-end)(Group)
+end
+
+Group = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(Group)
 
 local function GroupPicker(props)
     local children = {}
@@ -137,9 +142,7 @@ local function GroupPicker(props)
     })
 end
 
-GroupPicker = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     local tag = state.GroupPicker and TagManager.Get().tags[state.GroupPicker]
 
     return {
@@ -147,11 +150,17 @@ GroupPicker = RoactRodux.connect(function(store)
         tagIcon = tag and tag.Icon or nil,
         tagGroup = tag and tag.Group or nil,
         groups = state.GroupData,
+    }
+end
 
+local function mapDispatchToProps(dispatch)
+    return {
         close = function()
-            store:dispatch(Actions.ToggleGroupPicker(nil))
+            dispatch(Actions.ToggleGroupPicker(nil))
         end,
     }
-end)(GroupPicker)
+end
+
+GroupPicker = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(GroupPicker)
 
 return GroupPicker

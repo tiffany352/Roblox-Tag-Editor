@@ -132,15 +132,20 @@ local function MigrationDialog(props)
     })
 end
 
-MigrationDialog = RoactRodux.connect(function(store)
-    local state = store:getState()
-
+local function mapStateToProps(state)
     return {
         enabled = state.MigrationDialog,
+    }
+end
+
+local function mapDispatchToProps(dispatch)
+    return {
         close = function()
-            store:dispatch(Actions.OpenMigrationDialog(false))
+            dispatch(Actions.OpenMigrationDialog(false))
         end,
     }
-end)(MigrationDialog)
+end
+
+MigrationDialog = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(MigrationDialog)
 
 return MigrationDialog
