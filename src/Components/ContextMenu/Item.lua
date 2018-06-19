@@ -130,7 +130,9 @@ function Item:render()
 			self:setState({
 				hover = false,
 			})
-			props.onClick(rbx)
+			if props.onClick then
+				props.onClick(rbx)
+			end
 		end,
 	}
 
