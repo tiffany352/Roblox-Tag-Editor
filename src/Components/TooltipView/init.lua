@@ -31,6 +31,13 @@ function TooltipView:didMount()
 			for i = 1, 10 do
 				local obj = workspace:FindPartOnRayWithIgnoreList(ray, ignore, true)
 				local objTags = obj and Collection:GetTags(obj)
+				if objTags then
+					for i = #objTags, 1, -1 do
+						if objTags[i]:sub(1,1) == '.' then
+							table.remove(objTags, i)
+						end
+					end
+				end
 				local model = obj and obj.Parent and obj.Parent:IsA("Model") and obj.Parent
 				local modelTags = model and Collection:GetTags(model)
 				if objTags and #objTags > 0 then
