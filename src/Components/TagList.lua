@@ -59,7 +59,7 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-Tag = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(Tag)
+Tag = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(Tag)
 
 local function Group(props)
     return Roact.createElement(Item, {
@@ -256,6 +256,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-TagList = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(TagList)
+TagList = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(TagList)
 
 return TagList

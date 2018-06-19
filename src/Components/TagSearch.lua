@@ -18,6 +18,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-local TagSearch = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(Search)
+local TagSearch = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(Search)
 
 return TagSearch

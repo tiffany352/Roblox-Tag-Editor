@@ -225,6 +225,6 @@ local function mapStateToProps(state)
     }
 end
 
-TooltipView = RoactRodux.UNSTABLE_connect2(mapStateToProps)(TooltipView)
+TooltipView = RoactRodux.connect(mapStateToProps)(TooltipView)
 
 return TooltipView

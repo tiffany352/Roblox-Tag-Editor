@@ -175,6 +175,6 @@ local function mapStateToProps(state)
     }
 end
 
-Item = RoactRodux.UNSTABLE_connect2(mapStateToProps)(Item)
+Item = RoactRodux.connect(mapStateToProps)(Item)
 
 return Item

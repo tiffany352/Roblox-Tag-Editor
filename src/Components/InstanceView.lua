@@ -390,6 +390,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-InstanceView = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(InstanceView)
+InstanceView = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(InstanceView)
 
 return InstanceView

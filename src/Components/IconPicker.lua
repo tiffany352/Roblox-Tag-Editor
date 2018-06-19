@@ -165,7 +165,7 @@ local function mapStateToProps(state)
     }
 end
 
-IconPreview = RoactRodux.UNSTABLE_connect2(mapStateToProps)(IconPreview)
+IconPreview = RoactRodux.connect(mapStateToProps)(IconPreview)
 
 local IconPicker = Roact.Component:extend("IconPicker")
 
@@ -336,6 +336,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-IconPicker = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(IconPicker)
+IconPicker = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(IconPicker)
 
 return IconPicker

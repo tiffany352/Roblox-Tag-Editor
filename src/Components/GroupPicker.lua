@@ -45,7 +45,7 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-Group = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(Group)
+Group = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(Group)
 
 local function GroupPicker(props)
     local children = {}
@@ -161,6 +161,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-GroupPicker = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(GroupPicker)
+GroupPicker = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(GroupPicker)
 
 return GroupPicker

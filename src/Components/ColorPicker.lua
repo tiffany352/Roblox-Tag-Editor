@@ -400,6 +400,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-ColorPicker = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(ColorPicker)
+ColorPicker = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(ColorPicker)
 
 return ColorPicker

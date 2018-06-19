@@ -150,6 +150,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-TagMenu = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(TagMenu)
+TagMenu = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(TagMenu)
 
 return TagMenu

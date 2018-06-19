@@ -146,6 +146,6 @@ local function mapDispatchToProps(dispatch)
     }
 end
 
-MigrationDialog = RoactRodux.UNSTABLE_connect2(mapStateToProps, mapDispatchToProps)(MigrationDialog)
+MigrationDialog = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(MigrationDialog)
 
 return MigrationDialog

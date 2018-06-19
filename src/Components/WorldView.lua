@@ -578,6 +578,6 @@ local function mapStateToProps(state)
     }
 end
 
-WorldView = RoactRodux.UNSTABLE_connect2(mapStateToProps)(WorldView)
+WorldView = RoactRodux.connect(mapStateToProps)(WorldView)
 
 return WorldView
