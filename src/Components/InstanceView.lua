@@ -243,22 +243,24 @@ function InstanceView:didUpdate(prevProps, prevState)
         end
         self.ancestryChangedConns = {}
         self.nameChangedConns = {}
-        self.instanceAddedConn = Collection:GetInstanceAddedSignal(tagName):Connect(function(inst)
-            self.nameChangedConns[inst] = inst:GetPropertyChangedSignal("Name"):Connect(function()
+        if tagName then
+            self.instanceAddedConn = Collection:GetInstanceAddedSignal(tagName):Connect(function(inst)
+                self.nameChangedConns[inst] = inst:GetPropertyChangedSignal("Name"):Connect(function()
+                    self:updateState(tagName)
+                end)
+                self.ancestryChangedConns[inst] = inst.AncestryChanged:Connect(function()
+                    self:updateState(tagName)
+                end)
                 self:updateState(tagName)
             end)
-            self.ancestryChangedConns[inst] = inst.AncestryChanged:Connect(function()
+            self.instanceRemovedConn = Collection:GetInstanceRemovedSignal(tagName):Connect(function(inst)
+                self.nameChangedConns[inst]:Disconnect()
+                self.nameChangedConns[inst] = nil
+                self.ancestryChangedConns[inst]:Disconnect()
+                self.ancestryChangedConns[inst] = nil
                 self:updateState(tagName)
             end)
-            self:updateState(tagName)
-        end)
-        self.instanceRemovedConn = Collection:GetInstanceRemovedSignal(tagName):Connect(function(inst)
-            self.nameChangedConns[inst]:Disconnect()
-            self.nameChangedConns[inst] = nil
-            self.ancestryChangedConns[inst]:Disconnect()
-            self.ancestryChangedConns[inst] = nil
-            self:updateState(tagName)
-        end)
+        end
 
         for _,entry in pairs(parts) do
             local part = entry.instance
