@@ -1,7 +1,7 @@
 local Modules = script.Parent.Parent.Parent
 local RoactRodux = require(Modules.RoactRodux)
+local Actions = require(Modules.Plugin.Actions)
 
-local Actions = require(script.Parent.Parent.Actions)
 local Search = require(script.Parent.Search)
 
 local function mapStateToProps(state)

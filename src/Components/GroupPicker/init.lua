@@ -1,51 +1,15 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
+local Constants = require(Modules.Plugin.Constants)
+local Actions = require(Modules.Plugin.Actions)
+local TagManager = require(Modules.Plugin.TagManager)
 
-local Constants = require(script.Parent.Parent.Constants)
-local Actions = require(script.Parent.Parent.Actions)
 local Icon = require(script.Parent.Icon)
 local TextLabel = require(script.Parent.TextLabel)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
-local TagManager = require(script.Parent.Parent.TagManager)
 local Item = require(script.Parent.ListItem)
-
-local function Group(props)
-	return Roact.createElement(Item, {
-		Icon = 'folder',
-		Text = props.Name,
-		Active = props.Active,
-		LayoutOrder = props.LayoutOrder,
-
-		leftClick = function(rbx)
-			TagManager.Get():SetGroup(props.Tag, props.Group)
-			props.close()
-		end,
-
-		onDelete = props.Group and function()
-			props.delete(props.Group)
-		end or nil,
-	})
-end
-
-local function mapStateToProps(state)
-	return {
-		Tag = state.GroupPicker,
-	}
-end
-
-local function mapDispatchToProps(dispatch)
-	return {
-		close = function()
-			dispatch(Actions.ToggleGroupPicker(nil))
-		end,
-		delete = function(name)
-			TagManager.Get():DelGroup(name)
-		end,
-	}
-end
-
-Group = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(Group)
+local GroupItem = require(script.GroupItem)
 
 local function GroupPicker(props)
 	local children = {}
@@ -57,7 +21,7 @@ local function GroupPicker(props)
 		PaddingRight = UDim.new(0, 2),
 	})
 
-	children.Default = Roact.createElement(Group, {
+	children.Default = Roact.createElement(GroupItem, {
 		Name = "Default",
 		Group = nil,
 		Active = props.tagGroup == nil,
@@ -68,7 +32,7 @@ local function GroupPicker(props)
 
 	for i,entry in pairs(props.groups) do
 		local group = entry.Name
-		children['Group '..group] = Roact.createElement(Group, {
+		children['Group '..group] = Roact.createElement(GroupItem, {
 			Name = group,
 			Group = group,
 			Active = props.tagGroup == group,

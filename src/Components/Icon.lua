@@ -1,7 +1,6 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-
-local Icons = require(script.Parent.Parent.FamFamFam)
+local Icons = require(Modules.Plugin.FamFamFam)
 
 local function Icon(props)
 	local data = typeof(props.Name) == 'string' and Icons.Lookup(props.Name) or Icons.Lookup("computer_error")

@@ -1,128 +1,14 @@
 local Collection = game:GetService("CollectionService")
-local CoreGui = game:GetService("CoreGui")
 
-local Modules = script.Parent.Parent.Parent
+local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local RoactRodux = require(Modules.RoactRodux)
 
-local Constants = require(script.Parent.Parent.Constants)
-local TagManager = require(script.Parent.Parent.TagManager)
-local Icon = require(script.Parent.Icon)
-local Maid = require(script.Parent.Parent.Maid)
+local TagManager = require(Modules.Plugin.TagManager)
+local Maid = require(Modules.Plugin.Maid)
 
-local function BoxAdorn(props)
-	if props.Adornee.ClassName == 'Attachment' then
-		return Roact.createElement("BoxHandleAdornment", {
-			Adornee = props.Adornee.Parent,
-			CFrame = props.Adornee.CFrame,
-			Size = Vector3.new(1.2, 1.2, 1.2),
-			Transparency = 0.3,
-			Color3 = props.Color,
-		})
-	end
-	return Roact.createElement("SelectionBox", {
-		LineThickness = 0.03,
-		SurfaceTransparency = 0.7,
-		SurfaceColor3 = props.Color,
-		Adornee = props.Adornee,
-		Color3 = props.Color,
-	})
-end
+local WorldProvider = Roact.Component:extend("WorldProvider")
 
-local function OutlineAdorn(props)
-	if props.Adornee.ClassName == 'Attachment' then
-		return Roact.createElement("BoxHandleAdornment", {
-			Adornee = props.Adornee.Parent,
-			CFrame = props.Adornee.CFrame,
-			Size = Vector3.new(1.5, 1.5, 1.5),
-			Transparency = 0.3,
-			Color3 = props.Color,
-		})
-	end
-	return Roact.createElement("SelectionBox", {
-		LineThickness = 0.05,
-		Adornee = props.Adornee,
-		Color3 = props.Color,
-	})
-end
-
-local function SphereAdorn(props)
-	local adorn, cframe
-	if props.Adornee.ClassName == 'Attachment' then
-		adorn = props.Adornee.Parent
-		cframe = props.Adornee.CFrame
-	else
-		adorn = props.Adornee
-	end
-	return Roact.createElement("SphereHandleAdornment", {
-		Adornee = adorn,
-		CFrame = cframe,
-		Color3 = props.Color,
-		AlwaysOnTop = props.AlwaysOnTop,
-		Transparency = 0.3,
-		ZIndex = props.AlwaysOnTop and 1 or nil,
-	})
-end
-
-local function IconAdorn(props)
-	local children = {}
-	if #props.Icon > 1 then
-		children.UIListLayout = Roact.createElement("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal,
-			Padding = UDim.new(2/16, 0),
-		})
-	end
-	for i = 1, #props.Icon do
-		local icon = props.Icon[i]
-		children[i] = Roact.createElement(Icon, {
-			Name = icon,
-			Size = UDim2.new(1/#props.Icon, 0, 1, 0),
-		})
-	end
-	return Roact.createElement("BillboardGui", {
-		Adornee = props.Adornee,
-		Size = UDim2.new(#props.Icon, 0, 1, 0),
-		SizeOffset = Vector2.new(.5, .5),
-		ExtentsOffsetWorldSpace = Vector3.new(1, 1, 1),
-		AlwaysOnTop = props.AlwaysOnTop,
-	}, children)
-end
-
-local function TextAdorn(props)
-	local children = {}
-	if #props.TagName > 1 then
-		children.UIListLayout = Roact.createElement("UIListLayout", {
-			SortOrder = Enum.SortOrder.LayoutOrder,
-		})
-	end
-	for i = 1, #props.TagName do
-		local name = props.TagName[i]
-		children[name] = Roact.createElement("TextLabel", {
-			LayoutOrder = i,
-			Size = UDim2.new(1, 0, 1/#props.TagName, 0),
-			Text = name,
-			TextScaled = true,
-			TextSize = 20,
-			Font = Enum.Font.SourceSansBold,
-			TextColor3 = Constants.White,
-			BackgroundTransparency = 1.0,
-			TextXAlignment = Enum.TextXAlignment.Left,
-			TextYAlignment = Enum.TextYAlignment.Bottom,
-			TextStrokeTransparency = 0.0,
-		})
-	end
-	return Roact.createElement("BillboardGui", {
-		Adornee = props.Adornee,
-		Size = UDim2.new(10, 0, #props.TagName, 0),
-		SizeOffset = Vector2.new(.5, .5),
-		ExtentsOffsetWorldSpace = Vector3.new(1, 1, 1),
-		AlwaysOnTop = props.AlwaysOnTop,
-	}, children)
-end
-
-local WorldView = Roact.Component:extend("WorldView")
-
-function WorldView:init()
+function WorldProvider:init()
 	self.state = {
 		partsList = {},
 	}
@@ -153,7 +39,7 @@ function WorldView:init()
 	cameraAdded(workspace.CurrentCamera)
 end
 
-function WorldView:didMount()
+function WorldProvider:didMount()
 	local manager = TagManager.Get()
 
 	for name,_ in pairs(manager:GetTags()) do
@@ -202,8 +88,8 @@ local function sortedInsert(array, value, lessThan)
 	table.insert(array, start, value)
 end
 
-function WorldView:updateParts()
-	debug.profilebegin("[Tag Editor] Update WorldView")
+function WorldProvider:updateParts()
+	debug.profilebegin("[Tag Editor] Update WorldProvider")
 
 	local newList = {}
 
@@ -421,7 +307,7 @@ function WorldView:updateParts()
 	debug.profileend()
 end
 
-function WorldView:instanceAdded(inst)
+function WorldProvider:instanceAdded(inst)
 	if self.trackedParts[inst] then
 		self.trackedParts[inst] = self.trackedParts[inst] + 1
 	else
@@ -431,7 +317,7 @@ function WorldView:instanceAdded(inst)
 	end
 end
 
-function WorldView:instanceRemoved(inst)
+function WorldProvider:instanceRemoved(inst)
 	if self.trackedParts[inst] <= 1 then
 		self.trackedParts[inst] = nil
 		self.partIds[inst] = nil
@@ -447,7 +333,7 @@ local function isTypeAllowed(instance)
 	return false
 end
 
-function WorldView:tagAdded(tagName)
+function WorldProvider:tagAdded(tagName)
 	assert(not self.trackedTags[tagName])
 	self.trackedTags[tagName] = true
 	for _,obj in pairs(Collection:GetTagged(tagName)) do
@@ -495,7 +381,7 @@ function WorldView:tagAdded(tagName)
 	end)
 end
 
-function WorldView:tagRemoved(tagName)
+function WorldProvider:tagRemoved(tagName)
 	assert(self.trackedTags[tagName])
 	self.trackedTags[tagName] = nil
 	for _,obj in pairs(Collection:GetTagged(tagName)) do
@@ -507,7 +393,7 @@ function WorldView:tagRemoved(tagName)
 	self.instanceRemovedConns[tagName] = nil
 end
 
-function WorldView:willUnmount()
+function WorldProvider:willUnmount()
 	self.onTagAddedConn:Disconnect()
 	self.onTagRemovedConn:Disconnect()
 	self.onTagChangedConn:Disconnect()
@@ -517,67 +403,11 @@ function WorldView:willUnmount()
 	self.maid:clean()
 end
 
-function WorldView:render()
-	local props = self.props
-
-	if not props.worldView then
-		return nil
-	end
-
+function WorldProvider:render()
+	local render = Roact.oneChild(self.props[Roact.Children])
 	local partsList = self.state.partsList
 
-	local children = {}
-
-	for key,entry in pairs(partsList) do
-		local elt
-		if entry.DrawType == 'Outline' then
-			elt = OutlineAdorn
-		elseif entry.DrawType == 'Box' then
-			elt = BoxAdorn
-		elseif entry.DrawType == 'Sphere' then
-			elt = SphereAdorn
-		elseif entry.DrawType == 'Icon' then
-			elt = IconAdorn
-		elseif entry.DrawType == 'Text' then
-			elt = TextAdorn
-		else
-			error("Unknown DrawType: "..tostring(entry.DrawType))
-		end
-		children[key] = Roact.createElement(elt, {
-			Adornee = entry.Part,
-			Icon = entry.Icon,
-			Color = entry.Color,
-			TagName = entry.TagName,
-			AlwaysOnTop = entry.AlwaysOnTop,
-		})
-	end
-
-	return Roact.createElement(Roact.Portal, {
-		target = CoreGui,
-	}, {
-		TagEditorWorldView = Roact.createElement("Folder", {}, children),
-	})
+	return render(partsList)
 end
 
-local function conditionalComponent(component, property)
-	return function(props)
-		if props[property] then
-			return Roact.createElement(component, props)
-		else
-			return nil
-		end
-	end
-end
-
-WorldView = conditionalComponent(WorldView, 'worldView')
-
-local function mapStateToProps(state)
-	return {
-		worldView = state.WorldView,
-		tags = state.TagData,
-	}
-end
-
-WorldView = RoactRodux.connect(mapStateToProps)(WorldView)
-
-return WorldView
+return WorldProvider

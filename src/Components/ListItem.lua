@@ -1,8 +1,8 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
+local Constants = require(Modules.Plugin.Constants)
 
-local Constants = require(script.Parent.Parent.Constants)
 local Icon = require(script.Parent.Icon)
 
 local function merge(orig, new)
@@ -16,11 +16,11 @@ local function merge(orig, new)
 	return t
 end
 
-local Item = Roact.Component:extend("Item")
-
 local function fade(color, amount)
 	return color:lerp(Constants.White, amount or 0.7)
 end
+
+local Item = Roact.Component:extend("Item")
 
 function Item:render()
 	local props = self.props

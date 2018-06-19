@@ -1,11 +1,13 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
+local Constants = require(Modules.Plugin.Constants)
+local Actions = require(Modules.Plugin.Actions)
+local TagManager = require(Modules.Plugin.TagManager)
 
-local Constants = require(script.Parent.Parent.Constants)
-local Actions = require(script.Parent.Parent.Actions)
-local TagManager = require(script.Parent.Parent.TagManager)
 local Item = require(script.Parent.ListItem)
+local Tag = require(script.Tag)
+local Group = require(script.Group)
 
 local function merge(orig, new)
 	local t = {}
@@ -16,67 +18,6 @@ local function merge(orig, new)
 		t[k] = v
 	end
 	return t
-end
-
-local function Tag(props)
-	return Roact.createElement(Item, {
-		Text = props.Tag,
-		Icon = props.Icon,
-		IsInput = false,
-		LayoutOrder = props.LayoutOrder,
-		Visible = props.Visible,
-		Active = props.HasAll,
-		SemiActive = props.HasSome,
-		Hidden = props.Hidden,
-
-		onSetVisible = function()
-			TagManager.Get():SetVisible(props.Tag, not props.Visible)
-		end,
-
-		onSettings = function()
-			props.openTagMenu(props.Tag)
-		end,
-
-		leftClick = function(rbx)
-			TagManager.Get():SetTag(props.Tag, not props.HasAll)
-		end,
-
-		rightClick = function(rbx)
-			props.openTagMenu(props.Tag)
-		end,
-	})
-end
-
-local function mapStateToProps(state)
-	return {}
-end
-
-local function mapDispatchToProps(dispatch)
-	return {
-		openTagMenu = function(tag)
-			dispatch(Actions.OpenTagMenu(tag))
-		end
-	}
-end
-
-Tag = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(Tag)
-
-local function Group(props)
-	return Roact.createElement(Item, {
-		Text = props.Name,
-		--Icon = 'folder',
-		TextProps = {
-			Font = Enum.Font.SourceSansSemibold,
-			TextColor3 = Constants.VeryDarkGrey,
-		},
-		menuOpen = true,
-		LayoutOrder = props.LayoutOrder,
-		SemiActive = props.Hidden,
-
-		leftClick = function()
-			props.toggleHidden(props.Name)
-		end,
-	})
 end
 
 local TagList = Roact.Component:extend("TagList")

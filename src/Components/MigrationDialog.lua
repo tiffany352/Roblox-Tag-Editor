@@ -1,9 +1,9 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
+local Constants = require(Modules.Plugin.Constants)
+local Actions = require(Modules.Plugin.Actions)
 
-local Constants = require(script.Parent.Parent.Constants)
-local Actions = require(script.Parent.Parent.Actions)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
 local TextLabel = require(script.Parent.TextLabel)
 

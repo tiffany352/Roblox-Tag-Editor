@@ -1,7 +1,6 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-
-local Constants = require(script.Parent.Parent.Constants)
+local Constants = require(Modules.Plugin.Constants)
 
 local function ScrollingFrame(props)
 	local children = {}

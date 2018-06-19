@@ -1,11 +1,11 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
+local Constants = require(Modules.Plugin.Constants)
+local Actions = require(Modules.Plugin.Actions)
+local TagManager = require(Modules.Plugin.TagManager)
 
-local Constants = require(script.Parent.Parent.Constants)
 local ContextMenu = require(script.Parent.ContextMenu)
-local Actions = require(script.Parent.Parent.Actions)
-local TagManager = require(script.Parent.Parent.TagManager)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
 
 local function TagMenu(props)
