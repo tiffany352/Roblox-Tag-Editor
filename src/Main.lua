@@ -295,10 +295,10 @@ return function(plugin, savedState)
 		element = Roact.createElement(FakePluginGui, {}, { App = element })
 	end
 
-	local instance = Roact.reify(element, gui, "TagEditor")
+	local instance = Roact.mount(element, gui, "TagEditor")
 
     plugin:beforeUnload(function()
-		Roact.teardown(instance)
+		Roact.unmount(instance)
 		connection:Disconnect()
 		worldViewConnection:Disconnect()
 		if not usePluginGui then
