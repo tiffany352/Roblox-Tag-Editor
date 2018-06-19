@@ -20,6 +20,27 @@ local function InstanceList(props)
 	local parts = props.parts
 	local selected = props.selected
 
+	children.InstanceCount = Roact.createElement("Frame", {
+		Size = UDim2.new(1, 0, 0, 36),
+		LayoutOrder = -1,
+		BackgroundTransparency = 1.0,
+	}, {
+		Label = Roact.createElement(TextLabel, {
+			Position = UDim2.new(0, 16, 0, 4),
+			TextSize = 24,
+			Text = string.format("Instance List (%d instances)", #parts),
+			TextColor3 = Constants.Black,
+			Font = Enum.Font.SourceSansLight,
+		}),
+		Divider = Roact.createElement("Frame", {
+			Size = UDim2.new(1, -20, 0, 2),
+			AnchorPoint = Vector2.new(0.5, 1.0),
+			Position = UDim2.new(0.5, 0, 1, -2),
+			BorderSizePixel = 0,
+			BackgroundColor3 = Constants.LightGrey,
+		})
+	})
+
 	for i,entry in pairs(parts) do
 		local part = entry.instance
 		local id = entry.id
@@ -75,7 +96,7 @@ local function InstanceList(props)
 					LayoutOrder = 1,
 				}),
 				Label = Roact.createElement(TextLabel, {
-					Text = tostring(props.tagName).." - Instance List",
+					Text = tostring(props.tagName),
 					LayoutOrder = 2,
 					TextColor3 = Constants.White,
 					Font = Enum.Font.SourceSansSemibold,
