@@ -1,11 +1,11 @@
 local Actions = require(script.Parent.Parent.Actions)
 
 return function(state, action)
-    state = state or {}
+	state = state or {}
 
-    if action.type == 'SetGroupData' then
-        return action.data
-    end
+	if action.type == 'SetGroupData' then
+		return action.data
+	end
 
-    return state
+	return state
 end

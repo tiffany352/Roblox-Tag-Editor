@@ -1,6 +1,6 @@
 return function(enabled)
-    return {
-        type = 'OpenMigrationDialog',
-        enabled = enabled,
-    }
+	return {
+		type = 'OpenMigrationDialog',
+		enabled = enabled,
+	}
 end

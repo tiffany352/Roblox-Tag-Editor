@@ -1,6 +1,6 @@
 return function(text)
-    return {
-        type = 'SetSearch',
-        text = text,
-    }
+	return {
+		type = 'SetSearch',
+		text = text,
+	}
 end

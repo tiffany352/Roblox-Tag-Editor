@@ -1,11 +1,11 @@
 local Actions = require(script.Parent.Parent.Actions)
 
 return function(state, action)
-    state = state or false
+	state = state or false
 
-    if action.type == 'OpenDropdown' then
-        return action.open
-    end
+	if action.type == 'OpenDropdown' then
+		return action.open
+	end
 
-    return state
+	return state
 end

@@ -5,17 +5,17 @@ local Actions = require(script.Parent.Parent.Actions)
 local Search = require(script.Parent.Search)
 
 local function mapStateToProps(state)
-    return {
-        term = state.Search,
-    }
+	return {
+		term = state.Search,
+	}
 end
 
 local function mapDispatchToProps(dispatch)
-    return {
-        setTerm = function(text)
-            dispatch(Actions.SetSearch(text))
-        end
-    }
+	return {
+		setTerm = function(text)
+			dispatch(Actions.SetSearch(text))
+		end
+	}
 end
 
 local TagSearch = RoactRodux.connect(mapStateToProps, mapDispatchToProps)(Search)

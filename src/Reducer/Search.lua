@@ -1,12 +1,12 @@
 local Actions = require(script.Parent.Parent.Actions)
 
 return function(state, action)
-    state = state or ""
+	state = state or ""
 
-    if action.type == 'SetSearch' then
-        assert(typeof(action.text) == 'string')
-        return action.text
-    end
+	if action.type == 'SetSearch' then
+		assert(typeof(action.text) == 'string')
+		return action.text
+	end
 
-    return state
+	return state
 end

@@ -1,6 +1,6 @@
 return function(name)
-    return {
-        type = 'ToggleColorPicker',
-        tag = name,
-    }
+	return {
+		type = 'ToggleColorPicker',
+		tag = name,
+	}
 end

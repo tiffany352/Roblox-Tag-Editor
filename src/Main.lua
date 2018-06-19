@@ -1,10 +1,10 @@
 return function(plugin, savedState)
-    local Modules = script.Parent.Parent
+	local Modules = script.Parent.Parent
 	local Roact = require(Modules.Roact)
 	local Rodux = require(Modules.Rodux)
-    local RoactRodux = require(Modules.RoactRodux)
+	local RoactRodux = require(Modules.RoactRodux)
 
-    local App = require(script.Parent.Components.App)
+	local App = require(script.Parent.Components.App)
 	local Reducer = require(script.Parent.Reducer)
 	local TagManager = require(script.Parent.TagManager)
 	local Actions = require(script.Parent.Actions)
@@ -280,7 +280,7 @@ return function(plugin, savedState)
 	end
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-    local connection = toggleButton.Click:Connect(function()
+	local connection = toggleButton.Click:Connect(function()
 		gui.Enabled = not gui.Enabled
 		toggleButton:SetActive(gui.Enabled)
 	end)
@@ -297,7 +297,7 @@ return function(plugin, savedState)
 
 	local instance = Roact.mount(element, gui, "TagEditor")
 
-    plugin:beforeUnload(function()
+	plugin:beforeUnload(function()
 		Roact.unmount(instance)
 		connection:Disconnect()
 		worldViewConnection:Disconnect()
@@ -305,7 +305,7 @@ return function(plugin, savedState)
 			gui:Destroy()
 		end
 		manager:Destroy()
-        return store:getState()
+		return store:getState()
 	end)
 
 end

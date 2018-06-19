@@ -1,11 +1,11 @@
 local Actions = require(script.Parent.Parent.Actions)
 
 return function(state, action)
-    state = state or nil
+	state = state or nil
 
-    if action.type == 'SetHoveredIcon' then
-        return action.icon
-    end
+	if action.type == 'SetHoveredIcon' then
+		return action.icon
+	end
 
-    return state
+	return state
 end

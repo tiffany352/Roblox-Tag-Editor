@@ -103,7 +103,7 @@ function PluginFacade:_load(savedState)
 end
 
 function PluginFacade:_reload()
-    local saveState
+	local saveState
 	if self._beforeUnload then
 		saveState = self._beforeUnload()
 		self._beforeUnload = nil
