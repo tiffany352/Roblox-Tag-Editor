@@ -8,6 +8,13 @@ local Item = require(script.Parent.Item)
 
 local Dropdown = Roact.Component:extend("ContextMenuDropdown")
 
+function Dropdown.getDerivedStateFromProps(nextProps, lastState)
+	return {
+		open = lastState.open and nextProps.dropdownKey == lastState.dropdownKey,
+		dropdownKey = nextProps.dropdownKey or Roact.None,
+	}
+end
+
 function Dropdown:render()
 	local props = self.props
 	local newProps = {
@@ -26,6 +33,7 @@ function Dropdown:render()
 		Value = true,
 		onSubmit = true,
 		openDropdown = true,
+		dropdownKey = true,
 	}
 	for k,v in pairs(props) do
 		if not blacklist[k] then

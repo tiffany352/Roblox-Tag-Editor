@@ -30,7 +30,7 @@ local function Container(props)
 			end
 		end,
 	}, {
-		Window = Roact.createElement("ImageButton", {
+		Window = Roact.createElement("ImageLabel", {
 			Size = UDim2.new(.95, 0, .95, 0),
 			AnchorPoint = Vector2.new(.5, 1),
 			Position = UDim2.new(.5, 0, 1, -10),

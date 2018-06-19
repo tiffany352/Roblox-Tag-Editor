@@ -12,6 +12,13 @@ function Confirm:init()
 	}
 end
 
+function Confirm.getDerivedStateFromProps(nextProps, lastState)
+	return {
+		open = lastState.open and nextProps.confirmKey == lastState.confirmKey,
+		confirmKey = nextProps.confirmKey or Roact.None,
+	}
+end
+
 function Confirm:render()
 	local props = self.props
 	local confirm = props.ConfirmText or "Are you sure?"
@@ -30,6 +37,7 @@ function Confirm:render()
 		ConfirmText = true,
 		Text = true,
 		onClick = true,
+		confirmKey = true,
 	}
 	for k,v in pairs(props) do
 		if not blacklist[k] then
@@ -47,6 +55,9 @@ function Confirm:render()
 			[Roact.Event.MouseButton1Click] = function(rbx)
 				if props.onClick then
 					props.onClick(rbx)
+					self:setState({
+						open = false,
+					})
 				end
 			end,
 		}, {

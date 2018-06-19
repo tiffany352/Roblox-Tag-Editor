@@ -30,6 +30,7 @@ local function TagMenu(props)
 			Delete = Roact.createElement(ContextMenu.Confirm, {
 				Text = "Delete...",
 				LayoutOrder = 2,
+				confirmKey = props.tagMenu,
 				onClick = function()
 					TagManager.Get():DelTag(props.tagMenu)
 					props.close()
@@ -77,6 +78,7 @@ local function TagMenu(props)
 					Text = "Label",
 				},
 				LayoutOrder = 7,
+				dropdownKey = props.tagMenu,
 
 				onSubmit = function(value)
 					TagManager.Get():SetDrawType(props.tagMenu, value)
