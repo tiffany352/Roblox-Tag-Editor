@@ -156,10 +156,120 @@ function InstanceView:init()
     self.partIds = {}
 
     self.selectionChangedConn = Selection.SelectionChanged:Connect(function()
-        self:_forceUpdate()
+        self:updateState(self.props.instanceView)
     end)
     self.ancestryChangedConns = {}
     self.nameChangedConns = {}
+
+    self.state = {
+        parts = {},
+        selected = {},
+    }
+end
+
+function InstanceView:updateState(tagName)
+    local selected = {}
+    for _,instance in pairs(Selection:Get()) do
+        selected[instance] = true
+    end
+
+    local parts = {}
+    if tagName then
+        parts = Collection:GetTagged(tagName)
+    end
+
+    for i,part in pairs(parts) do
+        local path = {}
+        local cur = part.Parent
+        while cur and cur ~= game do
+            table.insert(path, 1, cur.Name)
+            cur = cur.Parent
+        end
+
+        local id = self.partIds[part]
+        if not id then
+            id = self.nextId
+            self.nextId = self.nextId + 1
+            self.partIds[part] = id
+        end
+
+        parts[i] = {
+            id = id,
+            instance = part,
+            path = table.concat(path, "."),
+        }
+    end
+
+    table.sort(parts, function(a,b)
+        if a.path < b.path then return true end
+        if b.path < a.path then return false end
+
+        if a.instance.Name < b.instance.Name then return true end
+        if b.instance.Name < b.instance.Name then return false end
+
+        if a.instance.ClassName < b.instance.ClassName then return true end
+        if b.instance.ClassName < b.instance.ClassName then return false end
+
+        return false
+    end)
+
+    self:setState({
+        parts = parts,
+        selected = selected,
+    })
+    return parts, selected
+end
+
+function InstanceView:didUpdate(prevProps, prevState)
+    local tagName = self.props.instanceView
+
+    if tagName ~= prevProps.instanceView then
+        local parts = self:updateState(tagName)
+
+        -- Setup signals
+        if self.instanceAddedConn then
+            self.instanceAddedConn:Disconnect()
+            self.instanceAddedConn = nil
+        end
+        if self.instanceRemovedConn then
+            self.instanceRemovedConn:Disconnect()
+            self.instanceRemovedConn = nil
+        end
+        for _,conn in pairs(self.ancestryChangedConns) do
+            conn:Disconnect()
+        end
+        for _,conn in pairs(self.nameChangedConns) do
+            conn:Disconnect()
+        end
+        self.ancestryChangedConns = {}
+        self.nameChangedConns = {}
+        self.instanceAddedConn = Collection:GetInstanceAddedSignal(tagName):Connect(function(inst)
+            self.nameChangedConns[inst] = inst:GetPropertyChangedSignal("Name"):Connect(function()
+                self:updateState(tagName)
+            end)
+            self.ancestryChangedConns[inst] = inst.AncestryChanged:Connect(function()
+                self:updateState(tagName)
+            end)
+            self:updateState(tagName)
+        end)
+        self.instanceRemovedConn = Collection:GetInstanceRemovedSignal(tagName):Connect(function(inst)
+            self.nameChangedConns[inst]:Disconnect()
+            self.nameChangedConns[inst] = nil
+            self.ancestryChangedConns[inst]:Disconnect()
+            self.ancestryChangedConns[inst] = nil
+            self:updateState(tagName)
+        end)
+
+        for _,entry in pairs(parts) do
+            local part = entry.instance
+            self.nameChangedConns[part] = part:GetPropertyChangedSignal("Name"):Connect(function()
+                self:updateState(tagName)
+            end)
+            self.ancestryChangedConns[part] = part.AncestryChanged:Connect(function()
+                self:updateState(tagName)
+            end)
+        end
+    end
 end
 
 function InstanceView:willUnmount()
@@ -190,98 +300,22 @@ function InstanceView:render()
         PaddingRight = UDim.new(0, 2),
     })
 
-    -- begin hack
-    if props.instanceView then
-        if self.instanceAddedConn then
-            self.instanceAddedConn:Disconnect()
-            self.instanceAddedConn = nil
-        end
-        if self.instanceRemovedConn then
-            self.instanceRemovedConn:Disconnect()
-            self.instanceRemovedConn = nil
-        end
-        for _,conn in pairs(self.ancestryChangedConns) do
-            conn:Disconnect()
-        end
-        for _,conn in pairs(self.nameChangedConns) do
-            conn:Disconnect()
-        end
-        self.ancestryChangedConns = {}
-        self.nameChangedConns = {}
-        self.instanceAddedConn = Collection:GetInstanceAddedSignal(props.instanceView):Connect(function(inst)
-            self.nameChangedConns[inst] = inst:GetPropertyChangedSignal("Name"):Connect(function()
-                self:_forceUpdate()
-            end)
-            self.ancestryChangedConns[inst] = inst.AncestryChanged:Connect(function()
-                self:_forceUpdate()
-            end)
-            self:_forceUpdate()
-        end)
-        self.instanceRemovedConn = Collection:GetInstanceRemovedSignal(props.instanceView):Connect(function(inst)
-            self.nameChangedConns[inst]:Disconnect()
-            self.nameChangedConns[inst] = nil
-            self.ancestryChangedConns[inst]:Disconnect()
-            self.ancestryChangedConns[inst] = nil
-            self:_forceUpdate()
-        end)
+    local parts = self.state.parts
+    local selected = self.state.selected
 
-        local selected = {}
-        for _,instance in pairs(Selection:Get()) do
-            selected[instance] = true
-        end
+    for i,entry in pairs(parts) do
+        local part = entry.instance
+        local id = entry.id
+        local path = entry.path
 
-        local parts = Collection:GetTagged(props.instanceView)
-        -- end hack
-
-        for i,obj in pairs(parts) do
-            local path = {}
-            local cur = obj.Parent
-            while cur and cur ~= game do
-                table.insert(path, 1, cur.Name)
-                cur = cur.Parent
-            end
-            parts[i] = {
-                Instance = obj,
-                Path = table.concat(path, "."),
-            }
-        end
-
-        table.sort(parts, function(a,b)
-            if a.Path < b.Path then return true end
-            if b.Path < a.Path then return false end
-
-            if a.Instance.Name < b.Instance.Name then return true end
-            if b.Instance.Name < b.Instance.Name then return false end
-
-            if a.Instance.ClassName < b.Instance.ClassName then return true end
-            if b.Instance.ClassName < b.Instance.ClassName then return false end
-
-            return false
-        end)
-
-        for i,entry in pairs(parts) do
-            local part = entry.Instance
-            local id = self.partIds[part]
-            if not id then
-                id = self.nextId
-                self.nextId = self.nextId + 1
-                self.partIds[part] = id
-            end
-            self.nameChangedConns[part] = part:GetPropertyChangedSignal("Name"):Connect(function()
-                self:_forceUpdate()
-            end)
-            self.ancestryChangedConns[part] = part.AncestryChanged:Connect(function()
-                self:_forceUpdate()
-            end)
-            children[id] = Roact.createElement(InstanceItem, {
-                LayoutOrder = i,
-                Name = part.Name,
-                ClassName = part.ClassName,
-                Path = entry.Path,
-                Instance = part,
-                Selected = selected[part] ~= nil,
-            })
-        end
+        children[id] = Roact.createElement(InstanceItem, {
+            LayoutOrder = i,
+            Name = part.Name,
+            ClassName = part.ClassName,
+            Path = path,
+            Instance = part,
+            Selected = selected[part] ~= nil,
+        })
     end
 
     return Roact.createElement("ImageButton", {
