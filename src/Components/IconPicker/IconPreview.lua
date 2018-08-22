@@ -3,7 +3,7 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local Icons = require(Modules.Plugin.FamFamFam)
 local Constants = require(Modules.Plugin.Constants)
-local TextLabel = require(Modules.Plugin.Components.TextLabel)
+local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 
 local IconPreview = Roact.Component:extend("IconPreview")
 
@@ -30,9 +30,8 @@ function IconPreview:render()
 		BackgroundTransparency = 1.0,
 		AnchorPoint = Vector2.new(1, 0),
 	}, {
-		IconName = Roact.createElement(TextLabel, {
+		IconName = Roact.createElement(ThemedTextLabel, {
 			TextSize = 14,
-			TextColor3 = Constants.DarkGrey,
 			Size = UDim2.new(0, 64, 0, 20*3),
 			Position = UDim2.new(0, 0, 0, 72),
 			TextWrapped = true,

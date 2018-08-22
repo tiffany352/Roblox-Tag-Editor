@@ -1,9 +1,11 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local Constants = require(Modules.Plugin.Constants)
+local Theme = require(Modules.Plugin.Theme)
 
 local Icon = require(script.Parent.Icon)
+local ThemeAccessor = require(script.Parent.ThemeAccessor)
+local ListItemChrome = require(script.Parent.ListItemChrome)
 
 local function merge(orig, new)
 	local t = {}
@@ -16,156 +18,94 @@ local function merge(orig, new)
 	return t
 end
 
-local function fade(color, amount)
-	return color:lerp(Constants.White, amount or 0.7)
-end
-
 local Item = Roact.Component:extend("Item")
 
 function Item:render()
 	local props = self.props
 	local height = 26
-	local buttonStyle
-	local textStyle
-	local flairColor
-	local showDivider = true
 	local isHover = self.state.Hover and not props.menuOpen
-	if props.Active or props.SemiActive then
-		local onlySemi = props.SemiActive and not props.Active
-		local color = Constants.RobloxBlue
-		if isHover then
-			color = Constants.RobloxBlueDark
-		end
-		if onlySemi then
-			color = fade(color, .5)
-		end
-		buttonStyle = {
-			Image = "rbxasset://textures/ui/dialog_white.png",
-			SliceCenter = Rect.new(10, 10, 10, 10),
-			ImageColor3 = color,
-		}
-		textStyle = {
-			TextColor3 = Constants.White,
-			Font = Enum.Font.SourceSansSemibold,
-		}
-		showDivider = false
-		if isHover then
-			flairColor = Constants.VeryDarkGrey
-		end
-	elseif props.ButtonColor then
-		buttonStyle = {
-			Image = "rbxasset://textures/ui/dialog_white.png",
-			SliceCenter = Rect.new(10, 10, 10, 10),
-			ImageColor3 = props.ButtonColor,
-		}
-		showDivider = false
-		if isHover then
-			flairColor = Constants.VeryDarkGrey
-		end
-	elseif isHover then
-		buttonStyle = {
-			Image = "rbxasset://textures/ui/dialog_white.png",
-			SliceCenter = Rect.new(10, 10, 10, 10),
-			ImageColor3 = Constants.LightGrey,
-		}
-		flairColor = Constants.DarkGrey
-		showDivider = false
-	end
-	return Roact.createElement("ImageButton", merge({
-		ScaleType = Enum.ScaleType.Slice,
-		Size = UDim2.new(1, 0, 0, height),
-		BackgroundTransparency = 1.0,
-		LayoutOrder = props.LayoutOrder,
-		Visible = not props.Hidden,
 
-		[Roact.Event.MouseEnter] = function(rbx)
+	local object = props.object or 'ListItem'
+	local state = Theme.tagsToState({
+		[Theme.Tags.Hover] = isHover,
+		[Theme.Tags.Pressed] = false,
+		[Theme.Tags.Active] = props.Active,
+		[Theme.Tags.Semiactive] = props.SemiActive,
+	})
+
+	return Roact.createElement(ListItemChrome, {
+		LayoutOrder = props.LayoutOrder,
+		visible = not props.Hidden,
+		state = state,
+
+		mouseEnter = function(rbx)
 			self:setState({
 				Hover = true
 			})
 		end,
 
-		[Roact.Event.MouseLeave] = function(rbx)
+		mouseLeave = function(rbx)
 			self:setState({
 				Hover = false
 			})
 		end,
 
-		[Roact.Event.MouseButton1Click] = function(rbx)
-			if props.leftClick then
-				props.leftClick(rbx)
-			end
-		end,
+		leftClick = props.leftClick,
+		rightClick = props.rightClick,
+	}, {
+		ThemeAccessor.withTheme(function(theme)
+			return Roact.createElement("Frame", {
+				Size = UDim2.new(1, 0, 1, 0),
+				BackgroundTransparency = 1.0,
+			}, {
+				Icon = props.Icon and Roact.createElement(Icon, {
+					Name = props.Icon,
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					Position = UDim2.new(0, 24, 0.5, 0),
+				}),
+				Name = Roact.createElement(props.IsInput and "TextBox" or "TextLabel", merge({
+					BackgroundTransparency = 1.0,
+					TextXAlignment = Enum.TextXAlignment.Left,
+					Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
+					Size = UDim2.new(1, -40, 0, height),
+					Text = props.IsInput and "" or props.Text,
+					PlaceholderText = props.IsInput and props.Text or nil,
+					PlaceholderColor3 = props.IsInput and theme:get(object, 'PlaceholderColor3', state) or nil,
+					Font = Enum.Font.SourceSans,
+					TextSize = 20,
+					TextColor3 = theme:get(object, 'TextColor3', state),
 
-		[Roact.Event.MouseButton2Click] = function(rbx)
-			if props.rightClick then
-				props.rightClick(rbx)
-			end
-		end,
-	}, buttonStyle), {
-		Divider = Roact.createElement("Frame", {
-			Visible = showDivider,
-			Size = UDim2.new(1, -10, 0, 1),
-			Position = UDim2.new(0.5, 0, 0, 0),
-			AnchorPoint = Vector2.new(0.5, 0),
-			BorderSizePixel = 0,
-			BackgroundColor3 = Constants.LightGrey,
-		}),
-		Flair = Roact.createElement("ImageLabel", {
-			Size = UDim2.new(0, 8, 1, 0),
-			Image = "rbxassetid://1353014916",
-			BackgroundTransparency = 1.0,
-			ImageColor3 = flairColor,
-			Visible = flairColor ~= nil,
-			ImageRectSize = Vector2.new(4, 40),
-			ScaleType = Enum.ScaleType.Slice,
-			SliceCenter = Rect.new(4, 20, 4, 20),
-		}),
-		Icon = props.Icon and Roact.createElement(Icon, {
-			Name = props.Icon,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.new(0, 24, 0.5, 0),
-		}) or nil,
-		Name = Roact.createElement(props.IsInput and "TextBox" or "TextLabel", merge(merge({
-			BackgroundTransparency = 1.0,
-			TextXAlignment = Enum.TextXAlignment.Left,
-			Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
-			Size = UDim2.new(1, -40, 0, height),
-			Text = props.IsInput and "" or props.Text,
-			PlaceholderText = props.IsInput and props.Text or nil,
-			PlaceholderColor3 = props.IsInput and Constants.DarkGrey or nil,
-			Font = Enum.Font.SourceSans,
-			TextSize = 20,
-			TextColor3 = Color3.fromRGB(0, 0, 0),
+					[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
+						local text = rbx.Text
+						rbx.Text = ""
+						if props.onSubmit and enterPressed then
+							props.onSubmit(rbx, text)
+						end
+					end or nil,
+				}, props.TextProps or {})),
+				Visibility = props.onSetVisible and Roact.createElement(Icon, {
+					Name = props.Visible and "lightbulb" or "lightbulb_off",
+					Position = UDim2.new(1, -4, .5, 0),
+					AnchorPoint = Vector2.new(1, .5),
 
-			[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
-				local text = rbx.Text
-				rbx.Text = ""
-				if props.onSubmit and enterPressed then
-					props.onSubmit(rbx, text)
-				end
-			end or nil,
-		}, textStyle), props.TextProps or {})),
-		Visibility = props.onSetVisible and Roact.createElement(Icon, {
-			Name = props.Visible and "lightbulb" or "lightbulb_off",
-			Position = UDim2.new(1, -4, .5, 0),
-			AnchorPoint = Vector2.new(1, .5),
+					onClick = props.onSetVisible,
+				}),
+				Settings = props.onSettings and Roact.createElement(Icon, {
+					Name = 'cog',
+					Position = UDim2.new(1, -24, .5, 0),
+					AnchorPoint = Vector2.new(1, .5),
 
-			onClick = props.onSetVisible,
-		}) or nil,
-		Settings = props.onSettings and Roact.createElement(Icon, {
-			Name = 'cog',
-			Position = UDim2.new(1, -24, .5, 0),
-			AnchorPoint = Vector2.new(1, .5),
+					onClick = props.onSettings,
+				}),
+				Delete = props.onDelete and Roact.createElement(Icon, {
+					Name = "cancel",
+					Position = UDim2.new(1, -4, .5, 0),
+					AnchorPoint = Vector2.new(1, .5),
 
-			onClick = props.onSettings,
-		}) or nil,
-		Delete = props.onDelete and Roact.createElement(Icon, {
-			Name = "cancel",
-			Position = UDim2.new(1, -4, .5, 0),
-			AnchorPoint = Vector2.new(1, .5),
-
-			onClick = props.onDelete,
-		}) or nil,
+					onClick = props.onDelete,
+				}),
+			})
+		end)
 	})
 end
 

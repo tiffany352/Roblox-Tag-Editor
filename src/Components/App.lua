@@ -10,12 +10,19 @@ local WorldView = require(script.Parent.WorldView)
 local InstanceView = require(script.Parent.InstanceView)
 local GroupPicker = require(script.Parent.GroupPicker)
 local TooltipView = require(script.Parent.TooltipView)
+local ThemeAccessor = require(script.Parent.ThemeAccessor)
 
 local function App(props)
 	return Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
-		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 	}, {
+		Background = ThemeAccessor.withTheme(function(theme)
+			return Roact.createElement("Frame", {
+				Size = UDim2.new(1, 0, 1, 0),
+				BackgroundColor3 = theme:get('MainSection', 'BackgroundColor3'),
+				ZIndex = -100,
+			})
+		end),
 		Container = Roact.createElement("Frame", {
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1.0,

@@ -1,16 +1,15 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local Constants = require(Modules.Plugin.Constants)
 local Actions = require(Modules.Plugin.Actions)
 local IconCategories = require(Modules.Plugin.IconCategories)
 
-local Icon = require(script.Parent.Icon)
+local Page = require(script.Parent.Page)
 local Search = require(script.Parent.Search)
-local TextLabel = require(script.Parent.TextLabel)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
 local Category = require(script.Category)
 local IconPreview = require(script.IconPreview)
+local ThemeAccessor = require(script.Parent.ThemeAccessor)
 
 local IconPicker = Roact.Component:extend("IconPicker")
 
@@ -69,82 +68,40 @@ function IconPicker:render()
 		PaddingBottom = UDim.new(0, 4),
 	})
 
-	return Roact.createElement("ImageButton", {
-		Size = UDim2.new(1, 0, 1, 0),
-		BackgroundColor3 = Constants.White,
-		ZIndex = 10,
-		Visible = props.tagName ~= nil,
-		AutoButtonColor = false,
+	return Roact.createElement(Page, {
+		visible = props.tagName ~= nil,
+		title = tostring(props.tagName).." - Select an Icon",
+		titleIcon = props.tagIcon,
+
+		close = function()
+			props.close()
+		end,
 	}, {
-		Topbar = Roact.createElement("Frame", {
-			Size = UDim2.new(1, 0, 0, 32),
-			BackgroundColor3 = Constants.RobloxBlue,
-			BorderSizePixel = 0,
-		}, {
-			Back = Roact.createElement("TextButton", {
-				Size = UDim2.new(0, 48, 0, 32),
-				Text = "Back",
-				TextSize = 20,
-				Font = Enum.Font.SourceSansBold,
-				BackgroundTransparency = 1.0,
-				TextColor3 = Constants.White,
+		IconList = Roact.createElement(ScrollingFrame, {
+			Size = UDim2.new(1, -80, 1, -40),
+			Position = UDim2.new(0, 0, 0, 40),
+			List = true,
+		}, children),
+		Search = Roact.createElement(Search, {
+			Size = UDim2.new(1, -80, 0, 40),
 
-				[Roact.Event.MouseButton1Click] = function(rbx)
-					props.close()
-				end,
-			}),
-			Title = Roact.createElement("Frame", {
-				Size = UDim2.new(1, 0, 1, 0),
-				BackgroundTransparency = 1.0,
-			}, {
-				UIListLayout = Roact.createElement("UIListLayout", {
-					HorizontalAlignment = Enum.HorizontalAlignment.Center,
-					VerticalAlignment = Enum.VerticalAlignment.Center,
-					FillDirection = Enum.FillDirection.Horizontal,
-					SortOrder = Enum.SortOrder.LayoutOrder,
-					Padding = UDim.new(0, 4),
-				}),
-				Icon = Roact.createElement(Icon, {
-					Name = props.tagIcon,
-					LayoutOrder = 1,
-				}),
-				Label = Roact.createElement(TextLabel, {
-					Text = tostring(props.tagName).." - Select an Icon",
-					LayoutOrder = 2,
-					TextColor3 = Constants.White,
-					Font = Enum.Font.SourceSansSemibold,
-				}),
-			})
+			term = props.search,
+			setTerm = function(term)
+				props.setTerm(term)
+			end,
 		}),
-		Body = Roact.createElement("Frame", {
-			Size = UDim2.new(1, 0, 1, -32),
-			Position = UDim2.new(0, 0, 0, 32),
-			BackgroundTransparency = 1.0,
-		}, {
-			IconList = Roact.createElement(ScrollingFrame, {
-				Size = UDim2.new(1, -80, 1, -40),
-				Position = UDim2.new(0, 0, 0, 40),
-				List = true,
-			}, children),
-			Search = Roact.createElement(Search, {
-				Size = UDim2.new(1, -80, 0, 40),
-
-				term = props.search,
-				setTerm = function(term)
-					props.setTerm(term)
-				end,
-			}),
-			Sidebar = Roact.createElement("Frame", {
-				BackgroundColor3 = Constants.LightGrey,
-				BorderColor3 = Constants.DarkGrey,
+		Sidebar = ThemeAccessor.withTheme(function(theme)
+			return Roact.createElement("Frame", {
+				BackgroundColor3 = theme:get("IconPickerSidebar", "BackgroundColor3"),
+				BorderColor3 = theme:get("IconPickerSidebar", "BorderColor3"),
 				Size = UDim2.new(0, 80, 1, 0),
 				Position = UDim2.new(1, -80, 0, 0),
 			}, {
 				Preview = Roact.createElement(IconPreview, {
 					Position = UDim2.new(1, -8, 0, 8),
 				}),
-			}),
-		})
+			})
+		end),
 	})
 end
 

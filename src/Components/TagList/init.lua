@@ -94,7 +94,6 @@ function TagList:render()
 			LayoutOrder = j,
 			TextProps = {
 				Font = Enum.Font.SourceSansItalic,
-				TextColor3 = Constants.White,
 			},
 
 			leftClick = function(rbx)
@@ -111,7 +110,6 @@ function TagList:render()
 			Icon = "cancel",
 			TextProps = {
 				Font = Enum.Font.SourceSansItalic,
-				TextColor3 = Constants.VeryDarkGrey,
 			},
 		})
 		j = j + 1

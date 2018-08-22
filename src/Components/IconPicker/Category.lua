@@ -2,7 +2,7 @@ local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local TagManager = require(Modules.Plugin.TagManager)
 local Icon = require(Modules.Plugin.Components.Icon)
-local TextLabel = require(Modules.Plugin.Components.TextLabel)
+local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 
 local function matchesSearch(term, subject)
 	if not term then return true end
@@ -60,7 +60,7 @@ local function Category(props)
 		BackgroundTransparency = 1.0,
 		Visible = numMatched > 0,
 	}, {
-		Label = Roact.createElement(TextLabel, {
+		Label = Roact.createElement(ThemedTextLabel, {
 			Text = props.CategoryName,
 			Size = UDim2.new(1, 0, 0, 20),
 			Font = Enum.Font.SourceSansSemibold,

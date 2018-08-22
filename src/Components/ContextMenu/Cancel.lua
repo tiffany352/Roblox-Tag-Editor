@@ -1,6 +1,6 @@
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local Constants = require(Modules.Plugin.Constants)
+local ThemeAccessor = require(Modules.Plugin.Components.ThemeAccessor)
 
 local Item = require(script.Parent.Item)
 
@@ -25,13 +25,17 @@ local function Cancel(props)
 		end
 	end
 	return Roact.createElement(Item, newProps, {
-		Label = Roact.createElement("TextLabel", {
-			Text = props.Text or "Cancel",
-			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundTransparency = 1.0,
-			TextSize = 19,
-			Font = Enum.Font.SourceSansSemibold,
-			TextColor3 = Constants.Black,
+		Label = Roact.createElement(ThemeAccessor, {}, {
+			render = function(theme)
+				return Roact.createElement("TextLabel", {
+					Text = props.Text or "Cancel",
+					Size = UDim2.new(1, 0, 1, 0),
+					BackgroundTransparency = 1.0,
+					TextSize = 19,
+					Font = Enum.Font.SourceSansSemibold,
+					TextColor3 = theme:get('ContextMenuItem', 'TextColor3'),
+				})
+			end
 		})
 	})
 end

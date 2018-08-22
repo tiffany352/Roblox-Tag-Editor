@@ -1,12 +1,10 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local Constants = require(Modules.Plugin.Constants)
 local Actions = require(Modules.Plugin.Actions)
 local TagManager = require(Modules.Plugin.TagManager)
 
-local Icon = require(script.Parent.Icon)
-local TextLabel = require(script.Parent.TextLabel)
+local Page = require(script.Parent.Page)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
 local Item = require(script.Parent.ListItem)
 local GroupItem = require(script.GroupItem)
@@ -51,56 +49,15 @@ local function GroupPicker(props)
 		end,
 	})
 
-	return Roact.createElement("ImageButton", {
-		Size = UDim2.new(1, 0, 1, 0),
-		BackgroundColor3 = Constants.White,
-		ZIndex = 10,
-		Visible = props.groupPicker ~= nil,
-		AutoButtonColor = false,
-	}, {
-		Topbar = Roact.createElement("Frame", {
-			Size = UDim2.new(1, 0, 0, 32),
-			BackgroundColor3 = Constants.RobloxBlue,
-			BorderSizePixel = 0,
-		}, {
-			Back = Roact.createElement("TextButton", {
-				Size = UDim2.new(0, 48, 0, 32),
-				Text = "Back",
-				TextSize = 20,
-				Font = Enum.Font.SourceSansBold,
-				BackgroundTransparency = 1.0,
-				TextColor3 = Constants.White,
+	return Roact.createElement(Page, {
+		visible = props.groupPicker ~= nil,
+		title = tostring(props.groupPicker).." - Select a Group",
+		titleIcon = props.tagIcon,
 
-				[Roact.Event.MouseButton1Click] = function(rbx)
-					props.close()
-				end,
-			}),
-			Title = Roact.createElement("Frame", {
-				Size = UDim2.new(1, 0, 1, 0),
-				BackgroundTransparency = 1.0,
-			}, {
-				UIListLayout = Roact.createElement("UIListLayout", {
-					HorizontalAlignment = Enum.HorizontalAlignment.Center,
-					VerticalAlignment = Enum.VerticalAlignment.Center,
-					FillDirection = Enum.FillDirection.Horizontal,
-					SortOrder = Enum.SortOrder.LayoutOrder,
-					Padding = UDim.new(0, 4),
-				}),
-				Icon = Roact.createElement(Icon, {
-					Name = props.tagIcon,
-					LayoutOrder = 1,
-				}),
-				Label = Roact.createElement(TextLabel, {
-					Text = tostring(props.groupPicker).." - Select a Group",
-					LayoutOrder = 2,
-					TextColor3 = Constants.White,
-					Font = Enum.Font.SourceSansSemibold,
-				}),
-			})
-		}),
+		close = props.close,
+	}, {
 		Body = Roact.createElement(ScrollingFrame, {
-			Size = UDim2.new(1, 0, 1, -32),
-			Position = UDim2.new(0, 0, 0, 32),
+			Size = UDim2.new(1, 0, 1, 0),
 			List = true,
 		}, children)
 	})

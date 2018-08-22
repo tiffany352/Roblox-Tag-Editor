@@ -5,7 +5,7 @@ local Constants = require(Modules.Plugin.Constants)
 local TagManager = require(Modules.Plugin.TagManager)
 local Actions = require(Modules.Plugin.Actions)
 
-local TextLabel = require(script.Parent.TextLabel)
+local TextLabel = require(script.Parent.ThemedTextLabel)
 local Icon = require(script.Parent.Icon)
 local TextBox = require(script.TextBox)
 

@@ -2,17 +2,17 @@ local TextService = game:GetService("TextService")
 
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local Constants = require(Modules.Plugin.Constants)
 
 local function TextLabel(props)
 	return Roact.createElement("TextLabel", {
+		LayoutOrder = props.LayoutOrder,
+		Position = props.Position,
+		Size = props.Size or props.TextWrapped and UDim2.new(1, 0, 0, 0) or nil,
 		BackgroundTransparency = 1.0,
+
 		Font = props.Font or Enum.Font.SourceSans,
 		TextSize = props.TextSize or 20,
-		TextColor3 = props.TextColor3 or Constants.Black,
-		Size = props.Size or props.TextWrapped and UDim2.new(1, 0, 0, 0) or nil,
-		Position = props.Position,
-		LayoutOrder = props.LayoutOrder,
+		TextColor3 = props.TextColor3 or Color3.fromRGB(0, 0, 0),
 		Text = props.Text or "<Text Not Set>",
 		TextWrapped = props.TextWrapped,
 		TextXAlignment = props.TextXAlignment or Enum.TextXAlignment.Left,

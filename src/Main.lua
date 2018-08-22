@@ -4,8 +4,11 @@ local Rodux = require(Modules.Rodux)
 local RoactRodux = require(Modules.RoactRodux)
 
 local App = require(script.Parent.Components.App)
+local ThemeProvider = require(script.Parent.Components.ThemeProvider)
 local Reducer = require(script.Parent.Reducer)
 local TagManager = require(script.Parent.TagManager)
+local ThemeManager = require(script.Parent.ThemeManager)
+local ThemePolyfill = require(script.Parent.ThemePolyfill)
 local Actions = require(script.Parent.Actions)
 
 return function(plugin, savedState)
@@ -31,6 +34,22 @@ return function(plugin, savedState)
 
 	local manager = TagManager.new(store)
 
+	-- theme hack
+	local StudioSettings = settings().Studio
+	local function getTheme()
+		local studioTheme = StudioSettings["UI Theme"]
+		return
+			ThemePolyfill[studioTheme.Name] or
+			ThemePolyfill.Light
+	end
+	local themeManager = ThemeManager.new(getTheme())
+	local running = true
+	spawn(function()
+		while running and wait() do
+			themeManager:setTheme(getTheme())
+		end
+	end)
+
 	local worldViewConnection = worldViewButton.Click:Connect(function()
 		local state = store:getState()
 		local newValue = not state.WorldView
@@ -53,12 +72,17 @@ return function(plugin, savedState)
 	local element = Roact.createElement(RoactRodux.StoreProvider, {
 		store = store,
 	}, {
-		App = Roact.createElement(App)
+		ThemeProvider = Roact.createElement(ThemeProvider, {
+			themeManager = themeManager,
+		}, {
+			App = Roact.createElement(App)
+		})
 	})
 
 	local instance = Roact.mount(element, gui, "TagEditor")
 
 	plugin:beforeUnload(function()
+		running = false
 		Roact.unmount(instance)
 		connection:Disconnect()
 		worldViewConnection:Disconnect()

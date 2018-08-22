@@ -1,12 +1,12 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local Constants = require(Modules.Plugin.Constants)
 local Actions = require(Modules.Plugin.Actions)
 local TagManager = require(Modules.Plugin.TagManager)
 
 local ContextMenu = require(script.Parent.ContextMenu)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
+local ThemeAccessor = require(script.Parent.ThemeAccessor)
 
 local function TagMenu(props)
 	return Roact.createElement(ContextMenu.Container, {
@@ -95,12 +95,14 @@ local function TagMenu(props)
 				end,
 			}),
 		}),
-		Footer = Roact.createElement(ContextMenu.Item, {
-			LayoutOrder = 3,
-			Last = true,
-			Size = UDim2.new(1, 0, 0, 8),
-			ImageColor3 = Constants.RobloxBlue,
-		}),
+		Footer = ThemeAccessor.withTheme(function(theme)
+			return Roact.createElement(ContextMenu.Item, {
+				LayoutOrder = 3,
+				Last = true,
+				Size = UDim2.new(1, 0, 0, 8),
+				ImageColor3 = theme:get('ContextMenuHeader', 'BackgroundColor3'),
+			})
+		end),
 		Close = Roact.createElement(ContextMenu.Cancel, {
 			LayoutOrder = 99,
 			OnClose = props.close,
