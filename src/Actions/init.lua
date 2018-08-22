@@ -11,7 +11,6 @@ local Actions = {
 	ToggleWorldView = require(script.ToggleWorldView),
 	OpenDropdown = require(script.OpenDropdown),
 	OpenInstanceView = require(script.OpenInstanceView),
-	OpenMigrationDialog = require(script.OpenMigrationDialog),
 	SetHoveredIcon = require(script.SetHoveredIcon),
 }
 

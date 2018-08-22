@@ -10,7 +10,6 @@ local GroupPicker = require(script.GroupPicker)
 local WorldView = require(script.WorldView)
 local Dropdown = require(script.Dropdown)
 local InstanceView = require(script.InstanceView)
-local MigrationDialog = require(script.MigrationDialog)
 local HoveredIcon = require(script.HoveredIcon)
 
 return function(state, action)
@@ -28,7 +27,6 @@ return function(state, action)
 		WorldView = WorldView(state.WorldView, action),
 		Dropdown = Dropdown(state.Dropdown, action),
 		InstanceView = InstanceView(state.InstanceView, action),
-		MigrationDialog = MigrationDialog(state.MigrationDialog, action),
 		HoveredIcon = HoveredIcon(state.HoveredIcon, action),
 	}
 end
