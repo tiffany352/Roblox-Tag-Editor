@@ -1,15 +1,17 @@
+local Modules = script.Parent.Parent
+local Roact = require(Modules.Roact)
+local Rodux = require(Modules.Rodux)
+local RoactRodux = require(Modules.RoactRodux)
+
+local App = require(script.Parent.Components.App)
+local Reducer = require(script.Parent.Reducer)
+local TagManager = require(script.Parent.TagManager)
+local Actions = require(script.Parent.Actions)
+
 return function(plugin, savedState)
-	local Modules = script.Parent.Parent
-	local Roact = require(Modules.Roact)
-	local Rodux = require(Modules.Rodux)
-	local RoactRodux = require(Modules.RoactRodux)
+	local isDev = plugin.isDev
 
-	local App = require(script.Parent.Components.App)
-	local Reducer = require(script.Parent.Reducer)
-	local TagManager = require(script.Parent.TagManager)
-	local Actions = require(script.Parent.Actions)
-
-	local toolbar = plugin:toolbar("Instance Tagging")
+	local toolbar = plugin:toolbar(isDev and "Instance Tagging [DEV]" or "Instance Tagging")
 
 	local toggleButton = plugin:button(
 		toolbar,
@@ -38,8 +40,8 @@ return function(plugin, savedState)
 
 	local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 0, 0)
 	local gui = plugin:createDockWidgetPluginGui("Tag Editor", info)
-	gui.Name = "Tag Editor"
-	gui.Title = "Tag Editor"
+	gui.Name = isDev and "TagEditorDev" or "TagEditor"
+	gui.Title = isDev and "Tag Editor [DEV]" or "Tag Editor"
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	toggleButton:SetActive(gui.Enabled)
 
