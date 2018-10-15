@@ -1,3 +1,5 @@
+local PluginGuiService = game:GetService("PluginGuiService")
+
 return function(plugin, savedState)
 	local Modules = script.Parent.Parent
 	local Roact = require(Modules.Roact)
@@ -62,6 +64,15 @@ return function(plugin, savedState)
 		worldViewConnection:Disconnect()
 		manager:Destroy()
 		return store:getState()
+	end)
+
+	PluginGuiService.ChildAdded:Connect(function(child)
+		-- Wait, since it's parented before it's named
+		wait(0)
+		if child.Name == "Tag Editor" then
+			print("New tag editor version coming online; unloading the old version")
+			plugin:unload()
+		end
 	end)
 
 end
