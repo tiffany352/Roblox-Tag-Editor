@@ -148,7 +148,7 @@ function PluginFacade:_watch(instance)
 end
 
 PluginFacade:_load()
--- PluginFacade:_watch(source)
+PluginFacade:_watch(source)
 
 -- development
 local development = false
