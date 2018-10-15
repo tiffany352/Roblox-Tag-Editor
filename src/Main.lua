@@ -66,11 +66,13 @@ return function(plugin, savedState)
 		return store:getState()
 	end)
 
-	PluginGuiService.ChildAdded:Connect(function(child)
+	local unloadConnection
+	unloadConnection = PluginGuiService.ChildAdded:Connect(function(child)
 		-- Wait, since it's parented before it's named
 		wait(0)
 		if child.Name == "Tag Editor" then
 			print("New tag editor version coming online; unloading the old version")
+			unloadConnection:Disconnect()
 			plugin:unload()
 		end
 	end)
