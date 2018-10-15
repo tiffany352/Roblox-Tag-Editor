@@ -102,13 +102,17 @@ function PluginFacade:_load(savedState)
 	end
 end
 
-function PluginFacade:_reload()
-	local saveState
+function PluginFacade:unload()
 	if self._beforeUnload then
-		saveState = self._beforeUnload()
+		local saveState = self._beforeUnload()
 		self._beforeUnload = nil
-	end
 
+		return saveState
+	end
+end
+
+function PluginFacade:_reload()
+	local saveState = self:unload()
 	currentRoot = source:Clone()
 
 	self:_load(saveState)
