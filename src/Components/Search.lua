@@ -4,9 +4,26 @@ local Roact = require(Modules.Roact)
 local ThemeAccessor = require(script.Parent.ThemeAccessor)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
-local function Search(props)
+local Search = Roact.PureComponent:extend("Search")
+
+function Search:init()
+	self.state = {
+		hover = false,
+		focus = false,
+	}
+end
+
+function Search:render()
+	local searchBarState = "Default"
+
+	if self.state.focus then
+		searchBarState = "Selected"
+	elseif self.state.hover then
+		searchBarState = "Hover"
+	end
+
 	return Roact.createElement("Frame", {
-		Size = props.Size,
+		Size = self.props.Size,
 		BackgroundTransparency = 1.0,
 	}, {
 		SearchBarContainer = StudioThemeAccessor.withTheme(function(theme)
@@ -16,7 +33,19 @@ local function Search(props)
 				Size = UDim2.new(1, -16, 1, -16),
 				BackgroundColor3 = theme:GetColor("InputFieldBackground", "Default"),
 				BorderSizePixel = 1,
-				BorderColor3 = theme:GetColor("Border", "Default"),
+				BorderColor3 = theme:GetColor("InputFieldBorder", searchBarState),
+
+				[Roact.Event.MouseEnter] = function(rbx)
+					self:setState({
+						hover = true,
+					})
+				end,
+
+				[Roact.Event.MouseLeave] = function(rbx)
+					self:setState({
+						hover = false,
+					})
+				end,
 			}, {
 				SearchBar = Roact.createElement("TextBox", {
 					AnchorPoint = Vector2.new(.5, .5),
@@ -29,19 +58,31 @@ local function Search(props)
 					PlaceholderText = "Search",
 					PlaceholderColor3 = theme:GetColor("DimmedText"),
 					TextColor3 = theme:GetColor("MainText"),
-					Text = props.term,
+					Text = self.props.term,
 					ClearTextOnFocus = false,
 
 					[Roact.Event.Changed] = function(rbx, prop)
 						if prop == 'Text' then
-							props.setTerm(rbx.Text)
+							self.props.setTerm(rbx.Text)
 						end
 					end,
 
 					[Roact.Event.InputBegan] = function(rbx, input)
 						if input.UserInputType == Enum.UserInputType.MouseButton2 and input.UserInputState == Enum.UserInputState.Begin then
-							props.setTerm("")
+							self.props.setTerm("")
 						end
+					end,
+
+					[Roact.Event.Focused] = function(rbx)
+						self:setState({
+							focus = true,
+						})
+					end,
+
+					[Roact.Event.FocusLost] = function(rbx, enterPressed)
+						self:setState({
+							focus = false,
+						})
 					end,
 				})
 			})
