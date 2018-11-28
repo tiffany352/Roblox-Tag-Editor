@@ -2,23 +2,23 @@ local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local ThemeAccessor = require(script.Parent.ThemeAccessor)
+local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
 local function Search(props)
 	return Roact.createElement("Frame", {
 		Size = props.Size,
 		BackgroundTransparency = 1.0,
 	}, {
-		SearchBarContainer = Roact.createElement("ImageLabel", {
-			BackgroundTransparency = 1.0,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.new(0.5, 0, 0.5, 0),
-			Size = UDim2.new(1, -10, 1, -10),
-			ScaleType = Enum.ScaleType.Slice,
-			SliceCenter = Rect.new(32, 32, 32, 32),
-			Image = "rbxasset://textures/ui/Keyboard/key_selection_9slice.png", -- rbxassetid://1353028396
-		}, {
-			SearchBar = ThemeAccessor.withTheme(function(theme)
-				return Roact.createElement("TextBox", {
+		SearchBarContainer = StudioThemeAccessor.withTheme(function(theme)
+			return Roact.createElement("Frame", {
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.new(0.5, 0, 0.5, 0),
+				Size = UDim2.new(1, -16, 1, -16),
+				BackgroundColor3 = theme:GetColor("InputFieldBackground", "Default"),
+				BorderSizePixel = 1,
+				BorderColor3 = theme:GetColor("Border", "Default"),
+			}, {
+				SearchBar = Roact.createElement("TextBox", {
 					AnchorPoint = Vector2.new(.5, .5),
 					Position = UDim2.new(0.5, 0, 0.5, 0),
 					Size = UDim2.new(1, -20, 0, 20),
@@ -27,8 +27,8 @@ local function Search(props)
 					Font = Enum.Font.SourceSans,
 					TextSize = 20,
 					PlaceholderText = "Search",
-					PlaceholderColor3 = theme:get("SearchBar", "PlaceholderColor3", "Normal"),
-					TextColor3 = theme:get("SearchBar", "TextColor3", "Normal"),
+					PlaceholderColor3 = theme:GetColor("DimmedText"),
+					TextColor3 = theme:GetColor("MainText"),
 					Text = props.term,
 					ClearTextOnFocus = false,
 
@@ -44,8 +44,8 @@ local function Search(props)
 						end
 					end,
 				})
-			end)
-		})
+			})
+		end)
 	})
 end
 
