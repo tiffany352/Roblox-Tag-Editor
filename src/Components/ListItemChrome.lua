@@ -13,9 +13,7 @@ local function ListItemChrome(props)
 	local child = Roact.oneChild(props[Roact.Children])
 
 	return StudioThemeAccessor.withTheme(function(theme)
-		print(theme:GetColor("Item", state), state)
 		local showDivider = props.showDivider
-		-- local flairColor = theme:GetColor(object, 'FlairColor', state)
 
 		return Roact.createElement("TextButton", {
 			Size = UDim2.new(1, 0, 0, height),
@@ -39,13 +37,6 @@ local function ListItemChrome(props)
 				BorderSizePixel = 0,
 				BackgroundColor3 = theme:GetColor("Separator"),
 			}),
-			-- Flair = Roact.createElement("Frame", {
-			-- 	Size = UDim2.new(0, 8, 1, 0),
-			-- 	BackgroundTransparency = 1.0,
-			-- 	BackgroundColor3 = flairColor,
-			-- 	Visible = flairColor ~= nil,
-			-- 	BorderSizePixel = 0,
-			-- }),
 			Contents = child,
 		})
 	end)
