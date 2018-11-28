@@ -34,7 +34,6 @@ return function(plugin, savedState)
 
 	local manager = TagManager.new(store)
 
-	-- theme hack
 	local StudioSettings = settings().Studio
 	local function getTheme()
 		local studioTheme = StudioSettings["UI Theme"]
@@ -43,11 +42,8 @@ return function(plugin, savedState)
 			ThemePolyfill.Light
 	end
 	local themeManager = ThemeManager.new(getTheme())
-	local running = true
-	spawn(function()
-		while running and wait() do
-			themeManager:setTheme(getTheme())
-		end
+	local themeConnection = StudioSettings:GetPropertyChangedSignal("UI Theme"):Connect(function()
+		themeManager:setTheme(getTheme())
 	end)
 
 	local worldViewConnection = worldViewButton.Click:Connect(function()
@@ -86,6 +82,7 @@ return function(plugin, savedState)
 		Roact.unmount(instance)
 		connection:Disconnect()
 		worldViewConnection:Disconnect()
+		themeConnection:Disconnect()
 		manager:Destroy()
 		return store:getState()
 	end)
