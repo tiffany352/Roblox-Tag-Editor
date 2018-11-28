@@ -10,6 +10,7 @@ local function ScrollingFrame(props)
 		newProps[Roact.Ref] = function(rbx)
 			if not rbx then return end
 			local function update()
+				if not rbx.Parent then return end
 				local cs = rbx.AbsoluteContentSize
 				rbx.Parent.CanvasSize = UDim2.new(0, 0, 0, cs.y)
 			end

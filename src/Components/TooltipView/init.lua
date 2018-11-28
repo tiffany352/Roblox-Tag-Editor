@@ -80,17 +80,12 @@ function TooltipView:render()
 	children.UIListLayout = Roact.createElement("UIListLayout", {
 		SortOrder = Enum.SortOrder.LayoutOrder,
 
-		[Roact.Ref] = function(rbx)
-			if not rbx then return end
-			local function update()
-				local cs = rbx.AbsoluteContentSize
-				if rbx.Parent and rbx.Parent.Parent then
-					rbx.Parent.Parent.Size = UDim2.new(0, 200, 0, cs.y)
-				end
+		[Roact.Change.AbsoluteContentSize] = function(rbx)
+			local cs = rbx.AbsoluteContentSize
+			if rbx.Parent and rbx.Parent.Parent then
+				rbx.Parent.Parent.Size = UDim2.new(0, 200, 0, cs.y)
 			end
-			rbx:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
-			update()
-		end
+		end,
 	})
 
 	children.ObjectDesc = Roact.createElement("Frame", {

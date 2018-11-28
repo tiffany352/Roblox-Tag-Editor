@@ -15,22 +15,6 @@ local function Category(props)
 		CellSize = UDim2.new(0, 16, 0, 16),
 		CellPadding = UDim2.new(0, 4, 0, 4),
 		SortOrder = Enum.SortOrder.LayoutOrder,
-
-		[Roact.Ref] = function(rbx)
-			if not rbx then return end
-
-			local function update()
-				local cs = rbx.AbsoluteContentSize
-				if rbx.Parent then
-					rbx.Parent.Size = UDim2.new(1, 0, 0, cs.y)
-					if rbx.Parent.Parent then
-						rbx.Parent.Parent.Size = UDim2.new(1, 0, 0, cs.y + 28)
-					end
-				end
-			end
-			update()
-			rbx:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
-		end
 	})
 
 	local numMatched = 0
@@ -56,6 +40,7 @@ local function Category(props)
 	end
 
 	return Roact.createElement("Frame", {
+		Size = UDim2.new(1, 0, 0, 0),
 		LayoutOrder = props.LayoutOrder,
 		BackgroundTransparency = 1.0,
 		Visible = numMatched > 0,
@@ -66,8 +51,25 @@ local function Category(props)
 			Font = Enum.Font.SourceSansSemibold,
 		}),
 		Body = Roact.createElement("Frame", {
+			Size = UDim2.new(1, 0, 0, 0),
 			Position = UDim2.new(0, 0, 0, 20),
 			BackgroundTransparency = 1.0,
+
+			[Roact.Change.AbsoluteSize] = function(rbx)
+				spawn(function()
+					local padding = 4
+					local cell = 16
+					local stride = padding + cell
+					local epsilon = 0.001
+					local w = math.floor((rbx.AbsoluteSize.X + padding) / stride + epsilon)
+					local h = math.ceil(numMatched / w)
+
+					rbx.Size = UDim2.new(1, 0, 0, h * stride)
+					if rbx.Parent then
+						rbx.Parent.Size = UDim2.new(1, 0, 0, h * stride + 28)
+					end
+				end)
+			end,
 		}, children)
 	})
 end
