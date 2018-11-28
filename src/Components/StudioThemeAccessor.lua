@@ -8,11 +8,13 @@ function StudioThemeAccessor:init()
 
 	self.state = {
 		theme = studioSettings.Theme,
+		themeEnum = studioSettings["UI Theme"]
 	}
 
 	self._themeConnection = studioSettings.ThemeChanged:Connect(function()
 		self:setState({
 			theme = studioSettings.Theme,
+			themeEnum = studioSettings["UI Theme"],
 		})
 	end)
 end
@@ -24,7 +26,7 @@ end
 function StudioThemeAccessor:render()
 	local render = Roact.oneChild(self.props[Roact.Children])
 
-	return render(self.state.theme)
+	return render(self.state.theme, self.state.themeEnum)
 end
 
 function StudioThemeAccessor.withTheme(render)
