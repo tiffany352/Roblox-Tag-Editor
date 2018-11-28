@@ -48,7 +48,7 @@ function TagList:render()
 
 	children.UIListLayout = Roact.createElement("UIListLayout", {
 		SortOrder = Enum.SortOrder.LayoutOrder,
-		Padding = UDim.new(0, 2),
+		Padding = UDim.new(0, 1),
 
 		[Roact.Ref] = function(rbx)
 			if not rbx then return end
