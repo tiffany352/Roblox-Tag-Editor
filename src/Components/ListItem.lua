@@ -35,7 +35,7 @@ function Item:render()
 
 	return Roact.createElement(ListItemChrome, {
 		LayoutOrder = props.LayoutOrder,
-		visible = not props.Hidden,
+		hidden = props.Hidden,
 		state = state,
 
 		mouseEnter = function(rbx)
