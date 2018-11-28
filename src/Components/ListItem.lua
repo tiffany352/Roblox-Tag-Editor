@@ -4,7 +4,7 @@ local RoactRodux = require(Modules.RoactRodux)
 local Theme = require(Modules.Plugin.Theme)
 
 local Icon = require(script.Parent.Icon)
-local ThemeAccessor = require(script.Parent.ThemeAccessor)
+local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local ListItemChrome = require(script.Parent.ListItemChrome)
 
 local function merge(orig, new)
@@ -26,12 +26,12 @@ function Item:render()
 	local isHover = self.state.Hover and not props.menuOpen
 
 	local object = props.object or 'ListItem'
-	local state = Theme.tagsToState({
-		[Theme.Tags.Hover] = isHover,
-		[Theme.Tags.Pressed] = false,
-		[Theme.Tags.Active] = props.Active,
-		[Theme.Tags.Semiactive] = props.SemiActive,
-	})
+	local state = Enum.StudioStyleGuideModifier.Default
+	if props.Active or props.SemiActive then
+		state = Enum.StudioStyleGuideModifier.Selected
+	elseif isHover then
+		state = Enum.StudioStyleGuideModifier.Hover
+	end
 
 	return Roact.createElement(ListItemChrome, {
 		LayoutOrder = props.LayoutOrder,
@@ -53,7 +53,7 @@ function Item:render()
 		leftClick = props.leftClick,
 		rightClick = props.rightClick,
 	}, {
-		ThemeAccessor.withTheme(function(theme)
+		StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement("Frame", {
 				Size = UDim2.new(1, 0, 1, 0),
 				BackgroundTransparency = 1.0,
@@ -70,10 +70,10 @@ function Item:render()
 					Size = UDim2.new(1, -40, 0, height),
 					Text = props.IsInput and "" or props.Text,
 					PlaceholderText = props.IsInput and props.Text or nil,
-					PlaceholderColor3 = props.IsInput and theme:get(object, 'PlaceholderColor3', state) or nil,
+					PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
 					Font = Enum.Font.SourceSans,
 					TextSize = 20,
-					TextColor3 = theme:get(object, 'TextColor3', state),
+					TextColor3 = theme:GetColor("MainText"),
 
 					[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
 						local text = rbx.Text
