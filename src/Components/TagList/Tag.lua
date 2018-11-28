@@ -15,6 +15,7 @@ local function Tag(props)
 		Active = props.HasAll,
 		SemiActive = props.HasSome,
 		Hidden = props.Hidden,
+		Indent = props.Group and 10 or 0,
 
 		onSetVisible = function()
 			TagManager.Get():SetVisible(props.Tag, not props.Visible)

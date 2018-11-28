@@ -24,8 +24,8 @@ function Item:render()
 	local props = self.props
 	local height = 26
 	local isHover = self.state.Hover and not props.menuOpen
+	local indent = props.Indent or 0
 
-	local object = props.object or 'ListItem'
 	local state = Enum.StudioStyleGuideModifier.Default
 	if props.Active or props.SemiActive then
 		state = Enum.StudioStyleGuideModifier.Selected
@@ -55,8 +55,9 @@ function Item:render()
 	}, {
 		StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement("Frame", {
-				Size = UDim2.new(1, 0, 1, 0),
+				Size = UDim2.new(1, -indent, 1, 0),
 				BackgroundTransparency = 1.0,
+				Position = UDim2.new(0, indent, 0, 0),
 			}, {
 				Icon = props.Icon and Roact.createElement(Icon, {
 					Name = props.Icon,
