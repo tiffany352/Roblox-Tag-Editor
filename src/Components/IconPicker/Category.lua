@@ -9,11 +9,15 @@ local function matchesSearch(term, subject)
 	return subject:find(term) ~= nil
 end
 
-local function Category(props)
+local Category = Roact.PureComponent:extend("Category")
+
+function Category:render()
+	local cellSize = 24
+	local props = self.props
 	local children = {}
 	children.UIGridLayout = Roact.createElement("UIGridLayout", {
-		CellSize = UDim2.new(0, 16, 0, 16),
-		CellPadding = UDim2.new(0, 4, 0, 4),
+		CellSize = UDim2.new(0, cellSize, 0, cellSize),
+		CellPadding = UDim2.new(0, 0, 0, 0),
 		SortOrder = Enum.SortOrder.LayoutOrder,
 	})
 
@@ -23,19 +27,34 @@ local function Category(props)
 		if matches then
 			numMatched = numMatched + 1
 		end
-		children[icon] = Roact.createElement(Icon, {
-			Name = icon,
-			LayoutOrder = i,
+		children[icon] = Roact.createElement("TextButton", {
+			BackgroundTransparency = 1,
+			Text = "",
 			Visible = matches,
-
-			onClick = function(rbx)
+			LayoutOrder = i,
+			[Roact.Event.MouseButton1Click] = function(rbx)
 				TagManager.Get():SetIcon(props.tagName, icon)
 				props.close()
 			end,
 
-			onHover = function(value)
-				props.onHover(value and icon or nil)
+			[Roact.Event.MouseEnter] = function(rbx)
+				self._enteredButton = rbx
+				props.onHover(icon)
 			end,
+			
+			[Roact.Event.MouseLeave] = function(rbx)
+				if self._enteredButton == rbx then
+					props.onHover(nil)
+					self._enteredButton = nil
+				end
+			end,
+		}, {
+			Icon = Roact.createElement(Icon, {
+				Name = icon,
+				Size = UDim2.new(0, 16, 0, 16),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.new(0.5, 0, 0.5, 0),
+			})
 		})
 	end
 
@@ -57,16 +76,14 @@ local function Category(props)
 
 			[Roact.Change.AbsoluteSize] = function(rbx)
 				spawn(function()
-					local padding = 4
-					local cell = 16
-					local stride = padding + cell
+					local stride = cellSize
 					local epsilon = 0.001
-					local w = math.floor((rbx.AbsoluteSize.X + padding) / stride + epsilon)
+					local w = math.floor((rbx.AbsoluteSize.X) / stride + epsilon)
 					local h = math.ceil(numMatched / w)
 
 					rbx.Size = UDim2.new(1, 0, 0, h * stride)
 					if rbx.Parent then
-						rbx.Parent.Size = UDim2.new(1, 0, 0, h * stride + 28)
+						rbx.Parent.Size = UDim2.new(1, 0, 0, h * stride + 24)
 					end
 				end)
 			end,

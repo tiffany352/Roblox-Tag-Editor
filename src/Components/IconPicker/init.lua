@@ -1,5 +1,6 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
+local e = Roact.createElement
 local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(Modules.Plugin.Actions)
 local IconCategories = require(Modules.Plugin.IconCategories)
@@ -9,7 +10,7 @@ local Search = require(script.Parent.Search)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
 local Category = require(script.Category)
 local IconPreview = require(script.IconPreview)
-local ThemeAccessor = require(script.Parent.ThemeAccessor)
+local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
 local IconPicker = Roact.Component:extend("IconPicker")
 
@@ -50,7 +51,7 @@ function IconPicker:render()
 	for i = 1, #cats do
 		local name = cats[i].Name
 		local icons = cats[i].Icons
-		children[name] = Roact.createElement(Category, {
+		children[name] = e(Category, {
 			LayoutOrder = i,
 			CategoryName = name,
 			Icons = icons,
@@ -61,14 +62,14 @@ function IconPicker:render()
 		})
 	end
 
-	children.UIPadding = Roact.createElement("UIPadding", {
+	children.UIPadding = e("UIPadding", {
 		PaddingLeft = UDim.new(0, 4),
 		PaddingRight = UDim.new(0, 4),
 		PaddingTop = UDim.new(0, 4),
 		PaddingBottom = UDim.new(0, 4),
 	})
 
-	return Roact.createElement(Page, {
+	return e(Page, {
 		visible = props.tagName ~= nil,
 		title = tostring(props.tagName).." - Select an Icon",
 		titleIcon = props.tagIcon,
@@ -77,29 +78,39 @@ function IconPicker:render()
 			props.close()
 		end,
 	}, {
-		IconList = Roact.createElement(ScrollingFrame, {
-			Size = UDim2.new(1, -80, 1, -40),
-			Position = UDim2.new(0, 0, 0, 40),
+		IconList = e(ScrollingFrame, {
+			Size = UDim2.new(1, 0, 1, -64),
+			Position = UDim2.new(0, 0, 0, 64),
 			List = true,
 		}, children),
-		Search = Roact.createElement(Search, {
-			Size = UDim2.new(1, -80, 0, 40),
-
-			term = props.search,
-			setTerm = function(term)
-				props.setTerm(term)
-			end,
-		}),
-		Sidebar = ThemeAccessor.withTheme(function(theme)
-			return Roact.createElement("Frame", {
-				BackgroundColor3 = theme:get("IconPickerSidebar", "BackgroundColor3"),
-				BorderColor3 = theme:get("IconPickerSidebar", "BorderColor3"),
-				Size = UDim2.new(0, 80, 1, 0),
-				Position = UDim2.new(1, -80, 0, 0),
+		TopBar = StudioThemeAccessor.withTheme(function(theme)
+			return e("Frame", {
+				BackgroundColor3 = theme:GetColor("Titlebar"),
+				BorderSizePixel = 0,
+				Size = UDim2.new(1, 0, 0, 64),
+				ZIndex = 2,
 			}, {
-				Preview = Roact.createElement(IconPreview, {
-					Position = UDim2.new(1, -8, 0, 8),
+				Search = e(Search, {
+					Size = UDim2.new(1, -56, 0, 40),
+					Position = UDim2.new(0, 56, 0, 0),
+		
+					term = props.search,
+					setTerm = function(term)
+						props.setTerm(term)
+					end,
 				}),
+				Preview = e(IconPreview, {
+					Position = UDim2.new(0, 8, 0, 8),
+				}),
+				Separator = e("Frame", {
+					-- This separator acts as a bottom border, so we should use the border color, not the separator color
+					BackgroundColor3 = theme:GetColor("Border"),
+					BorderSizePixel = 0,
+					Size = UDim2.new(1, 0, 0, 1),
+					Position = UDim2.new(0, 0, 1, 0),
+					AnchorPoint = Vector2.new(0, 1),
+					ZIndex = 2,
+				})
 			})
 		end),
 	})
