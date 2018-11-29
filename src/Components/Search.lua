@@ -1,7 +1,6 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
-local ThemeAccessor = require(script.Parent.ThemeAccessor)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
 local Search = Roact.PureComponent:extend("Search")
@@ -24,6 +23,7 @@ function Search:render()
 
 	return Roact.createElement("Frame", {
 		Size = self.props.Size,
+		Position = self.props.Position,
 		BackgroundTransparency = 1.0,
 	}, {
 		SearchBarContainer = StudioThemeAccessor.withTheme(function(theme)
