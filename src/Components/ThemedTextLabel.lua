@@ -1,16 +1,16 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
-local ThemeAccessor = require(script.Parent.ThemeAccessor)
+local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local TextLabel = require(script.Parent.TextLabel)
 
 local function ThemedTextLabel(props)
-	return ThemeAccessor.withTheme(function(theme)
-		local object = props.object or 'MainSection'
-		local state = props.state or 'Normal'
+	return StudioThemeAccessor.withTheme(function(theme)
+		local kind = props.object or 'MainText'
+		local state = props.state or 'Default'
 		local newProps = {
-			TextColor3 = theme:get(object, 'TextColor3', state),
-			Font = theme:get(object, 'Font', state),
+			TextColor3 = theme:GetColor(kind, state),
+			Font = Enum.Font.SourceSans,
 		}
 		for key, value in pairs(props) do
 			if key ~= 'object' and key ~= 'state' then
