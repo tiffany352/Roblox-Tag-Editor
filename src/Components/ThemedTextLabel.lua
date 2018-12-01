@@ -5,9 +5,10 @@ local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local TextLabel = require(script.Parent.TextLabel)
 
 local function ThemedTextLabel(props)
+	local kind = props.object or 'MainText'
+	local state = props.state or 'Default'
+
 	return StudioThemeAccessor.withTheme(function(theme)
-		local kind = props.object or 'MainText'
-		local state = props.state or 'Default'
 		local newProps = {
 			TextColor3 = theme:GetColor(kind, state),
 			Font = Enum.Font.SourceSans,
