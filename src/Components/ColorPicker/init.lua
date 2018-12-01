@@ -112,7 +112,8 @@ function ColorPicker:render()
 					Position = Roact.createElement("Frame", {
 						Size = UDim2.new(0, 4, 0, 4),
 						BorderSizePixel = 0,
-						Position = UDim2.new(hue, -1, 1 - sat, -1),
+						Position = UDim2.new(hue, 0, 1 - sat, 0),
+						AnchorPoint = Vector2.new(0.5, 0.5),
 						BackgroundColor3 = Constants.DarkGrey,
 					}),
 					ValueSlider = Roact.createElement(ValueSlider, {
