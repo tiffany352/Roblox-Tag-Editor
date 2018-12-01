@@ -6,15 +6,12 @@ local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
 local function ListItemChrome(props)
 	local height = 26
-
-	local object = props.object or 'ListItem'
 	local state = props.state or Enum.StudioStyleGuideModifier.Default
+	local showDivider = props.showDivider
 
 	local child = Roact.oneChild(props[Roact.Children])
 
 	return StudioThemeAccessor.withTheme(function(theme)
-		local showDivider = props.showDivider
-
 		return Roact.createElement("TextButton", {
 			Size = UDim2.new(1, 0, 0, height),
 			AutoButtonColor = false,
