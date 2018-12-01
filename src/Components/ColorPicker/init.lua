@@ -90,7 +90,8 @@ function ColorPicker:render()
 							pos = pos / rbx.AbsoluteSize
 							pos = Vector2.new(math.clamp(pos.x, 0, 1), math.clamp(pos.y, 0, 1))
 							self:setState({
-								color = Color3.fromHSV(pos.x, 1 - pos.y, val),
+								h = pos.x,
+								s = 1 - pos.y,
 								wheelMouseDown = false,
 							})
 						end
@@ -140,7 +141,7 @@ function ColorPicker:render()
 					Hex = Roact.createElement(TextBox, {
 						Size = UDim2.new(1, 0, 0, 20),
 						Text = string.format(
-							"%02x%02x%02x",
+							"#%02x%02x%02x",
 							red*255, green*255, blue*255
 						),
 						Label = "Hex",
