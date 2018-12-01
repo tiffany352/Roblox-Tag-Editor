@@ -71,7 +71,9 @@ return function(plugin, savedState)
 		ThemeProvider = Roact.createElement(ThemeProvider, {
 			themeManager = themeManager,
 		}, {
-			App = Roact.createElement(App)
+			App = Roact.createElement(App, {
+				root = gui,
+			})
 		})
 	})
 

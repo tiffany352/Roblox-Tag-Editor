@@ -11,8 +11,17 @@ local InstanceView = require(script.Parent.InstanceView)
 local GroupPicker = require(script.Parent.GroupPicker)
 local TooltipView = require(script.Parent.TooltipView)
 local ThemeAccessor = require(script.Parent.ThemeAccessor)
+local rootKey = require(script.Parent.rootKey)
 
-local function App(props)
+local App = Roact.PureComponent:extend("App")
+
+function App:init()
+	self._context[rootKey] = self.props.root
+end
+
+function App:render()
+	local props = self.props
+	
 	return Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
 	}, {
