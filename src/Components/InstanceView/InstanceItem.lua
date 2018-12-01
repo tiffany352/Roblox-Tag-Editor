@@ -13,12 +13,13 @@ local InstanceItem = Roact.Component:extend("InstanceItem")
 function InstanceItem:render()
 	local props = self.props
 
-	local state = Theme.tagsToState({
-		[Theme.Tags.Hover] = self.state.hover,
-		[Theme.Tags.Pressed] = false,
-		[Theme.Tags.Active] = props.Selected,
-		[Theme.Tags.Semiactive] = false,
-	})
+	local state = "Default"
+
+	if props.Selected then
+		state = "Selected"
+	elseif self.state.hover then
+		state = "Hover"
+	end
 
 	return Roact.createElement(ListItemChrome, {
 		LayoutOrder = props.LayoutOrder,
@@ -87,23 +88,23 @@ function InstanceItem:render()
 				Padding = UDim.new(0, 4),
 			}),
 			InstanceClass = Roact.createElement(ThemedTextLabel, {
-				object = "InstanceItemClass",
+				object = "DimmedText",
 				state = state,
+				TextSize = 16,
 				Text = props.ClassName,
 				LayoutOrder = 1,
 			}),
 			InstanceName = Roact.createElement(ThemedTextLabel, {
-				object = "InstanceItemName",
 				state = state,
 				Text = props.Name,
 				LayoutOrder = 2,
 			}),
 			Path = Roact.createElement(ThemedTextLabel, {
-				object = "InstanceItemPath",
+				Font = Enum.Font.SourceSansItalic,
 				state = state,
 				Text = props.Path,
 				LayoutOrder = 3,
-				TextSize = 18,
+				TextSize = 16,
 			})
 		}),
 	})

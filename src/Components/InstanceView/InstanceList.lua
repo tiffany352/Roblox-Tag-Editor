@@ -56,7 +56,9 @@ local function InstanceList(props)
 	}, {
 		Body = Roact.createElement(ScrollingFrame, {
 			Size = UDim2.new(1, 0, 1, 0),
-			List = true,
+			List = {
+				Padding = UDim.new(0, 1),
+			},
 		}, children)
 	})
 end
