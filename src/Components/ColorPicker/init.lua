@@ -117,7 +117,7 @@ function ColorPicker:render()
 						AnchorPoint = Vector2.new(0.5, 0.5),
 						BackgroundColor3 = Constants.DarkGrey,
 					}),
-					ValueSlider = props.tagName ~= nil and Roact.createElement(ValueSlider, {
+					ValueSlider = Roact.createElement(ValueSlider, {
 						hue = hue,
 						sat = sat,
 						val = val,

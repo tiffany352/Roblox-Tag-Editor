@@ -2,7 +2,7 @@ local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local e = Roact.createElement
 
-local rootKey = require(script.Parent.Parent.rootKey)
+local RootPortal = require(script.Parent.Parent.RootPortal)
 local StudioThemeAccessor = require(script.Parent.Parent.StudioThemeAccessor)
 
 local ValueSlider = Roact.PureComponent:extend("ValueSlider")
@@ -53,9 +53,7 @@ function ValueSlider:render()
                 -- Hardcode this color, since the color it's on top of doesn't respond to themes
                 ImageColor3 = Color3.new(1, 1, 1),
             }),
-            Portal = e(Roact.Portal, {
-                target = self._context[rootKey].current,
-            }, {
+            Portal = e(RootPortal, nil, {
                 ValueSliderInputCapturer = e("ImageButton", {
                     BackgroundTransparency = 1,
                     ZIndex = 100,
