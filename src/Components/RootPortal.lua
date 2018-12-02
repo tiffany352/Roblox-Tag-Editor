@@ -35,8 +35,14 @@ end
 
 function RootPortal:didMount()
     spawn(function()
-        self:setState({})
+        if not self._unmounted then
+            self:setState({})
+        end
     end)
+end
+
+function RootPortal:willUnmount()
+    self._unmounted = true
 end
 
 return RootPortal
