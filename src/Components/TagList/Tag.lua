@@ -4,8 +4,11 @@ local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(Modules.Plugin.Actions)
 local TagManager = require(Modules.Plugin.TagManager)
 local Item = require(Modules.Plugin.Components.ListItem)
+local TagSettings = require(Modules.Plugin.Components.TagList.TagSettings)
 
 local function Tag(props)
+	local isOpen = props.tagWithOpenMenu == props.Tag
+
 	return Roact.createElement(Item, {
 		Text = props.Tag,
 		Icon = props.Icon,
@@ -16,13 +19,18 @@ local function Tag(props)
 		SemiActive = props.HasSome,
 		Hidden = props.Hidden,
 		Indent = props.Group and 10 or 0,
+		Height = isOpen and 171 or 26,
 
 		onSetVisible = function()
 			TagManager.Get():SetVisible(props.Tag, not props.Visible)
 		end,
 
 		onSettings = function()
-			props.openTagMenu(props.Tag)
+			if not isOpen then
+				props.openTagMenu(props.Tag)
+			else
+				props.openTagMenu(nil)
+			end
 		end,
 
 		leftClick = function(rbx)
@@ -30,13 +38,22 @@ local function Tag(props)
 		end,
 
 		rightClick = function(rbx)
-			props.openTagMenu(props.Tag)
+			if not isOpen then
+				props.openTagMenu(props.Tag)
+			else
+				props.openTagMenu(nil)
+			end
 		end,
+	}, {
+		Settings = isOpen and Roact.createElement(TagSettings, {
+		})
 	})
 end
 
 local function mapStateToProps(state)
-	return {}
+	return {
+		tagWithOpenMenu = state.TagMenu,
+	}
 end
 
 local function mapDispatchToProps(dispatch)
