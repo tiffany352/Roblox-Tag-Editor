@@ -3,7 +3,6 @@ local UserInputService = game:GetService("UserInputService")
 
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local Theme = require(Modules.Plugin.Theme)
 
 local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 local ListItemChrome = require(Modules.Plugin.Components.ListItemChrome)

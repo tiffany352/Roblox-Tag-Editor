@@ -93,7 +93,7 @@ function IconPicker:render()
 				Search = e(Search, {
 					Size = UDim2.new(1, -56, 0, 40),
 					Position = UDim2.new(0, 56, 0, 0),
-		
+
 					term = props.search,
 					setTerm = function(term)
 						props.setTerm(term)

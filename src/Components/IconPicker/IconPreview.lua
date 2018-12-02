@@ -85,7 +85,7 @@ local function mapStateToProps(state)
 
 	if icon == nil then
 		local tagName = state.IconPicker
-		local tagIcon
+
 		for _,tag in pairs(state.TagData) do
 			if tag.Name == tagName then
 				icon = tag.Icon

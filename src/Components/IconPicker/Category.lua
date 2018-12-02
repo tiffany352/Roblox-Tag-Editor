@@ -41,7 +41,7 @@ function Category:render()
 				self._enteredButton = rbx
 				props.onHover(icon)
 			end,
-			
+
 			[Roact.Event.MouseLeave] = function(rbx)
 				if self._enteredButton == rbx then
 					props.onHover(nil)

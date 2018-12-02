@@ -1,7 +1,6 @@
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local e = Roact.createElement
-local Constants = require(Modules.Plugin.Constants)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 
 local TextBox = Roact.PureComponent:extend("ColorPicker.TextBox")
