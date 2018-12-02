@@ -50,11 +50,11 @@ function ValueSlider:render()
                 Position = UDim2.new(self.props.val, 0, 0, 0),
                 AnchorPoint = Vector2.new(0.5, 0),
                 Image = "rbxassetid://2610863246",
-                -- TODO: Move this to a suitable theme enum?
-                ImageColor3 = themeEnum == Enum.UITheme.Dark and Color3.fromRGB(204, 204, 204) or Color3.fromRGB(72, 72, 72),
+                -- Hardcode this color, since the color it's on top of doesn't respond to themes
+                ImageColor3 = Color3.new(1, 1, 1),
             }),
             Portal = e(Roact.Portal, {
-                target = self._context[rootKey],
+                target = self._context[rootKey].current,
             }, {
                 ValueSliderInputCapturer = e("ImageButton", {
                     BackgroundTransparency = 1,

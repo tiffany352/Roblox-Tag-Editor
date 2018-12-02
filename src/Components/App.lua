@@ -16,14 +16,16 @@ local rootKey = require(script.Parent.rootKey)
 local App = Roact.PureComponent:extend("App")
 
 function App:init()
-	self._context[rootKey] = self.props.root
+	self._rootRef = Roact.createRef()
+	self._context[rootKey] = self._rootRef
 end
 
 function App:render()
 	local props = self.props
-	
+
 	return Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
+		[Roact.Ref] = self._rootRef
 	}, {
 		Background = ThemeAccessor.withTheme(function(theme)
 			return Roact.createElement("Frame", {
@@ -68,7 +70,7 @@ function App:render()
 		InstanceView = Roact.createElement(InstanceView),
 		GroupPicker = Roact.createElement(GroupPicker),
 
-		TagMenu = Roact.createElement(TagMenu),
+		-- TagMenu = Roact.createElement(TagMenu),
 		IconPicker = Roact.createElement(IconPicker),
 		ColorPicker = Roact.createElement(ColorPicker),
 		WorldView = Roact.createElement(WorldView),
