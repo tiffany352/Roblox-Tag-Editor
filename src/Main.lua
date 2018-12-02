@@ -80,7 +80,6 @@ return function(plugin, savedState)
 	local instance = Roact.mount(element, gui, "TagEditor")
 
 	plugin:beforeUnload(function()
-		running = false
 		Roact.unmount(instance)
 		connection:Disconnect()
 		worldViewConnection:Disconnect()
