@@ -68,12 +68,14 @@ function Button:render()
             Text = props.Text,
             TextColor3 = theme:GetColor("ButtonText", buttonState),
             TextSize = props.TextSize,
+            ZIndex = props.ZIndex,
             [Roact.Event.MouseEnter] = self._mouseEnter,
             [Roact.Event.MouseLeave] = self._mouseLeave,
             [Roact.Event.MouseButton1Down] = self._mouseDown,
             [Roact.Event.MouseButton1Up] = self._mouseUp,
             [Roact.Event.MouseButton1Click] = props.leftClick,
-        })
+            [Roact.Event.Changed] = props[Roact.Event.Changed],
+        }, props[Roact.Children])
     end)
 end
 
