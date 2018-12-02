@@ -8,6 +8,7 @@ local TagManager = require(Modules.Plugin.TagManager)
 local Item = require(script.Parent.ListItem)
 local Tag = require(script.Tag)
 local Group = require(script.Group)
+local ScrollingFrame = require(Modules.Plugin.Components.ScrollingFrame)
 
 local function merge(orig, new)
 	local t = {}
@@ -147,16 +148,8 @@ function TagList:render()
 		})
 	end
 
-	return Roact.createElement("ScrollingFrame", {
+	return Roact.createElement(ScrollingFrame, {
 		Size = props.Size or UDim2.new(1, 0, 1, 0),
-		BackgroundColor3 = Constants.DarkGrey,
-		BackgroundTransparency = 1,
-		ScrollBarThickness = 4,
-		BorderSizePixel = 0,
-		MidImage = 'rbxasset://textures/ui/Gear.png',
-		BottomImage = 'rbxasset://textures/ui/Gear.png',
-		TopImage = 'rbxasset://textures/ui/Gear.png',
-		VerticalScrollBarInset = Enum.ScrollBarInset.Always,
 	}, children)
 end
 
