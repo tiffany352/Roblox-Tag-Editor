@@ -1,11 +1,10 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local Constants = require(Modules.Plugin.Constants)
 
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
 local function ListItemChrome(props)
-	local height = 26
+	local height = props.height or 26
 	local state = props.state or Enum.StudioStyleGuideModifier.Default
 	local showDivider = props.showDivider
 

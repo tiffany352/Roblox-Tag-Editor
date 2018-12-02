@@ -1,7 +1,6 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local Theme = require(Modules.Plugin.Theme)
 
 local Icon = require(script.Parent.Icon)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
@@ -22,9 +21,10 @@ local Item = Roact.Component:extend("Item")
 
 function Item:render()
 	local props = self.props
-	local height = 26
-	local isHover = self.state.Hover and not props.menuOpen
+	local ignoresMenuOpen = props.ignoresMenuOpen
+	local isHover = self.state.Hover and (not props.menuOpen or ignoresMenuOpen)
 	local indent = props.Indent or 0
+	local height = props.Height or 26
 
 	local state = Enum.StudioStyleGuideModifier.Default
 	if props.Active or props.SemiActive then
@@ -37,6 +37,8 @@ function Item:render()
 		LayoutOrder = props.LayoutOrder,
 		hidden = props.Hidden,
 		state = state,
+		height = height,
+		showDivider = props.ShowDivider,
 
 		mouseEnter = function(rbx)
 			self:setState({
@@ -55,56 +57,68 @@ function Item:render()
 	}, {
 		StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement("Frame", {
-				Size = UDim2.new(1, -indent, 1, 0),
+				Size = UDim2.new(1, 0, 1, 0),
 				BackgroundTransparency = 1.0,
-				Position = UDim2.new(0, indent, 0, 0),
+				Position = UDim2.new(0, 0, 0, 0),
 			}, {
-				Icon = props.Icon and Roact.createElement(Icon, {
-					Name = props.Icon,
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.new(0, 24, 0.5, 0),
-				}),
-				Name = Roact.createElement(props.IsInput and "TextBox" or "TextLabel", merge({
-					BackgroundTransparency = 1.0,
-					TextXAlignment = Enum.TextXAlignment.Left,
-					Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
-					Size = UDim2.new(1, -40, 0, height),
-					Text = props.IsInput and "" or props.Text,
-					PlaceholderText = props.IsInput and props.Text or nil,
-					PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
-					Font = Enum.Font.SourceSans,
-					TextSize = 20,
-					TextColor3 = theme:GetColor("MainText"),
+				TopElements = Roact.createElement("Frame", {
+					BackgroundTransparency = 1,
+					Size = UDim2.new(1, -indent, 0, 26),
+					Position = UDim2.new(0, indent, 0, 0),
+				}, {
+					Icon = props.Icon and Roact.createElement(Icon, {
+						Name = props.Icon,
+						AnchorPoint = Vector2.new(0.5, 0.5),
+						Position = UDim2.new(0, 24, 0.5, 0),
+					}),
+					Name = Roact.createElement(props.IsInput and "TextBox" or "TextLabel", merge({
+						BackgroundTransparency = 1.0,
+						TextXAlignment = Enum.TextXAlignment.Left,
+						Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
+						Size = UDim2.new(1, -40, 1, 0),
+						Text = props.IsInput and "" or props.Text,
+						PlaceholderText = props.IsInput and props.Text or nil,
+						PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
+						Font = Enum.Font.SourceSans,
+						TextSize = 20,
+						TextColor3 = theme:GetColor("MainText"),
 
-					[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
-						local text = rbx.Text
-						rbx.Text = ""
-						if props.onSubmit and enterPressed then
-							props.onSubmit(rbx, text)
-						end
-					end or nil,
-				}, props.TextProps or {})),
-				Visibility = props.onSetVisible and Roact.createElement(Icon, {
-					Name = props.Visible and "lightbulb" or "lightbulb_off",
-					Position = UDim2.new(1, -4, .5, 0),
-					AnchorPoint = Vector2.new(1, .5),
+						[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
+							local text = rbx.Text
+							rbx.Text = ""
+							if props.onSubmit and enterPressed then
+								props.onSubmit(rbx, text)
+							end
+						end or nil,
+					}, props.TextProps or {})),
+					Visibility = props.onSetVisible and Roact.createElement(Icon, {
+						Name = props.Visible and "lightbulb" or "lightbulb_off",
+						Position = UDim2.new(1, -4, .5, 0),
+						AnchorPoint = Vector2.new(1, .5),
 
-					onClick = props.onSetVisible,
-				}),
-				Settings = props.onSettings and Roact.createElement(Icon, {
-					Name = 'cog',
-					Position = UDim2.new(1, -24, .5, 0),
-					AnchorPoint = Vector2.new(1, .5),
+						onClick = props.onSetVisible,
+					}),
+					Settings = props.onSettings and Roact.createElement(Icon, {
+						Name = 'cog',
+						Position = UDim2.new(1, -24, .5, 0),
+						AnchorPoint = Vector2.new(1, .5),
 
-					onClick = props.onSettings,
-				}),
-				Delete = props.onDelete and Roact.createElement(Icon, {
-					Name = "cancel",
-					Position = UDim2.new(1, -4, .5, 0),
-					AnchorPoint = Vector2.new(1, .5),
+						onClick = props.onSettings,
+					}),
+					Delete = props.onDelete and Roact.createElement(Icon, {
+						Name = "cancel",
+						Position = UDim2.new(1, -4, .5, 0),
+						AnchorPoint = Vector2.new(1, .5),
 
-					onClick = props.onDelete,
+						onClick = props.onDelete,
+					}),
 				}),
+				Children = Roact.createElement("Frame", {
+					Size = UDim2.new(1, 0, 1, -26),
+					Position = UDim2.new(0, 0, 0, 26),
+					BackgroundColor3 = theme:GetColor("MainBackground"),
+					BorderSizePixel = 0,
+				}, props[Roact.Children])
 			})
 		end)
 	})
