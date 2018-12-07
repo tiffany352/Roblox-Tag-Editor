@@ -26,8 +26,12 @@ local source = builtinSource
 local currentRoot = source
 
 if useDevSource then
-	source = devSource or error("Development mode is enabled but the source could not be found")
+	if devSource ~= nil then
+		source = devSource
 	currentRoot = source
+	else
+		warn("Tag editor development source is not present, running using built-in source.")
+	end
 end
 
 local PluginFacade = {
