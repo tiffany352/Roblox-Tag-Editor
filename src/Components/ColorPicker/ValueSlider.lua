@@ -50,7 +50,7 @@ function ValueSlider:render()
                 AnchorPoint = Vector2.new(0.5, 0),
                 Image = "rbxassetid://2610863246",
                 -- Hardcode this color, since the color it's on top of doesn't respond to themes
-                ImageColor3 = Color3.new(1, 1, 1),
+                ImageColor3 = Color3.fromRGB(255, 255, 255),
             }),
             Portal = Roact.createElement(RootPortal, nil, {
                 ValueSliderInputCapturer = Roact.createElement("ImageButton", {

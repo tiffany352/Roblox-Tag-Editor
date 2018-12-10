@@ -22,7 +22,7 @@ function TextBox:render()
 	return StudioThemeAccessor.withTheme(function(theme)
 		local borderColor
 		if not self.state.isValid then
-			borderColor = Color3.new(1, 0, 0)
+			borderColor = Color3.fromRGB(255, 0, 0)
 		else
 			local searchBarState = "Default"
 			if self.state.focus then
