@@ -8,6 +8,7 @@ local TagManager = require(Modules.Plugin.TagManager)
 local Item = require(script.Parent.ListItem)
 local Tag = require(script.Tag)
 local Group = require(script.Group)
+local ScrollingFrame = require(Modules.Plugin.Components.ScrollingFrame)
 
 local function merge(orig, new)
 	local t = {}
@@ -48,7 +49,7 @@ function TagList:render()
 
 	children.UIListLayout = Roact.createElement("UIListLayout", {
 		SortOrder = Enum.SortOrder.LayoutOrder,
-		Padding = UDim.new(0, 2),
+		Padding = UDim.new(0, 1),
 
 		[Roact.Ref] = function(rbx)
 			if not rbx then return end
@@ -63,25 +64,25 @@ function TagList:render()
 	})
 
 	local lastGroup
-	local j = 1
+	local itemCount = 1
 	for i = 1, #tags do
 		local groupName = tags[i].Group or 'Default'
 		if tags[i].Group ~= lastGroup then
 			lastGroup = tags[i].Group
 			children['Group'..groupName] = Roact.createElement(Group, {
 				Name = groupName,
-				LayoutOrder = j,
+				LayoutOrder = itemCount,
 				toggleHidden = toggleGroup,
 				Hidden = self.state['Hide'..groupName],
 			})
-			j = j + 1
+			itemCount = itemCount + 1
 		end
 		children[tags[i].Name] = Roact.createElement(Tag, merge(tags[i], {
 			Hidden = self.state['Hide'..groupName],
 			Tag = tags[i].Name,
-			LayoutOrder = j,
+			LayoutOrder = itemCount,
 		}))
-		j = j + 1
+		itemCount = itemCount + 1
 	end
 
 	local unknownTags = props.unknownTags
@@ -92,30 +93,28 @@ function TagList:render()
 			Text = string.format("%s (click to import)", tag),
 			Icon = 'help',
 			ButtonColor = Constants.LightRed,
-			LayoutOrder = j,
+			LayoutOrder = itemCount,
 			TextProps = {
 				Font = Enum.Font.SourceSansItalic,
-				TextColor3 = Constants.White,
 			},
 
 			leftClick = function(rbx)
 				TagManager.Get():AddTag(tag)
 			end,
 		})
-		j = j + 1
+		itemCount = itemCount + 1
 	end
 
 	if #tags == 0 then
 		children.NoResults = Roact.createElement(Item, {
-			LayoutOrder = j,
+			LayoutOrder = itemCount,
 			Text = "No search results found.",
 			Icon = "cancel",
 			TextProps = {
 				Font = Enum.Font.SourceSansItalic,
-				TextColor3 = Constants.VeryDarkGrey,
 			},
 		})
-		j = j + 1
+		itemCount = itemCount + 1
 	end
 
 	local searchTagExists = false
@@ -127,7 +126,7 @@ function TagList:render()
 	end
 	if props.searchTerm and #props.searchTerm > 0 and not searchTagExists then
 		children.AddNew = Roact.createElement(Item, {
-			LayoutOrder = j,
+			LayoutOrder = itemCount,
 			Text = string.format("Add tag %q...", props.searchTerm),
 			Icon = "tag_blue_add",
 
@@ -138,7 +137,7 @@ function TagList:render()
 		})
 	else
 		children.AddNew = Roact.createElement(Item, {
-			LayoutOrder = j,
+			LayoutOrder = itemCount,
 			Text = "Add new tag...",
 			Icon = "tag_blue_add",
 			IsInput = true,
@@ -149,16 +148,8 @@ function TagList:render()
 		})
 	end
 
-	return Roact.createElement("ScrollingFrame", {
+	return Roact.createElement(ScrollingFrame, {
 		Size = props.Size or UDim2.new(1, 0, 1, 0),
-		BackgroundColor3 = Constants.DarkGrey,
-		BackgroundTransparency = 1,
-		ScrollBarThickness = 4,
-		BorderSizePixel = 0,
-		MidImage = 'rbxasset://textures/ui/Gear.png',
-		BottomImage = 'rbxasset://textures/ui/Gear.png',
-		TopImage = 'rbxasset://textures/ui/Gear.png',
-		VerticalScrollBarInset = Enum.ScrollBarInset.Always,
 	}, children)
 end
 

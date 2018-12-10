@@ -3,20 +3,34 @@ local Roact = require(Modules.Roact)
 
 local TagList = require(script.Parent.TagList)
 local TagSearch = require(script.Parent.TagSearch)
-local TagMenu = require(script.Parent.TagMenu)
 local IconPicker = require(script.Parent.IconPicker)
 local ColorPicker = require(script.Parent.ColorPicker)
 local WorldView = require(script.Parent.WorldView)
 local InstanceView = require(script.Parent.InstanceView)
 local GroupPicker = require(script.Parent.GroupPicker)
 local TooltipView = require(script.Parent.TooltipView)
-local MigrationDialog = require(script.Parent.MigrationDialog)
+local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
+local rootKey = require(script.Parent.rootKey)
 
-return function(props)
+local App = Roact.PureComponent:extend("App")
+
+function App:init()
+	self._rootRef = Roact.createRef()
+	self._context[rootKey] = self._rootRef
+end
+
+function App:render()
 	return Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
-		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+		[Roact.Ref] = self._rootRef
 	}, {
+		Background = StudioThemeAccessor.withTheme(function(theme)
+			return Roact.createElement("Frame", {
+				Size = UDim2.new(1, 0, 1, 0),
+				BackgroundColor3 = theme:GetColor('MainBackground'),
+				ZIndex = -100,
+			})
+		end),
 		Container = Roact.createElement("Frame", {
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1.0,
@@ -52,12 +66,11 @@ return function(props)
 		}),
 		InstanceView = Roact.createElement(InstanceView),
 		GroupPicker = Roact.createElement(GroupPicker),
-
-		TagMenu = Roact.createElement(TagMenu),
 		IconPicker = Roact.createElement(IconPicker),
 		ColorPicker = Roact.createElement(ColorPicker),
 		WorldView = Roact.createElement(WorldView),
 		TooltipView = Roact.createElement(TooltipView),
-		MigrationDialog = Roact.createElement(MigrationDialog),
 	})
 end
+
+return App

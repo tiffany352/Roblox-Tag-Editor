@@ -3,11 +3,13 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local Icons = require(Modules.Plugin.FamFamFam)
 local Constants = require(Modules.Plugin.Constants)
-local TextLabel = require(Modules.Plugin.Components.TextLabel)
+local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 
 local IconPreview = Roact.Component:extend("IconPreview")
 
 function IconPreview:render()
+	local scaleFactor = 3
+
 	local function update()
 		local Vector2new = Vector2.new
 		local image = self.props.icon and Icons.Lookup(self.props.icon)
@@ -25,24 +27,24 @@ function IconPreview:render()
 	end
 
 	return Roact.createElement("Frame", {
-		Size = UDim2.new(0, 64, 0, 72+20*3),
+		Size = UDim2.new(1, 0, 0, 56),
 		Position = self.props.Position,
 		BackgroundTransparency = 1.0,
-		AnchorPoint = Vector2.new(1, 0),
+		AnchorPoint = Vector2.new(0, 0),
 	}, {
-		IconName = Roact.createElement(TextLabel, {
+		IconName = Roact.createElement(ThemedTextLabel, {
 			TextSize = 14,
-			TextColor3 = Constants.DarkGrey,
-			Size = UDim2.new(0, 64, 0, 20*3),
-			Position = UDim2.new(0, 0, 0, 72),
+			Size = UDim2.new(1, -56, 0, 20*3),
+			Position = UDim2.new(0, 56, 0, 32),
 			TextWrapped = true,
 			Text = self.props.icon or "",
 			TextYAlignment = Enum.TextYAlignment.Top,
 		}),
 		IconMagnify = Roact.createElement("Frame", {
-			Size = UDim2.new(0, 64, 0, 64),
+			Size = UDim2.new(0, 48, 0, 48),
 			BorderColor3 = Constants.DarkGrey,
 			BackgroundColor3 = Constants.White,
+			BackgroundTransparency = 1,
 
 			[Roact.Ref] = function(rbx)
 				if rbx == self.oldRbx then return end
@@ -63,8 +65,8 @@ function IconPreview:render()
 							image.Name = string.format("Pixel [%d, %d]", x, y)
 							image.Image = Icons.Asset
 							image.ImageRectSize = Vector2.new(0, 0)
-							image.Size = UDim2.new(0, 4, 0, 4)
-							image.Position = UDim2.new(0, x*4, 0, y*4)
+							image.Size = UDim2.new(0, scaleFactor, 0, scaleFactor)
+							image.Position = UDim2.new(0, x*scaleFactor, 0, y*scaleFactor)
 							image.BackgroundTransparency = 1.0
 							image.Parent = rbx
 							self.pixels[x * 16 + y] = image
@@ -79,8 +81,20 @@ function IconPreview:render()
 end
 
 local function mapStateToProps(state)
+	local icon = state.HoveredIcon
+
+	if icon == nil then
+		local tagName = state.IconPicker
+
+		for _,tag in pairs(state.TagData) do
+			if tag.Name == tagName then
+				icon = tag.Icon
+				break
+			end
+		end
+	end
 	return {
-		icon = state.HoveredIcon,
+		icon = icon,
 	}
 end
 

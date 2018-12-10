@@ -1,20 +1,38 @@
--- When using HotSwap, your code sometimes runs in a non-plugin context
+-- Sanity check.
 if not plugin then
-	return
+	error("Hot reloader must be executed as a plugin!")
 end
 
-local RunService = game:GetService("RunService")
-
 -- RenderStepped errors out in Start Server, so we consider it a hostile environment even though it has a 3D view that we could potentially be using.
+local RunService = game:GetService("RunService")
 if not RunService:IsClient() then
 	return
 end
 
--- currentRoot will not be the same as source
-local source = script.Parent.Parent
-local currentRoot = script.Parent.Parent
+-- Change to true to enable hot reloading support. Opening a place
+-- containing the code synced via Rojo will cause the plugin to be
+-- reloaded in edit mode. (No need for play solo or the hotswap plugin.)
+local useDevSource = false
+local ServerStorage = game:GetService("ServerStorage")
+local devSource = ServerStorage:FindFirstChild("TagEditor")
 
-script.Disabled = true
+-- The source that's shipped integrated into the plugin.
+local builtinSource = script.Parent.Parent
+
+-- `source` is where we should watch for changes.
+-- `currentRoot` is the clone we make of source to avoid require()
+-- returning stale values.
+local source = builtinSource
+local currentRoot = source
+
+if useDevSource then
+	if devSource ~= nil then
+		source = devSource
+	currentRoot = source
+	else
+		warn("Tag editor development source is not present, running using built-in source.")
+	end
+end
 
 local PluginFacade = {
 	_toolbars = {},
@@ -22,6 +40,7 @@ local PluginFacade = {
 	_buttons = {},
 	_watching = {},
 	_beforeUnload = nil,
+	isDev = devSource ~= nil,
 }
 
 --[[
@@ -149,18 +168,3 @@ end
 
 PluginFacade:_load()
 PluginFacade:_watch(source)
-
--- development
-local development = false
-if development then
-	local toolbar = PluginFacade:toolbar("Plugin Facade Debugger")
-
-	local button = PluginFacade:button(toolbar, "Reload", "Reload the Plugin Facade Debugger", "")
-
-	button.Click:Connect(function()
-		spawn(function()
-			print("Reloading manually...")
-			PluginFacade:_reload()
-		end)
-	end)
-end

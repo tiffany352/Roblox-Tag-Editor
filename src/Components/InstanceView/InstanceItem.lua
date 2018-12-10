@@ -4,56 +4,39 @@ local UserInputService = game:GetService("UserInputService")
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
-local Constants = require(Modules.Plugin.Constants)
-local TextLabel = require(Modules.Plugin.Components.TextLabel)
+local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
+local ListItemChrome = require(Modules.Plugin.Components.ListItemChrome)
 
 local InstanceItem = Roact.Component:extend("InstanceItem")
 
 function InstanceItem:render()
 	local props = self.props
 
-	local isActive = props.Selected
-	local isHover = self.state.hover
+	local state = "Default"
 
-	local imageColor
-	local showDivider
-	local flairColor
-	if isActive then
-		if isHover then
-			imageColor = Constants.RobloxBlue:lerp(Constants.LightGrey, 0.5)
-			flairColor = Constants.VeryDarkGrey
-		else
-			imageColor = Constants.RobloxBlue:lerp(Constants.White, 0.5)
-		end
-		showDivider = false
-	elseif isHover then
-		imageColor = Constants.LightGrey
-		flairColor = Constants.DarkGrey
-		showDivider = false
+	if props.Selected then
+		state = "Selected"
+	elseif self.state.hover then
+		state = "Hover"
 	end
 
-	return Roact.createElement("ImageButton", {
-		Size = UDim2.new(1, 0, 0, 32),
-		BackgroundTransparency = 1.0,
-		Image = imageColor and "rbxasset://textures/ui/dialog_white.png" or nil,
-		SliceCenter = Rect.new(10, 10, 10, 10),
-		ImageColor3 = imageColor,
-		ScaleType = Enum.ScaleType.Slice,
+	return Roact.createElement(ListItemChrome, {
 		LayoutOrder = props.LayoutOrder,
+		state = state,
 
-		[Roact.Event.MouseEnter] = function(rbx)
+		mouseEnter = function(rbx)
 			self:setState({
 				hover = true,
 			})
 		end,
 
-		[Roact.Event.MouseLeave] = function(rbx)
+		mouseLeave = function(rbx)
 			self:setState({
 				hover = false,
 			})
 		end,
 
-		[Roact.Event.MouseButton1Click] = function(rbx)
+		leftClick = function(rbx)
 			local sel = Selection:Get()
 			local alreadySelected = false
 			for _,instance in pairs(sel) do
@@ -90,54 +73,37 @@ function InstanceItem:render()
 			end
 		end,
 	}, {
-		Divider = Roact.createElement("Frame", {
-			Visible = showDivider,
-			Size = UDim2.new(1, -20, 0, 1),
-			Position = UDim2.new(.5, 0, 1, 0),
-			AnchorPoint = Vector2.new(.5, 1),
-			BorderSizePixel = 0,
-			BackgroundColor3 = Constants.LightGrey,
-		}),
-		Flair = Roact.createElement("ImageLabel", {
-			Size = UDim2.new(0, 8, 1, 0),
-			Image = "rbxassetid://1353014916",
-			BackgroundTransparency = 1.0,
-			ImageColor3 = flairColor,
-			Visible = flairColor ~= nil,
-			ImageRectSize = Vector2.new(4, 40),
-			ScaleType = Enum.ScaleType.Slice,
-			SliceCenter = Rect.new(4, 20, 4, 20),
-		}),
 		Container = Roact.createElement("Frame", {
-			Size = UDim2.new(1, -16, 0, 20),
-			Position = UDim2.new(0, 16, .5, 0),
-			AnchorPoint = Vector2.new(0, .5),
+			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1.0,
 		}, {
+			UIPadding = Roact.createElement("UIPadding", {
+				PaddingLeft = UDim.new(0, 12),
+			}),
 			UIListLayout = Roact.createElement("UIListLayout", {
 				SortOrder = Enum.SortOrder.LayoutOrder,
 				VerticalAlignment = Enum.VerticalAlignment.Center,
 				FillDirection = Enum.FillDirection.Horizontal,
 				Padding = UDim.new(0, 4),
 			}),
-			InstanceClass = Roact.createElement(TextLabel, {
+			InstanceClass = Roact.createElement(ThemedTextLabel, {
+				object = "DimmedText",
+				state = state,
+				TextSize = 16,
 				Text = props.ClassName,
 				LayoutOrder = 1,
-				Font = Enum.Font.SourceSansSemibold,
-				TextColor3 = Constants.VeryDarkGrey,
 			}),
-			InstanceName = Roact.createElement(TextLabel, {
+			InstanceName = Roact.createElement(ThemedTextLabel, {
+				state = state,
 				Text = props.Name,
 				LayoutOrder = 2,
-				TextColor3 = Constants.Black,
-				Font = Enum.Font.SourceSansSemibold,
 			}),
-			Path = Roact.createElement(TextLabel, {
+			Path = Roact.createElement(ThemedTextLabel, {
+				Font = Enum.Font.SourceSansItalic,
+				state = state,
 				Text = props.Path,
 				LayoutOrder = 3,
-				Font = Enum.Font.SourceSansItalic,
-				TextSize = 18,
-				TextColor3 = Constants.VeryDarkGrey,
+				TextSize = 16,
 			})
 		}),
 	})
