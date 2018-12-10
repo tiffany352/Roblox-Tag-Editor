@@ -11,8 +11,6 @@ function TextBox:init()
 		press = false,
 		isValid = true,
 	}
-
-	self._textboxRef = Roact.createRef()
 end
 
 function TextBox:render()
@@ -80,7 +78,19 @@ function TextBox:render()
 					BackgroundTransparency = 1.0,
 					TextXAlignment = Enum.TextXAlignment.Left,
 
-					[Roact.Ref] = self._textboxRef,
+					[Roact.Change.Text] = function(rbx)
+						local isValid = true
+
+						if rbx.Text ~= "" then
+							isValid = self.props.Validate(rbx.Text)
+						end
+
+						if isValid ~= self.state.isValid then
+							self:setState({
+								isValid = isValid
+							})
+						end
+					end,
 
 					[Roact.Event.Focused] = function(rbx)
 						self:setState({
@@ -103,33 +113,6 @@ function TextBox:render()
 			})
 		})
 	end)
-end
-
-function TextBox:didMount()
-	local debounce = false
-	local rbx = self._textboxRef.current
-
-	self._inputConnection = rbx:GetPropertyChangedSignal("Text"):Connect(function()
-		if debounce then return end
-		debounce = true
-		local isValid = true
-
-		if rbx.Text ~= "" then
-			isValid = self.props.Validate(rbx.Text)
-		end
-
-		if isValid ~= self.state.isValid then
-			self:setState({
-				isValid = isValid
-			})
-		end
-
-		debounce = false
-	end)
-end
-
-function TextBox:willUnmount()
-	self._inputConnection:Disconnect()
 end
 
 return TextBox
