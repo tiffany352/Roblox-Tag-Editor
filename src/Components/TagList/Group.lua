@@ -3,12 +3,12 @@ local OPEN_ARROW_IMAGE = "rbxasset://textures/StudioToolbox/ArrowDownIconWhite.p
 
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
+
 local ListItemChrome = require(Modules.Plugin.Components.ListItemChrome)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 
 local function Group(props)
-	return e(ListItemChrome, {
+	return Roact.createElement(ListItemChrome, {
 		LayoutOrder = props.LayoutOrder,
 		showDivider = true,
 		leftClick = function()
@@ -16,11 +16,11 @@ local function Group(props)
 		end,
 	}, {
 		StudioThemeAccessor.withTheme(function(theme, themeType)
-			return e("Frame", {
+			return Roact.createElement("Frame", {
 				BackgroundTransparency = 1,
 				Size = UDim2.new(1, 0, 1, 0),
 			}, {
-				GroupText = e("TextLabel", {
+				GroupText = Roact.createElement("TextLabel", {
 					Font = Enum.Font.SourceSansSemibold,
 					Text = props.Name,
 					BackgroundTransparency = 1,
@@ -30,7 +30,7 @@ local function Group(props)
 					TextXAlignment = "Left",
 					TextSize = 20,
 				}),
-				Arrow = e("ImageLabel", {
+				Arrow = Roact.createElement("ImageLabel", {
 					Size = UDim2.new(0, 12, 0, 12),
 					Position = UDim2.new(0, 10, 0.5, 0),
 					AnchorPoint = Vector2.new(0.5, 0.5),

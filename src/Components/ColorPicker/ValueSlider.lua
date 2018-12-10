@@ -1,6 +1,5 @@
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
 
 local RootPortal = require(script.Parent.Parent.RootPortal)
 local StudioThemeAccessor = require(script.Parent.Parent.StudioThemeAccessor)
@@ -26,7 +25,7 @@ end
 
 function ValueSlider:render()
     return StudioThemeAccessor.withTheme(function(theme, themeEnum)
-        return e("ImageButton", {
+        return Roact.createElement("ImageButton", {
             Size = UDim2.new(1, 0, 0, 20),
             Position = UDim2.new(0, 0, 1, 5),
             AnchorPoint = Vector2.new(0, 0),
@@ -44,7 +43,7 @@ function ValueSlider:render()
                 self.props.updatePosition(self:xToAlpha(x))
             end,
         }, {
-            Position = e("ImageLabel", {
+            Position = Roact.createElement("ImageLabel", {
                 Size = UDim2.new(0, 8, 0, 5),
                 BackgroundTransparency = 1,
                 Position = UDim2.new(self.props.val, 0, 0, 0),
@@ -53,8 +52,8 @@ function ValueSlider:render()
                 -- Hardcode this color, since the color it's on top of doesn't respond to themes
                 ImageColor3 = Color3.new(1, 1, 1),
             }),
-            Portal = e(RootPortal, nil, {
-                ValueSliderInputCapturer = e("ImageButton", {
+            Portal = Roact.createElement(RootPortal, nil, {
+                ValueSliderInputCapturer = Roact.createElement("ImageButton", {
                     BackgroundTransparency = 1,
                     ZIndex = 100,
                     Size = self.state.valueMouseDown and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 0, 0, 0),

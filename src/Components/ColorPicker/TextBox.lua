@@ -1,6 +1,6 @@
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
+
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 
 local TextBox = Roact.PureComponent:extend("ColorPicker.TextBox")
@@ -34,13 +34,13 @@ function TextBox:render()
 			borderColor = theme:GetColor("InputFieldBorder", searchBarState)
 		end
 
-		return e("Frame", {
+		return Roact.createElement("Frame", {
 			Size = props.Size,
 			Position = props.Position,
 			BackgroundTransparency = 1.0,
 			LayoutOrder = props.LayoutOrder,
 		}, {
-			Label = props.Label and e("TextLabel", {
+			Label = props.Label and Roact.createElement("TextLabel", {
 				Text = props.Label,
 				Size = UDim2.new(0, inset, 0, 20),
 				TextXAlignment = Enum.TextXAlignment.Left,
@@ -49,7 +49,7 @@ function TextBox:render()
 				TextColor3 = theme:GetColor("MainText"),
 				BackgroundTransparency = 1.0,
 			}) or nil,
-			Input = e("Frame", {
+			Input = Roact.createElement("Frame", {
 				Size = UDim2.new(1, -inset, 1, 0),
 				Position = UDim2.new(0, inset, 0, 0),
 				BackgroundColor3 = theme:GetColor("InputFieldBackground"),
@@ -67,7 +67,7 @@ function TextBox:render()
 					})
 				end,
 			}, {
-				TextBox = e("TextBox", {
+				TextBox = Roact.createElement("TextBox", {
 					Text = "",
 					PlaceholderText = props.Text,
 					PlaceholderColor3 = theme:GetColor("DimmedText"),

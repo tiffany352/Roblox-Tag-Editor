@@ -1,6 +1,5 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
 
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
@@ -55,7 +54,7 @@ function Button:render()
     end
 
     return StudioThemeAccessor.withTheme(function(theme, themeEnum)
-        return e("TextButton", {
+        return Roact.createElement("TextButton", {
             AnchorPoint = props.AnchorPoint,
             AutoButtonColor = false,
             BackgroundColor3 = theme:GetColor("Button", buttonState),

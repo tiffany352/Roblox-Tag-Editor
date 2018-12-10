@@ -2,7 +2,6 @@ local ARROW_IMAGE = "rbxasset://textures/StudioToolbox/ArrowDownIconWhite.png"
 
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
 
 local Button = require(Modules.Plugin.Components.Button)
 local ListItem = require(Modules.Plugin.Components.ListItem)
@@ -12,7 +11,7 @@ local rootKey = require(Modules.Plugin.Components.rootKey)
 local RootPortal = require(Modules.Plugin.Components.RootPortal)
 
 local DropdownItem = function(props)
-    return e(ListItem, {
+    return Roact.createElement(ListItem, {
         ShowDivider = false,
         Text = props.Text,
         leftClick = props.leftClick,
@@ -44,7 +43,7 @@ function Dropdown:render()
     local children = {}
 
     for _, option in ipairs(props.Options) do
-        children[option] = e(DropdownItem, {
+        children[option] = Roact.createElement(DropdownItem, {
             Text = option,
             Height = 26,
             leftClick = function()
@@ -58,7 +57,7 @@ function Dropdown:render()
     end
 
     return StudioThemeAccessor.withTheme(function(theme, themeType)
-        return e(Button, {
+        return Roact.createElement(Button, {
             Size = props.Size,
             LayoutOrder = props.LayoutOrder,
             Position = props.Position,
@@ -90,8 +89,8 @@ function Dropdown:render()
                 })
             end,
         }, {
-            Portal = e(RootPortal, nil, {
-                OptionList = e(ScrollingFrame, {
+            Portal = Roact.createElement(RootPortal, nil, {
+                OptionList = Roact.createElement(ScrollingFrame, {
                     ShowBorder = true,
                     Size = UDim2.new(1, 0, 0, self.state.dropdownHeight),
                     Visible = self.state.open,
@@ -100,7 +99,7 @@ function Dropdown:render()
                     ZIndex = 5,
                 }, children),
             }),
-            Arrow = e("ImageLabel", {
+            Arrow = Roact.createElement("ImageLabel", {
                 BackgroundTransparency = 1,
                 Size = UDim2.new(0, 12, 0, 12),
                 Position = UDim2.new(1, -6, 0.5, 0),

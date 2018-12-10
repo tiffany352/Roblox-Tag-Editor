@@ -3,7 +3,6 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(Modules.Plugin.Actions)
 local TagManager = require(Modules.Plugin.TagManager)
-local e = Roact.createElement
 
 local Button = require(Modules.Plugin.Components.Button)
 local Checkbox = require(Modules.Plugin.Components.Checkbox)
@@ -13,28 +12,28 @@ local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccesso
 local Dropdown = require(Modules.Plugin.Components.Dropdown)
 
 local function TagSettings(props)
-    return e("Frame", {
+    return Roact.createElement("Frame", {
         BackgroundTransparency = 1,
         Size = UDim2.new(1, 0, 1, 0),
     }, {
-        SideButtons = e("Frame", {
+        SideButtons = Roact.createElement("Frame", {
             Size = UDim2.new(0.3, 0, 1, 0),
             BackgroundTransparency = 1,
         }, {
-            Padding = e("UIPadding", {
+            Padding = Roact.createElement("UIPadding", {
                 PaddingTop = UDim.new(0, 5),
                 PaddingBottom = UDim.new(0, 5),
                 PaddingRight = UDim.new(0, 5),
                 PaddingLeft = UDim.new(0, 5),
             }),
-            Layout = e("UIListLayout", {
+            Layout = Roact.createElement("UIListLayout", {
                 SortOrder = "LayoutOrder",
                 HorizontalAlignment = "Center",
                 FillDirection = "Vertical",
                 VerticalAlignment = "Top",
                 Padding = UDim.new(0, 5),
             }),
-            ChangeIcon = e(Button, {
+            ChangeIcon = Roact.createElement(Button, {
                 LayoutOrder = 1,
                 Size = UDim2.new(1, 0, 0, 30),
                 Text = "Change icon",
@@ -42,7 +41,7 @@ local function TagSettings(props)
                     props.iconPicker(props.tagMenu)
                 end,
             }),
-            ChangeGroup = e(Button, {
+            ChangeGroup = Roact.createElement(Button, {
                 LayoutOrder = 2,
                 Size = UDim2.new(1, 0, 0, 30),
                 Text = "Change group",
@@ -50,7 +49,7 @@ local function TagSettings(props)
                     props.groupPicker(props.tagMenu)
                 end,
             }),
-            TaggedInstances = e(Button, {
+            TaggedInstances = Roact.createElement(Button, {
                 LayoutOrder = 3,
                 Size = UDim2.new(1, 0, 0, 30),
                 Text = "Tagged instances",
@@ -58,7 +57,7 @@ local function TagSettings(props)
                     props.instanceView(props.tagMenu)
                 end,
             }),
-            Delete = e(DeleteButton, {
+            Delete = Roact.createElement(DeleteButton, {
                 LayoutOrder = 4,
                 Size = UDim2.new(1, 0, 0, 30),
                 Text = "Delete",
@@ -68,28 +67,28 @@ local function TagSettings(props)
                 end,
             }),
         }),
-        Visualization = e("Frame", {
+        Visualization = Roact.createElement("Frame", {
             Size = UDim2.new(0.7, -10, 1, 0),
             Position = UDim2.new(0.3, 5, 0, 0),
             BackgroundTransparency = 1,
         }, {
-            Padding = e("UIPadding", {
+            Padding = Roact.createElement("UIPadding", {
                 PaddingTop = UDim.new(0, 5),
                 PaddingBottom = UDim.new(0, 5),
                 PaddingRight = UDim.new(0, 5),
                 PaddingLeft = UDim.new(0, 5),
             }),
-            Layout = e("UIListLayout", {
+            Layout = Roact.createElement("UIListLayout", {
                 Padding = UDim.new(0, 5),
                 SortOrder = "LayoutOrder",
             }),
-            Title = e(TextLabel, {
+            Title = Roact.createElement(TextLabel, {
                 Size = UDim2.new(1, 0, 0, 30),
                 LayoutOrder = 1,
                 Text = "Tag Visualization",
                 TextSize = 20,
             }),
-            ChangeColor = e(Button, {
+            ChangeColor = Roact.createElement(Button, {
                 LayoutOrder = 2,
                 Size = UDim2.new(1, 0, 0, 30),
                 Text = "Change color",
@@ -98,21 +97,21 @@ local function TagSettings(props)
                 end,
             }, {
                 ColorVisualization = StudioThemeAccessor.withTheme(function(theme)
-                    return e("Frame", {
+                    return Roact.createElement("Frame", {
                         Size = UDim2.new(1, -10, 1, -10),
                         Position = UDim2.new(1, -5, 0.5, 0),
                         AnchorPoint = Vector2.new(1, 0.5),
                         BackgroundColor3 = props.tagColor,
                         BorderColor3 = theme:GetColor("Border"),
                     }, {
-                        ARConstraint = e("UIAspectRatioConstraint", {
+                        ARConstraint = Roact.createElement("UIAspectRatioConstraint", {
                             AspectRatio = 1,
                             DominantAxis = "Height",
                         })
                     })
                 end),
             }),
-            AlwaysOnTop = e("ImageButton", {
+            AlwaysOnTop = Roact.createElement("ImageButton", {
                 LayoutOrder = 3,
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, 30),
@@ -121,40 +120,40 @@ local function TagSettings(props)
                     TagManager.Get():SetAlwaysOnTop(props.tagMenu, not props.tagAlwaysOnTop)
                 end,
             }, {
-                Padding = e("UIPadding", {
+                Padding = Roact.createElement("UIPadding", {
                     PaddingTop = UDim.new(0, 5),
                     PaddingBottom = UDim.new(0, 5),
                 }),
-                Check = e(Checkbox, {
+                Check = Roact.createElement(Checkbox, {
                     Checked = props.tagAlwaysOnTop,
                     leftClick = function()
                         TagManager.Get():SetAlwaysOnTop(props.tagMenu, not props.tagAlwaysOnTop)
                     end,
                 }),
-                Label = e(TextLabel, {
+                Label = Roact.createElement(TextLabel, {
                     Size = UDim2.new(1, -30, 1, 0),
                     Position = UDim2.new(0, 30, 0, 0),
                     Text = "Always on top",
                     TextSize = 16,
                 })
             }),
-            VisualizationKind = e("Frame", {
+            VisualizationKind = Roact.createElement("Frame", {
                 Size = UDim2.new(1, 0, 0, 30),
                 BackgroundTransparency = 1,
                 LayoutOrder = 4,
             }, {
-                Layout = e("UIListLayout", {
+                Layout = Roact.createElement("UIListLayout", {
                     SortOrder = "LayoutOrder",
                     FillDirection = "Horizontal",
                     VerticalAlignment = "Center",
                     Padding = UDim.new(0, 5),
                 }),
-                Label = e(TextLabel, {
+                Label = Roact.createElement(TextLabel, {
                     Text = "Visualize as:",
                     LayoutOrder = 1,
                     TextSize = 16,
                 }),
-                Dropdown = e(Dropdown, {
+                Dropdown = Roact.createElement(Dropdown, {
                     LayoutOrder = 2,
                     Size = UDim2.new(1, -75, 0, 30),
                     Options = { "None", "Icon", "Outline", "Box", "Sphere", "Text" },

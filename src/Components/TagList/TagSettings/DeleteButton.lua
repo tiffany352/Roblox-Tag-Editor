@@ -1,6 +1,5 @@
 local Modules = script.Parent.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
 
 local Button = require(Modules.Plugin.Components.Button)
 
@@ -13,7 +12,7 @@ function DeleteButton:init()
 end
 
 function DeleteButton:render()
-    return e(Button, {
+    return Roact.createElement(Button, {
         Text = self.state.confirming and "Confirm?" or "Delete",
         Size = self.props.Size,
         Position = self.props.Position,

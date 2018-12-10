@@ -1,6 +1,6 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
+
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 
 local function ScrollingFrame(props)
@@ -30,7 +30,7 @@ local function ScrollingFrame(props)
 	end
 
 	return StudioThemeAccessor.withTheme(function(theme, themeEnum)
-		return e("Frame", {
+		return Roact.createElement("Frame", {
 			Size = props.Size or UDim2.new(1, 0, 1, 0),
 			Position = props.Position,
 			AnchorPoint = props.AnchorPoint,
@@ -43,14 +43,14 @@ local function ScrollingFrame(props)
 			ClipsDescendants = true,
 			[Roact.Ref] = props[Roact.Ref],
 		}, {
-			BarBackground = e("Frame", {
+			BarBackground = Roact.createElement("Frame", {
 				BackgroundColor3 = theme:GetColor("ScrollBarBackground"),
 				Size = UDim2.new(0, 12, 1, 0),
 				AnchorPoint = Vector2.new(1, 0),
 				Position = UDim2.new(1, 0, 0, 0),
 				BorderSizePixel = 0,
 			}),
-			ScrollingFrame = e("ScrollingFrame", {
+			ScrollingFrame = Roact.createElement("ScrollingFrame", {
 				Size = UDim2.new(1, -2, 1, 0),
 				VerticalScrollBarInset = Enum.ScrollBarInset.Always,
 				BackgroundTransparency = 1,

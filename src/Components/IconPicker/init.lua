@@ -1,6 +1,5 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
 local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(Modules.Plugin.Actions)
 local IconCategories = require(Modules.Plugin.IconCategories)
@@ -51,7 +50,7 @@ function IconPicker:render()
 	for i = 1, #cats do
 		local name = cats[i].Name
 		local icons = cats[i].Icons
-		children[name] = e(Category, {
+		children[name] = Roact.createElement(Category, {
 			LayoutOrder = i,
 			CategoryName = name,
 			Icons = icons,
@@ -62,14 +61,14 @@ function IconPicker:render()
 		})
 	end
 
-	children.UIPadding = e("UIPadding", {
+	children.UIPadding = Roact.createElement("UIPadding", {
 		PaddingLeft = UDim.new(0, 4),
 		PaddingRight = UDim.new(0, 4),
 		PaddingTop = UDim.new(0, 4),
 		PaddingBottom = UDim.new(0, 4),
 	})
 
-	return e(Page, {
+	return Roact.createElement(Page, {
 		visible = props.tagName ~= nil,
 		title = tostring(props.tagName).." - Select an Icon",
 		titleIcon = props.tagIcon,
@@ -78,19 +77,19 @@ function IconPicker:render()
 			props.close()
 		end,
 	}, {
-		IconList = e(ScrollingFrame, {
+		IconList = Roact.createElement(ScrollingFrame, {
 			Size = UDim2.new(1, 0, 1, -64),
 			Position = UDim2.new(0, 0, 0, 64),
 			List = true,
 		}, children),
 		TopBar = StudioThemeAccessor.withTheme(function(theme)
-			return e("Frame", {
+			return Roact.createElement("Frame", {
 				BackgroundColor3 = theme:GetColor("Titlebar"),
 				BorderSizePixel = 0,
 				Size = UDim2.new(1, 0, 0, 64),
 				ZIndex = 2,
 			}, {
-				Search = e(Search, {
+				Search = Roact.createElement(Search, {
 					Size = UDim2.new(1, -56, 0, 40),
 					Position = UDim2.new(0, 56, 0, 0),
 
@@ -99,10 +98,10 @@ function IconPicker:render()
 						props.setTerm(term)
 					end,
 				}),
-				Preview = e(IconPreview, {
+				Preview = Roact.createElement(IconPreview, {
 					Position = UDim2.new(0, 8, 0, 8),
 				}),
-				Separator = e("Frame", {
+				Separator = Roact.createElement("Frame", {
 					-- This separator acts as a bottom border, so we should use the border color, not the separator color
 					BackgroundColor3 = theme:GetColor("Border"),
 					BorderSizePixel = 0,

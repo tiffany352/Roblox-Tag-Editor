@@ -1,6 +1,5 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local e = Roact.createElement
 
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local Icon = require(script.Parent.Icon)
@@ -8,20 +7,20 @@ local TextLabel = require(script.Parent.TextLabel)
 
 local function Page(props)
 	return StudioThemeAccessor.withTheme(function(theme)
-		return e("ImageButton", {
+		return Roact.createElement("ImageButton", {
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundColor3 = theme:GetColor("MainBackground"),
 			ZIndex = 10,
 			Visible = props.visible,
 			AutoButtonColor = false,
 		}, {
-			Topbar = e("Frame", {
+			Topbar = Roact.createElement("Frame", {
 				Size = UDim2.new(1, 0, 0, 32),
 				BackgroundColor3 = theme:GetColor("Titlebar"),
 				BorderSizePixel = 0,
 				ZIndex = 2,
 			}, {
-				Back = e("TextButton", {
+				Back = Roact.createElement("TextButton", {
 					Size = UDim2.new(0, 48, 0, 32),
 					Text = "Back",
 					TextSize = 20,
@@ -33,29 +32,29 @@ local function Page(props)
 						props.close()
 					end,
 				}),
-				Title = e("Frame", {
+				Title = Roact.createElement("Frame", {
 					Size = UDim2.new(1, 0, 1, 0),
 					BackgroundTransparency = 1.0,
 				}, {
-					UIListLayout = e("UIListLayout", {
+					UIListLayout = Roact.createElement("UIListLayout", {
 						HorizontalAlignment = Enum.HorizontalAlignment.Center,
 						VerticalAlignment = Enum.VerticalAlignment.Center,
 						FillDirection = Enum.FillDirection.Horizontal,
 						SortOrder = Enum.SortOrder.LayoutOrder,
 						Padding = UDim.new(0, 4),
 					}),
-					Icon = props.titleIcon and e(Icon, {
+					Icon = props.titleIcon and Roact.createElement(Icon, {
 						Name = props.titleIcon,
 						LayoutOrder = 1,
 					}),
-					Label = e(TextLabel, {
+					Label = Roact.createElement(TextLabel, {
 						Text = props.title,
 						LayoutOrder = 2,
 						TextColor3 = theme:GetColor("TitlebarText"),
 						Font = Enum.Font.SourceSansSemibold,
 					}),
 				}),
-				Separator = e("Frame", {
+				Separator = Roact.createElement("Frame", {
 					-- This separator acts as a bottom border, so we should use the border color, not the separator color
 					BackgroundColor3 = theme:GetColor("Border"),
 					BorderSizePixel = 0,
@@ -65,7 +64,7 @@ local function Page(props)
 					ZIndex = 2,
 				})
 			}),
-			Body = e("Frame", {
+			Body = Roact.createElement("Frame", {
 				Size = UDim2.new(1, 0, 1, -32),
 				Position = UDim2.new(0, 0, 0, 32),
 				BackgroundTransparency = 1.0,
