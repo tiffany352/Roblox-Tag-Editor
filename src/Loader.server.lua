@@ -12,7 +12,8 @@ end
 -- Change to true to enable hot reloading support. Opening a place
 -- containing the code synced via Rojo will cause the plugin to be
 -- reloaded in edit mode. (No need for play solo or the hotswap plugin.)
-local useDevSource = false
+local Config = require(script.Parent.Config)
+local useDevSource = Config.useDevSource
 local ServerStorage = game:GetService("ServerStorage")
 local devSource = ServerStorage:FindFirstChild("TagEditor")
 
@@ -40,7 +41,7 @@ local PluginFacade = {
 	_buttons = {},
 	_watching = {},
 	_beforeUnload = nil,
-	isDev = devSource ~= nil,
+	isDev = useDevSource and devSource ~= nil,
 }
 
 --[[

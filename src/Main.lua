@@ -7,11 +7,22 @@ local App = require(script.Parent.Components.App)
 local Reducer = require(script.Parent.Reducer)
 local TagManager = require(script.Parent.TagManager)
 local Actions = require(script.Parent.Actions)
+local Config = require(script.Parent.Config)
+
+local function getSuffix(plugin)
+	if plugin.isDev then
+		return " [DEV]", "Dev"
+	elseif Config.betaRelease then
+		return " [BETA]", "Beta"
+	end
+
+	return "", ""
+end
 
 return function(plugin, savedState)
-	local isDev = plugin.isDev
+	local displaySuffix, nameSuffix = getSuffix(plugin)
 
-	local toolbar = plugin:toolbar(isDev and "Instance Tagging [DEV]" or "Instance Tagging")
+	local toolbar = plugin:toolbar("Instance Tagging"..displaySuffix)
 
 	local toggleButton = plugin:button(
 		toolbar,
@@ -39,9 +50,9 @@ return function(plugin, savedState)
 	end)
 
 	local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 0, 0)
-	local gui = plugin:createDockWidgetPluginGui("Tag Editor", info)
-	gui.Name = isDev and "TagEditorDev" or "TagEditor"
-	gui.Title = isDev and "Tag Editor [DEV]" or "Tag Editor"
+	local gui = plugin:createDockWidgetPluginGui("TagEditor"..nameSuffix, info)
+	gui.Name = "TagEditor"..nameSuffix
+	gui.Title = "Tag Editor"..displaySuffix
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	toggleButton:SetActive(gui.Enabled)
 
