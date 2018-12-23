@@ -17,7 +17,7 @@ local function TagSettings(props)
         Size = UDim2.new(1, 0, 1, 0),
     }, {
         SideButtons = Roact.createElement("Frame", {
-            Size = UDim2.new(0.3, 0, 1, 0),
+            Size = UDim2.new(0.4, 0, 1, 0),
             BackgroundTransparency = 1,
         }, {
             Padding = Roact.createElement("UIPadding", {
@@ -25,7 +25,7 @@ local function TagSettings(props)
                 PaddingBottom = UDim.new(0, 5),
                 PaddingRight = UDim.new(0, 5),
                 PaddingLeft = UDim.new(0, 5),
-            }),
+			}),
             Layout = Roact.createElement("UIListLayout", {
                 SortOrder = "LayoutOrder",
                 HorizontalAlignment = "Center",
@@ -68,8 +68,9 @@ local function TagSettings(props)
             }),
         }),
         Visualization = Roact.createElement("Frame", {
-            Size = UDim2.new(0.7, -10, 1, 0),
-            Position = UDim2.new(0.3, 5, 0, 0),
+            Size = UDim2.new(0.6, -10, 1, 0),
+			Position = UDim2.new(1, -5, 0, 0),
+			AnchorPoint = Vector2.new(1, 0),
             BackgroundTransparency = 1,
         }, {
             Padding = Roact.createElement("UIPadding", {
