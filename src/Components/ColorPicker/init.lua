@@ -239,40 +239,39 @@ function ColorPicker:render()
 					}),
 					Preview = Roact.createElement("Frame", {
 						LayoutOrder = 4,
-						Size = UDim2.new(1, 0, 0, 64),
+						Size = UDim2.new(1, 0, 0, 48),
 						AnchorPoint = Vector2.new(0, 1),
 						BackgroundColor3 = color,
 						BorderColor3 = theme:GetColor("Border"),
 					}),
+					Buttons = Roact.createElement("Frame", {
+						LayoutOrder = 5,
+						Size = UDim2.new(1, 0, 0, 24),
+						BackgroundTransparency = 1.0,
+					}, {
+						UIListLayout = Roact.createElement("UIListLayout", {
+							FillDirection = "Horizontal",
+							HorizontalAlignment = "Center",
+							SortOrder = "LayoutOrder",
+							Padding = UDim.new(0, 8),
+						}),
+						Cancel = Roact.createElement(Button, {
+							Text = "Cancel",
+							Size = UDim2.new(0.5, 0, 0, 24),
+							leftClick = props.close,
+							LayoutOrder = 2,
+						}),
+						Submit = Roact.createElement(Button, {
+							LayoutOrder = 1,
+							Text = "Submit",
+							Size = UDim2.new(0.5, 0, 0, 24),
+							leftClick = function()
+								TagManager.Get():SetColor(props.tagName, Color3.fromHSV(self.state.h, self.state.s, self.state.v))
+								props.close()
+							end,
+						}),
+					})
 				}),
-				Buttons = Roact.createElement("Frame", {
-					Position = UDim2.new(1, 0, 1, 0),
-					AnchorPoint = Vector2.new(1, 1),
-					Size = UDim2.new(0.5, -8, 0, 24),
-					BackgroundTransparency = 1.0,
-				}, {
-					UIListLayout = Roact.createElement("UIListLayout", {
-						FillDirection = "Horizontal",
-						HorizontalAlignment = "Right",
-						SortOrder = "LayoutOrder",
-						Padding = UDim.new(0, 8),
-					}),
-					Cancel = Roact.createElement(Button, {
-						Text = "Cancel",
-						Size = UDim2.new(0, 80, 0, 24),
-						leftClick = props.close,
-						LayoutOrder = 2,
-					}),
-					Submit = Roact.createElement(Button, {
-						LayoutOrder = 1,
-						Text = "Submit",
-						Size = UDim2.new(0, 80, 0, 24),
-						leftClick = function()
-							TagManager.Get():SetColor(props.tagName, Color3.fromHSV(self.state.h, self.state.s, self.state.v))
-							props.close()
-						end,
-					}),
-				})
 			})
 		})
 	end)
