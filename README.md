@@ -5,6 +5,13 @@ Check out the [Roblox Developer Forum post](https://devforum.roblox.com/t/tag-ed
 
 ## Changelog
 
+### **v2.1.0**
+
+- Updated UI design. (Thanks @AmaranthineCodices!)
+- Studio themes support. (@AmaranthineCodices)
+- Fixed errors after reloading plugin.
+- Fix delete confirmation get stuck in "Confirm" state.
+
 ### v2.0.4
 
 - Fixed performance issue caused by tooltips.
