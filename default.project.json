@@ -1,0 +1,30 @@
+{
+  "name": "Roblox-Tag-Editor",
+  "tree": {
+    "$className": "DataModel",
+    "HttpService": {
+      "$className": "HttpService",
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
+    "ServerStorage": {
+      "$className": "ServerStorage",
+      "TagEditor": {
+        "$className": "Folder",
+        "Plugin": {
+          "$path": "src"
+        },
+        "Roact": {
+          "$path": "roact"
+        },
+        "Rodux": {
+          "$path": "rodux"
+        },
+        "RoactRodux": {
+          "$path": "roact-rodux"
+        }
+      }
+    }
+  }
+}
