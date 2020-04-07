@@ -16,13 +16,13 @@
           "$path": "src"
         },
         "Roact": {
-          "$path": "roact"
+          "$path": "roact/src"
         },
         "Rodux": {
-          "$path": "rodux"
+          "$path": "rodux/lib"
         },
         "RoactRodux": {
-          "$path": "roact-rodux"
+          "$path": "roact-rodux/lib"
         }
       }
     }
