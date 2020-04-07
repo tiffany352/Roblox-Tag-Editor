@@ -3,12 +3,6 @@ if not plugin then
 	error("Hot reloader must be executed as a plugin!")
 end
 
--- RenderStepped errors out in Start Server, so we consider it a hostile environment even though it has a 3D view that we could potentially be using.
-local RunService = game:GetService("RunService")
-if not RunService:IsClient() then
-	return
-end
-
 -- Change to true to enable hot reloading support. Opening a place
 -- containing the code synced via Rojo will cause the plugin to be
 -- reloaded in edit mode. (No need for play solo or the hotswap plugin.)
