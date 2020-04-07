@@ -18,7 +18,7 @@ local TooltipView = Roact.Component:extend("TooltipView")
 
 function TooltipView:didMount()
 	self.mouseSunk = false
-	self.steppedConn = RunService.RenderStepped:Connect(function()
+	self.steppedConn = self:_runRunServiceEvent():Connect(function()
 		local camera = workspace.CurrentCamera
 		local part = false
 		local tags = {}
@@ -146,7 +146,7 @@ function TooltipView:render()
 
 				[Roact.Ref] = function(rbx)
 					if rbx then
-						self.mouseSteppedConn = RunService.RenderStepped:Connect(function()
+						self.mouseSteppedConn = self:_runRunServiceEvent():Connect(function()
 							local inset = GuiService:GetGuiInset()
 							local pos = UserInput:GetMouseLocation() - inset + Vector2.new(20, 0)
 							rbx.Position = UDim2.new(0, pos.x, 0, pos.y)
@@ -177,6 +177,15 @@ function TooltipView:render()
 			})
 		})
 	})
+end
+
+--- RenderStepped errors out in Start Server, so bind to stepped if we can't bind to RenderStepped
+function TooltipView:_runRunServiceEvent()
+	if RunService:IsClient() then
+		return RunService.RenderStepped
+	else
+		return RunService.Stepped
+	end
 end
 
 local function mapStateToProps(state)
