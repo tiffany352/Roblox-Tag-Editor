@@ -271,6 +271,9 @@ function TagManager:_setProp(tagName, key, value)
 end
 
 function TagManager:AddTag(name)
+	if string.byte(string.sub(name, #name, #name)) == 13 then
+		name = string.sub(name, 1, #name-1)
+	end
 	if self.tags[name] then
 		return
 	end
