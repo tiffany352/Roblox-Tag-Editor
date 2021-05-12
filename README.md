@@ -5,7 +5,13 @@ Check out the [Roblox Developer Forum post](https://devforum.roblox.com/t/tag-ed
 
 ## Changelog
 
-### **v2.1.0**
+### v2.1.1
+
+- Fixed a critical error on startup due the `UI Theme` property being removed from the API.
+- Switched to Plugin.Unloading API, removed that annoying "new tag editor version" print.
+- Fixed the color picker being broken.
+
+### v2.1.0
 
 - Updated UI design. (Thanks @AmaranthineCodices!)
 - Studio themes support. (@AmaranthineCodices)
