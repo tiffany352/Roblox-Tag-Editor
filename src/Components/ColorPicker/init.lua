@@ -30,13 +30,17 @@ function ColorPicker.getDerivedStateFromProps(nextProps, lastState)
 		}
 	end
 
-	local h, s, v = Color3.toHSV(nextProps.tagColor)
-	return {
-		-- When we open a fresh color picker, it should default to the color that the tag already was
-		h = h,
-		s = s,
-		v = v,
-	}
+	if lastState.tagColor ~= nextProps.tagColor then
+		lastState.tagColor = nextProps.tagColor
+		local h, s, v = Color3.toHSV(nextProps.tagColor)
+		return {
+			-- When we open a fresh color picker, it should default to the color that the tag already was
+			h = h,
+			s = s,
+			v = v,
+			tagColor = nextProps.tagColor
+		}
+	end
 end
 
 function ColorPicker:render()
