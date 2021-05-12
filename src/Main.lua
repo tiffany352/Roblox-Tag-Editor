@@ -78,11 +78,4 @@ return function(plugin, savedState)
 		manager:Destroy()
 		return store:getState()
 	end)
-
-	local unloadConnection
-	unloadConnection = gui.AncestryChanged:Connect(function()
-		print("New tag editor version coming online; unloading the old version")
-		unloadConnection:Disconnect()
-		plugin:unload()
-	end)
 end

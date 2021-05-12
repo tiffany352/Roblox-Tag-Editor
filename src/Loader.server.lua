@@ -163,3 +163,7 @@ end
 
 PluginFacade:_load()
 PluginFacade:_watch(source)
+
+plugin.Unloading:Connect(function()
+	PluginFacade:unload()
+end)
