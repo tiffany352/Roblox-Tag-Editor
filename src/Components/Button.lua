@@ -53,7 +53,7 @@ function Button:render()
         buttonState = "Hover"
     end
 
-    return StudioThemeAccessor.withTheme(function(theme, themeEnum)
+    return StudioThemeAccessor.withTheme(function(theme)
         return Roact.createElement("TextButton", {
             AnchorPoint = props.AnchorPoint,
             AutoButtonColor = false,

@@ -24,7 +24,7 @@ function ValueSlider:xToAlpha(x)
 end
 
 function ValueSlider:render()
-    return StudioThemeAccessor.withTheme(function(theme, themeEnum)
+    return StudioThemeAccessor.withTheme(function(theme)
         return Roact.createElement("ImageButton", {
             Size = UDim2.new(1, 0, 0, 20),
             Position = UDim2.new(0, 0, 1, 5),

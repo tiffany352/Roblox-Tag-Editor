@@ -29,7 +29,7 @@ local function ScrollingFrame(props)
 		children[key] = value
 	end
 
-	return StudioThemeAccessor.withTheme(function(theme, themeEnum)
+	return StudioThemeAccessor.withTheme(function(theme, isDarkTheme)
 		return Roact.createElement("Frame", {
 			Size = props.Size or UDim2.new(1, 0, 1, 0),
 			Position = props.Position,
@@ -59,7 +59,7 @@ local function ScrollingFrame(props)
 				TopImage = "rbxasset://textures/StudioToolbox/ScrollBarTop.png",
 				MidImage = "rbxasset://textures/StudioToolbox/ScrollBarMiddle.png",
 				BottomImage = "rbxasset://textures/StudioToolbox/ScrollBarBottom.png",
-				ScrollBarImageColor3 = themeEnum == Enum.UITheme.Dark and Color3.fromRGB(85, 85, 85) or Color3.fromRGB(245, 245, 245),--theme:GetColor("ScrollBar"),
+				ScrollBarImageColor3 = isDarkTheme and Color3.fromRGB(85, 85, 85) or Color3.fromRGB(245, 245, 245),--theme:GetColor("ScrollBar"),
 			}, children)
 		})
 	end)

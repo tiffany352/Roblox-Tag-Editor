@@ -45,7 +45,7 @@ function ColorPicker:render()
 	local color = Color3.fromHSV(hue, sat, val)
 	local red, green, blue = color.r, color.g, color.b
 
-	return StudioThemeAccessor.withTheme(function(theme, themeEnum)
+	return StudioThemeAccessor.withTheme(function(theme)
 		return Roact.createElement(Page, {
 			visible = props.tagName ~= nil,
 			title = tostring(props.tagName).." - Select a Color",

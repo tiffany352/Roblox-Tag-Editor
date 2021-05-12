@@ -56,7 +56,7 @@ function Dropdown:render()
         })
     end
 
-    return StudioThemeAccessor.withTheme(function(theme, themeType)
+    return StudioThemeAccessor.withTheme(function(theme, isDarkTheme)
         return Roact.createElement(Button, {
             Size = props.Size,
             LayoutOrder = props.LayoutOrder,
@@ -107,7 +107,7 @@ function Dropdown:render()
                 Image = ARROW_IMAGE,
                 -- FIXME: This needs a non-hardcoded icon color.
                 -- The studio theme API doesn't have a class for this :(
-                ImageColor3 = themeType == Enum.UITheme.Light and Color3.fromRGB(25, 25, 25) or Color3.fromRGB(242, 242, 242),
+                ImageColor3 = isDarkTheme and Color3.fromRGB(242, 242, 242) or Color3.fromRGB(25, 25, 25),
             })
         })
     end)
