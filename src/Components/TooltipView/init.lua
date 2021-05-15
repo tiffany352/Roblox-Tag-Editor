@@ -24,12 +24,17 @@ function TooltipView:didMount()
 		local tags = {}
 		if camera and not self.mouseSunk then
 			local mouse = UserInput:GetMouseLocation()
-			local ray = camera:ViewportPointToRay(mouse.x, mouse.y)
-			ray = Ray.new(ray.Origin, ray.Direction.Unit * 1000)
+			local ray = camera:ViewportPointToRay(mouse.X, mouse.Y)
+			local params = RaycastParams.new()
+			params.IgnoreWater = true
+			params.FilterType = Enum.RaycastFilterType.Blacklist
+			local direction = ray.Direction.Unit * 1000
 
 			local ignore = {}
 			for _i = 1, 10 do
-				local obj = workspace:FindPartOnRayWithIgnoreList(ray, ignore, true)
+				params.FilterDescendantsInstances = ignore
+				local result = workspace:Raycast(ray.Origin, direction, params)
+				local obj = result and result.Instance
 				local objTags = obj and Collection:GetTags(obj)
 				if objTags then
 					for i = #objTags, 1, -1 do
