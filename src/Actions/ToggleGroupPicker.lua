@@ -1,6 +1,6 @@
 return function(name)
 	return {
-		type = 'ToggleGroupPicker',
+		type = "ToggleGroupPicker",
 		tag = name,
 	}
 end

@@ -18,7 +18,7 @@ local DropdownItem = function(props)
 		ignoresMenuOpen = true,
 		TextProps = {
 			TextSize = 16,
-		}
+		},
 	})
 end
 
@@ -26,7 +26,7 @@ local Dropdown = Roact.PureComponent:extend("Dropdown")
 
 function Dropdown:init()
 	self.state = {
-		open = false
+		open = false,
 	}
 
 	self._listRef = Roact.createRef()
@@ -74,7 +74,12 @@ function Dropdown:render()
 
 					if remainingHeight - self.state.dropdownHeight < -60 then
 						-- There's not enough space below; put the dropdown above the button
-						list.Position = UDim2.new(0, buttonPosition.X, 0, buttonPosition.Y - self.state.dropdownHeight - 4)
+						list.Position = UDim2.new(
+							0,
+							buttonPosition.X,
+							0,
+							buttonPosition.Y - self.state.dropdownHeight - 4
+						)
 						list.Size = UDim2.new(0, buttonSize.X, 0, self.state.dropdownHeight)
 					else
 						list.Position = UDim2.new(0, buttonPosition.X, 0, buttonPosition.Y + buttonSize.Y + 4)
@@ -108,7 +113,7 @@ function Dropdown:render()
 				-- FIXME: This needs a non-hardcoded icon color.
 				-- The studio theme API doesn't have a class for this :(
 				ImageColor3 = isDarkTheme and Color3.fromRGB(242, 242, 242) or Color3.fromRGB(25, 25, 25),
-			})
+			}),
 		})
 	end)
 end

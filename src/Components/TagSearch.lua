@@ -14,7 +14,7 @@ local function mapDispatchToProps(dispatch)
 	return {
 		setTerm = function(text)
 			dispatch(Actions.SetSearch(text))
-		end
+		end,
 	}
 end
 

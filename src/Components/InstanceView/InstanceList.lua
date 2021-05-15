@@ -32,7 +32,7 @@ local function InstanceList(props)
 		}),
 	})
 
-	for i,entry in pairs(parts) do
+	for i, entry in pairs(parts) do
 		local part = entry.instance
 		local id = entry.id
 		local path = entry.path
@@ -59,7 +59,7 @@ local function InstanceList(props)
 			List = {
 				Padding = UDim.new(0, 1),
 			},
-		}, children)
+		}, children),
 	})
 end
 

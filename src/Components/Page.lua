@@ -62,13 +62,13 @@ local function Page(props)
 					Position = UDim2.new(0, 0, 1, 0),
 					AnchorPoint = Vector2.new(0, 1),
 					ZIndex = 2,
-				})
+				}),
 			}),
 			Body = Roact.createElement("Frame", {
 				Size = UDim2.new(1, 0, 1, -32),
 				Position = UDim2.new(0, 0, 0, 32),
 				BackgroundTransparency = 1.0,
-			}, props[Roact.Children])
+			}, props[Roact.Children]),
 		})
 	end)
 end

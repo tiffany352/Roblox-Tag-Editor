@@ -2,7 +2,7 @@ local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local function BoxAdorn(props)
-	if props.Adornee.ClassName == 'Attachment' then
+	if props.Adornee.ClassName == "Attachment" then
 		return Roact.createElement("BoxHandleAdornment", {
 			Adornee = props.Adornee.Parent,
 			CFrame = props.Adornee.CFrame,

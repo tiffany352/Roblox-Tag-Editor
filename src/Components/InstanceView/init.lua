@@ -19,7 +19,7 @@ local function InstanceView(props)
 				tagIcon = props.tagIcon,
 				close = props.close,
 			})
-		end
+		end,
 	})
 end
 

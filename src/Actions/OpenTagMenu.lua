@@ -1,6 +1,6 @@
 return function(name)
 	return {
-		type = 'OpenTagMenu',
+		type = "OpenTagMenu",
 		tag = name,
 	}
 end

@@ -12,10 +12,10 @@ local ScrollingFrame = require(Modules.Plugin.Components.ScrollingFrame)
 
 local function merge(orig, new)
 	local t = {}
-	for k,v in pairs(orig or {}) do
+	for k, v in pairs(orig or {}) do
 		t[k] = v
 	end
-	for k,v in pairs(new or {}) do
+	for k, v in pairs(new or {}) do
 		t[k] = v
 	end
 	return t
@@ -28,16 +28,20 @@ function TagList:render()
 
 	local function toggleGroup(group)
 		self:setState({
-			['Hide'..group] = not self.state['Hide'..group],
+			["Hide" .. group] = not self.state["Hide" .. group],
 		})
 	end
 
 	local tags = props.Tags
-	table.sort(tags, function(a,b)
+	table.sort(tags, function(a, b)
 		local ag = a.Group or ""
 		local bg = b.Group or ""
-		if ag < bg then return true end
-		if bg < ag then return false end
+		if ag < bg then
+			return true
+		end
+		if bg < ag then
+			return false
+		end
 
 		local an = a.Name or ""
 		local bn = b.Name or ""
@@ -52,9 +56,13 @@ function TagList:render()
 		Padding = UDim.new(0, 1),
 
 		[Roact.Ref] = function(rbx)
-			if not rbx then return end
+			if not rbx then
+				return
+			end
 			local function update()
-				if not rbx.Parent then return end
+				if not rbx.Parent then
+					return
+				end
 				local cs = rbx.AbsoluteContentSize
 				rbx.Parent.CanvasSize = UDim2.new(0, 0, 0, cs.y)
 			end
@@ -66,22 +74,25 @@ function TagList:render()
 	local lastGroup
 	local itemCount = 1
 	for i = 1, #tags do
-		local groupName = tags[i].Group or 'Default'
+		local groupName = tags[i].Group or "Default"
 		if tags[i].Group ~= lastGroup then
 			lastGroup = tags[i].Group
-			children['Group'..groupName] = Roact.createElement(Group, {
+			children["Group" .. groupName] = Roact.createElement(Group, {
 				Name = groupName,
 				LayoutOrder = itemCount,
 				toggleHidden = toggleGroup,
-				Hidden = self.state['Hide'..groupName],
+				Hidden = self.state["Hide" .. groupName],
 			})
 			itemCount = itemCount + 1
 		end
-		children[tags[i].Name] = Roact.createElement(Tag, merge(tags[i], {
-			Hidden = self.state['Hide'..groupName],
-			Tag = tags[i].Name,
-			LayoutOrder = itemCount,
-		}))
+		children[tags[i].Name] = Roact.createElement(
+			Tag,
+			merge(tags[i], {
+				Hidden = self.state["Hide" .. groupName],
+				Tag = tags[i].Name,
+				LayoutOrder = itemCount,
+			})
+		)
 		itemCount = itemCount + 1
 	end
 
@@ -91,7 +102,7 @@ function TagList:render()
 		local tag = unknownTags[i]
 		children[tag] = Roact.createElement(Item, {
 			Text = string.format("%s (click to import)", tag),
-			Icon = 'help',
+			Icon = "help",
 			ButtonColor = Constants.LightRed,
 			LayoutOrder = itemCount,
 			TextProps = {
@@ -160,7 +171,7 @@ local function mapStateToProps(state)
 		-- todo: LCS
 		local passSearch = not state.Search or tag.Name:lower():find(state.Search:lower())
 		if passSearch then
-			tags[#tags+1] = tag
+			tags[#tags + 1] = tag
 		end
 	end
 
@@ -169,7 +180,7 @@ local function mapStateToProps(state)
 		-- todo: LCS
 		local passSearch = not state.Search or tag:lower():find(state.Search:lower())
 		if passSearch then
-			unknownTags[#unknownTags+1] = tag
+			unknownTags[#unknownTags + 1] = tag
 		end
 	end
 

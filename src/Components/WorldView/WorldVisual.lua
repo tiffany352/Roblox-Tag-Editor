@@ -14,20 +14,20 @@ local function WorldVisual(props)
 
 	local children = {}
 
-	for key,entry in pairs(partsList) do
+	for key, entry in pairs(partsList) do
 		local elt
-		if entry.DrawType == 'Outline' then
+		if entry.DrawType == "Outline" then
 			elt = OutlineAdorn
-		elseif entry.DrawType == 'Box' then
+		elseif entry.DrawType == "Box" then
 			elt = BoxAdorn
-		elseif entry.DrawType == 'Sphere' then
+		elseif entry.DrawType == "Sphere" then
 			elt = SphereAdorn
-		elseif entry.DrawType == 'Icon' then
+		elseif entry.DrawType == "Icon" then
 			elt = IconAdorn
-		elseif entry.DrawType == 'Text' then
+		elseif entry.DrawType == "Text" then
 			elt = TextAdorn
 		else
-			error("Unknown DrawType: "..tostring(entry.DrawType))
+			error("Unknown DrawType: " .. tostring(entry.DrawType))
 		end
 		children[key] = Roact.createElement(elt, {
 			Adornee = entry.Part,

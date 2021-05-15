@@ -1,6 +1,6 @@
 return function(name)
 	return {
-		type = 'ToggleIconPicker',
+		type = "ToggleIconPicker",
 		tag = name,
 	}
 end

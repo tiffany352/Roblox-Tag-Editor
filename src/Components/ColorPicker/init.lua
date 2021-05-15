@@ -38,7 +38,7 @@ function ColorPicker.getDerivedStateFromProps(nextProps, lastState)
 			h = h,
 			s = s,
 			v = v,
-			tagColor = nextProps.tagColor
+			tagColor = nextProps.tagColor,
 		}
 	end
 end
@@ -52,7 +52,7 @@ function ColorPicker:render()
 	return StudioThemeAccessor.withTheme(function(theme)
 		return Roact.createElement(Page, {
 			visible = props.tagName ~= nil,
-			title = tostring(props.tagName).." - Select a Color",
+			title = tostring(props.tagName) .. " - Select a Color",
 			titleIcon = props.tagIcon,
 
 			close = function()
@@ -76,7 +76,7 @@ function ColorPicker:render()
 					Size = UDim2.new(0.5, -4, 1, 0),
 					Position = UDim2.new(0, 0, 0, 0),
 					BorderColor3 = theme:GetColor("Border"),
-					Image = 'rbxassetid://1357075261',
+					Image = "rbxassetid://1357075261",
 					BackgroundColor3 = Constants.Black,
 					AutoButtonColor = false,
 					ImageTransparency = 1 - val,
@@ -88,7 +88,10 @@ function ColorPicker:render()
 					end,
 
 					[Roact.Event.InputEnded] = function(rbx, input)
-						if input.UserInputType == Enum.UserInputType.MouseButton1 and self.state.wheelMouseDown then
+						if
+							input.UserInputType == Enum.UserInputType.MouseButton1
+							and self.state.wheelMouseDown
+						then
 							local x, y = input.Position.X, input.Position.Y
 							local pos = Vector2.new(x, y) - rbx.AbsolutePosition
 							pos = pos / rbx.AbsoluteSize
@@ -102,7 +105,10 @@ function ColorPicker:render()
 					end,
 
 					[Roact.Event.InputChanged] = function(rbx, input)
-						if self.state.wheelMouseDown and input.UserInputType == Enum.UserInputType.MouseMovement then
+						if
+							self.state.wheelMouseDown
+							and input.UserInputType == Enum.UserInputType.MouseMovement
+						then
 							local pos = Vector2.new(input.Position.X, input.Position.Y) - rbx.AbsolutePosition
 							pos = pos / rbx.AbsoluteSize
 
@@ -144,10 +150,7 @@ function ColorPicker:render()
 					}),
 					Hex = Roact.createElement(TextBox, {
 						Size = UDim2.new(1, 0, 0, 20),
-						Text = string.format(
-							"#%02x%02x%02x",
-							red*255, green*255, blue*255
-						),
+						Text = string.format("#%02x%02x%02x", red * 255, green * 255, blue * 255),
 						Label = "Hex",
 						LayoutOrder = 1,
 
@@ -270,13 +273,16 @@ function ColorPicker:render()
 							Text = "Submit",
 							Size = UDim2.new(0.5, 0, 0, 24),
 							leftClick = function()
-								TagManager.Get():SetColor(props.tagName, Color3.fromHSV(self.state.h, self.state.s, self.state.v))
+								TagManager.Get():SetColor(
+									props.tagName,
+									Color3.fromHSV(self.state.h, self.state.s, self.state.v)
+								)
 								props.close()
 							end,
 						}),
-					})
+					}),
 				}),
-			})
+			}),
 		})
 	end)
 end
@@ -285,7 +291,7 @@ local function mapStateToProps(state)
 	local tag = state.ColorPicker
 	local tagIcon
 	local tagColor
-	for _,entry in pairs(state.TagData) do
+	for _, entry in pairs(state.TagData) do
 		if entry.Name == tag then
 			tagIcon = entry.Icon
 			tagColor = entry.Color

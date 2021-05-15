@@ -9,9 +9,13 @@ local function ScrollingFrame(props)
 	if props.List then
 		local newProps = {}
 		newProps[Roact.Ref] = function(rbx)
-			if not rbx then return end
+			if not rbx then
+				return
+			end
 			local function update()
-				if not rbx.Parent then return end
+				if not rbx.Parent then
+					return
+				end
 				local cs = rbx.AbsoluteContentSize
 				rbx.Parent.CanvasSize = UDim2.new(0, 0, 0, cs.y)
 			end
@@ -19,7 +23,7 @@ local function ScrollingFrame(props)
 			update()
 		end
 		newProps.SortOrder = Enum.SortOrder.LayoutOrder
-		for key,value in pairs(props.List == true and {} or props.List) do
+		for key, value in pairs(props.List == true and {} or props.List) do
 			newProps[key] = value
 		end
 		children.UIListLayout = Roact.createElement("UIListLayout", newProps)
@@ -59,8 +63,8 @@ local function ScrollingFrame(props)
 				TopImage = "rbxasset://textures/StudioToolbox/ScrollBarTop.png",
 				MidImage = "rbxasset://textures/StudioToolbox/ScrollBarMiddle.png",
 				BottomImage = "rbxasset://textures/StudioToolbox/ScrollBarBottom.png",
-				ScrollBarImageColor3 = isDarkTheme and Color3.fromRGB(85, 85, 85) or Color3.fromRGB(245, 245, 245),--theme:GetColor("ScrollBar"),
-			}, children)
+				ScrollBarImageColor3 = isDarkTheme and Color3.fromRGB(85, 85, 85) or Color3.fromRGB(245, 245, 245), --theme:GetColor("ScrollBar"),
+			}, children),
 		})
 	end)
 end

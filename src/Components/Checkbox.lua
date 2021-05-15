@@ -25,7 +25,7 @@ local function Checkbox(props)
 				Visible = props.Checked == true,
 				ImageColor3 = theme:GetColor("CheckedFieldIndicator", state),
 				Image = "rbxassetid://2617163557",
-			})
+			}),
 		})
 	end)
 end

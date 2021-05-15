@@ -3,7 +3,7 @@ local Roact = require(Modules.Roact)
 
 local function SphereAdorn(props)
 	local adorn, cframe
-	if props.Adornee.ClassName == 'Attachment' then
+	if props.Adornee.ClassName == "Attachment" then
 		adorn = props.Adornee.Parent
 		cframe = props.Adornee.CFrame
 	else

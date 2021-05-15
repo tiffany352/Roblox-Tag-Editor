@@ -14,8 +14,8 @@ function IconPreview:render()
 		local Vector2new = Vector2.new
 		local image = self.props.icon and Icons.Lookup(self.props.icon)
 		local rect = image and image.ImageRectOffset or Vector2.new(10000, 10000)
-		for y = 0, 16-1 do
-			for x = 0, 16-1 do
+		for y = 0, 16 - 1 do
+			for x = 0, 16 - 1 do
 				local pixel = self.pixels[x * 16 + y]
 				pixel.ImageRectOffset = rect + Vector2new(x + 0.5, y + 0.5)
 			end
@@ -34,7 +34,7 @@ function IconPreview:render()
 	}, {
 		IconName = Roact.createElement(ThemedTextLabel, {
 			TextSize = 14,
-			Size = UDim2.new(1, -56, 0, 20*3),
+			Size = UDim2.new(1, -56, 0, 20 * 3),
 			Position = UDim2.new(0, 56, 0, 32),
 			TextWrapped = true,
 			Text = self.props.icon or "",
@@ -47,10 +47,12 @@ function IconPreview:render()
 			BackgroundTransparency = 1,
 
 			[Roact.Ref] = function(rbx)
-				if rbx == self.oldRbx then return end
+				if rbx == self.oldRbx then
+					return
+				end
 
 				if self.pixels then
-					for _,pixel in pairs(self.pixels) do
+					for _, pixel in pairs(self.pixels) do
 						pixel:Destroy()
 					end
 				end
@@ -66,7 +68,7 @@ function IconPreview:render()
 							image.Image = Icons.Asset
 							image.ImageRectSize = Vector2.new(0, 0)
 							image.Size = UDim2.new(0, scaleFactor, 0, scaleFactor)
-							image.Position = UDim2.new(0, x*scaleFactor, 0, y*scaleFactor)
+							image.Position = UDim2.new(0, x * scaleFactor, 0, y * scaleFactor)
 							image.BackgroundTransparency = 1.0
 							image.Parent = rbx
 							self.pixels[x * 16 + y] = image
@@ -76,7 +78,7 @@ function IconPreview:render()
 					update()
 				end
 			end,
-		})
+		}),
 	})
 end
 
@@ -86,7 +88,7 @@ local function mapStateToProps(state)
 	if icon == nil then
 		local tagName = state.IconPicker
 
-		for _,tag in pairs(state.TagData) do
+		for _, tag in pairs(state.TagData) do
 			if tag.Name == tagName then
 				icon = tag.Icon
 				break

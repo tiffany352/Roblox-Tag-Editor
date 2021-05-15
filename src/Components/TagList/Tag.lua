@@ -45,8 +45,7 @@ local function Tag(props)
 			end
 		end,
 	}, {
-		Settings = isOpen and Roact.createElement(TagSettings, {
-		})
+		Settings = isOpen and Roact.createElement(TagSettings, {}),
 	})
 end
 
@@ -60,7 +59,7 @@ local function mapDispatchToProps(dispatch)
 	return {
 		openTagMenu = function(tag)
 			dispatch(Actions.OpenTagMenu(tag))
-		end
+		end,
 	}
 end
 

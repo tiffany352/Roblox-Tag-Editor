@@ -14,13 +14,13 @@ function StudioThemeAccessor:init()
 
 	self.state = {
 		theme = studioSettings.Theme,
-		isDarkTheme = isDarkTheme(studioSettings.Theme:GetColor(Enum.StudioStyleGuideColor.MainBackground))
+		isDarkTheme = isDarkTheme(studioSettings.Theme:GetColor(Enum.StudioStyleGuideColor.MainBackground)),
 	}
 
 	self._themeConnection = studioSettings.ThemeChanged:Connect(function()
 		self:setState({
 			theme = studioSettings.Theme,
-			isDarkTheme = isDarkTheme(studioSettings.Theme:GetColor(Enum.StudioStyleGuideColor.MainBackground))
+			isDarkTheme = isDarkTheme(studioSettings.Theme:GetColor(Enum.StudioStyleGuideColor.MainBackground)),
 		})
 	end)
 end

@@ -1,6 +1,6 @@
 return function(text)
 	return {
-		type = 'SetIconSearch',
+		type = "SetIconSearch",
 		text = text,
 	}
 end

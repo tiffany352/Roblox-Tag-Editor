@@ -7,7 +7,7 @@ local DeleteButton = Roact.PureComponent:extend("DeleteButton")
 
 function DeleteButton:init()
 	self.state = {
-		confirming = false
+		confirming = false,
 	}
 end
 
@@ -24,7 +24,7 @@ function DeleteButton:render()
 				self.props.leftClick()
 			else
 				self:setState({
-					confirming = true
+					confirming = true,
 				})
 			end
 		end,

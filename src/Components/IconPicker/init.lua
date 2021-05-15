@@ -30,19 +30,23 @@ function IconPicker:render()
 	local props = self.props
 	local children = {}
 	local cats = {}
-	for name,icons in pairs(IconCategories) do
-		cats[#cats+1] = {
+	for name, icons in pairs(IconCategories) do
+		cats[#cats + 1] = {
 			Name = name,
 			Icons = icons,
 		}
 	end
 
-	table.sort(cats, function(a,b)
-		local aIsUncat = a.Name == 'Uncategorized' and 1 or 0
-		local bIsUncat = b.Name == 'Uncategorized' and 1 or 0
+	table.sort(cats, function(a, b)
+		local aIsUncat = a.Name == "Uncategorized" and 1 or 0
+		local bIsUncat = b.Name == "Uncategorized" and 1 or 0
 
-		if aIsUncat < bIsUncat then return true end
-		if bIsUncat < aIsUncat then return false end
+		if aIsUncat < bIsUncat then
+			return true
+		end
+		if bIsUncat < aIsUncat then
+			return false
+		end
 
 		return a.Name < b.Name
 	end)
@@ -70,7 +74,7 @@ function IconPicker:render()
 
 	return Roact.createElement(Page, {
 		visible = props.tagName ~= nil,
-		title = tostring(props.tagName).." - Select an Icon",
+		title = tostring(props.tagName) .. " - Select an Icon",
 		titleIcon = props.tagIcon,
 
 		close = function()
@@ -109,7 +113,7 @@ function IconPicker:render()
 					Position = UDim2.new(0, 0, 1, 0),
 					AnchorPoint = Vector2.new(0, 1),
 					ZIndex = 2,
-				})
+				}),
 			})
 		end),
 	})
@@ -118,7 +122,7 @@ end
 local function mapStateToProps(state, props)
 	local tagName = state.IconPicker
 	local tagIcon
-	for _,tag in pairs(state.TagData) do
+	for _, tag in pairs(state.TagData) do
 		if tag.Name == tagName then
 			tagIcon = tag.Icon
 			break

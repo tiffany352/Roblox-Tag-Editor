@@ -22,7 +22,7 @@ end
 return function(plugin, savedState)
 	local displaySuffix, nameSuffix = getSuffix(plugin)
 
-	local toolbar = plugin:toolbar("Instance Tagging"..displaySuffix)
+	local toolbar = plugin:toolbar("Instance Tagging" .. displaySuffix)
 
 	local toggleButton = plugin:button(
 		toolbar,
@@ -50,9 +50,9 @@ return function(plugin, savedState)
 	end)
 
 	local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 0, 0)
-	local gui = plugin:createDockWidgetPluginGui("TagEditor"..nameSuffix, info)
-	gui.Name = "TagEditor"..nameSuffix
-	gui.Title = "Tag Editor"..displaySuffix
+	local gui = plugin:createDockWidgetPluginGui("TagEditor" .. nameSuffix, info)
+	gui.Name = "TagEditor" .. nameSuffix
+	gui.Title = "Tag Editor" .. displaySuffix
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	toggleButton:SetActive(gui.Enabled)
 
@@ -66,7 +66,7 @@ return function(plugin, savedState)
 	}, {
 		App = Roact.createElement(App, {
 			root = gui,
-		})
+		}),
 	})
 
 	local instance = Roact.mount(element, gui, "TagEditor")

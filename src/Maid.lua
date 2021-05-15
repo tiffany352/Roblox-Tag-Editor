@@ -30,14 +30,14 @@ end
 
 function Maid:give(task)
 	local tasks = self._tasks
-	tasks[#tasks+1] = task
+	tasks[#tasks + 1] = task
 end
 
 function Maid.cleanupTask(task)
 	local taskTy = typeof(task)
-	if taskTy == 'function' then
+	if taskTy == "function" then
 		task()
-	elseif taskTy == 'RBXScriptConnection' then
+	elseif taskTy == "RBXScriptConnection" then
 		task:Disconnect()
 	elseif task.Destroy then
 		task:Destroy()
@@ -51,8 +51,8 @@ end
 function Maid:clean()
 	local tasks = self._tasks
 
-	for key,task in pairs(tasks) do
-		if typeof(task) == 'RBXScriptConnection' then
+	for key, task in pairs(tasks) do
+		if typeof(task) == "RBXScriptConnection" then
 			tasks[key] = nil
 			task:Disconnect()
 		end

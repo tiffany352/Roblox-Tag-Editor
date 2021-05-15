@@ -17,10 +17,7 @@ end
 function ValueSlider:xToAlpha(x)
 	local rbx = self._rootRef.current
 
-	return math.clamp(
-		(x - rbx.AbsolutePosition.X) / rbx.AbsoluteSize.X,
-		0, 1
-	)
+	return math.clamp((x - rbx.AbsolutePosition.X) / rbx.AbsoluteSize.X, 0, 1)
 end
 
 function ValueSlider:render()
@@ -29,7 +26,7 @@ function ValueSlider:render()
 			Size = UDim2.new(1, 0, 0, 20),
 			Position = UDim2.new(0, 0, 1, 5),
 			AnchorPoint = Vector2.new(0, 0),
-			Image = 'rbxassetid://1357203924',
+			Image = "rbxassetid://1357203924",
 			ImageColor3 = Color3.fromHSV(self.props.hue, self.props.sat, 1),
 			AutoButtonColor = false,
 			BorderColor3 = theme:GetColor("Border"),
@@ -72,8 +69,8 @@ function ValueSlider:render()
 							self.props.updatePosition(self:xToAlpha(x))
 						end
 					end,
-				})
-			})
+				}),
+			}),
 		})
 	end)
 end

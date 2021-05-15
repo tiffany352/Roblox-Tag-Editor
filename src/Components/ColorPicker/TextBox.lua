@@ -87,7 +87,7 @@ function TextBox:render()
 
 						if isValid ~= self.state.isValid then
 							self:setState({
-								isValid = isValid
+								isValid = isValid,
 							})
 						end
 					end,
@@ -109,8 +109,8 @@ function TextBox:render()
 							end
 						end
 					end,
-				})
-			})
+				}),
+			}),
 		})
 	end)
 end

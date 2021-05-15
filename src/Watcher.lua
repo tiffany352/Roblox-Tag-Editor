@@ -75,7 +75,7 @@ function Watcher:WatcherStart()
 		end
 	end)
 
-	for _,instance in pairs(self.root:GetDescendants()) do
+	for _, instance in pairs(self.root:GetDescendants()) do
 		instanceAdded(instance)
 	end
 end
@@ -84,10 +84,10 @@ function Watcher:WatcherStop()
 	self.descendantAddedConn:Disconnect()
 	self.descendantRemovingConn:Disconnect()
 
-	for _,conn in pairs(self.changedConns) do
+	for _, conn in pairs(self.changedConns) do
 		conn:Disconnect()
 	end
-	for _,conn in pairs(self.nameChangedConns) do
+	for _, conn in pairs(self.nameChangedConns) do
 		conn:Disconnect()
 	end
 	self.running = false

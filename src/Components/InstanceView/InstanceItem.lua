@@ -39,7 +39,7 @@ function InstanceItem:render()
 		leftClick = function(rbx)
 			local sel = Selection:Get()
 			local alreadySelected = false
-			for _,instance in pairs(sel) do
+			for _, instance in pairs(sel) do
 				if instance == props.Instance then
 					alreadySelected = true
 					break
@@ -52,9 +52,9 @@ function InstanceItem:render()
 				else
 					-- deselect
 					local baseSel = {}
-					for _,instance in pairs(sel) do
+					for _, instance in pairs(sel) do
 						if instance ~= props.Instance then
-							baseSel[#baseSel+1] = instance
+							baseSel[#baseSel + 1] = instance
 						end
 					end
 					Selection:Set(baseSel)
@@ -65,10 +65,15 @@ function InstanceItem:render()
 				local function isDown(key)
 					return UserInputService:IsKeyDown(Enum.KeyCode[key])
 				end
-				if isDown('LeftControl') or isDown('RightControl') or isDown('LeftShift') or isDown('RightShift') then
+				if
+					isDown("LeftControl")
+					or isDown("RightControl")
+					or isDown("LeftShift")
+					or isDown("RightShift")
+				then
 					baseSel = sel
 				end
-				baseSel[#baseSel+1] = props.Instance
+				baseSel[#baseSel + 1] = props.Instance
 				Selection:Set(baseSel)
 			end
 		end,
@@ -104,7 +109,7 @@ function InstanceItem:render()
 				Text = props.Path,
 				LayoutOrder = 3,
 				TextSize = 16,
-			})
+			}),
 		}),
 	})
 end

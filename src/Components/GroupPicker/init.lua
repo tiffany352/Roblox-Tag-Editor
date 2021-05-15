@@ -26,11 +26,13 @@ local function GroupPicker(props)
 		LayoutOrder = -1,
 	})
 
-	table.sort(props.groups, function(a,b) return a.Name < b.Name end)
+	table.sort(props.groups, function(a, b)
+		return a.Name < b.Name
+	end)
 
-	for i,entry in pairs(props.groups) do
+	for i, entry in pairs(props.groups) do
 		local group = entry.Name
-		children['Group '..group] = Roact.createElement(GroupItem, {
+		children["Group " .. group] = Roact.createElement(GroupItem, {
 			Name = group,
 			Group = group,
 			Active = props.tagGroup == group,
@@ -51,7 +53,7 @@ local function GroupPicker(props)
 
 	return Roact.createElement(Page, {
 		visible = props.groupPicker ~= nil,
-		title = tostring(props.groupPicker).." - Select a Group",
+		title = tostring(props.groupPicker) .. " - Select a Group",
 		titleIcon = props.tagIcon,
 
 		close = props.close,
@@ -59,7 +61,7 @@ local function GroupPicker(props)
 		Body = Roact.createElement(ScrollingFrame, {
 			Size = UDim2.new(1, 0, 1, 0),
 			List = true,
-		}, children)
+		}, children),
 	})
 end
 

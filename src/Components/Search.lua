@@ -48,7 +48,7 @@ function Search:render()
 				end,
 			}, {
 				SearchBar = Roact.createElement("TextBox", {
-					AnchorPoint = Vector2.new(.5, .5),
+					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.new(0.5, 0, 0.5, 0),
 					Size = UDim2.new(1, -20, 0, 20),
 					BackgroundTransparency = 1.0,
@@ -62,13 +62,16 @@ function Search:render()
 					ClearTextOnFocus = false,
 
 					[Roact.Event.Changed] = function(rbx, prop)
-						if prop == 'Text' then
+						if prop == "Text" then
 							self.props.setTerm(rbx.Text)
 						end
 					end,
 
 					[Roact.Event.InputBegan] = function(rbx, input)
-						if input.UserInputType == Enum.UserInputType.MouseButton2 and input.UserInputState == Enum.UserInputState.Begin then
+						if
+							input.UserInputType == Enum.UserInputType.MouseButton2
+							and input.UserInputState == Enum.UserInputState.Begin
+						then
 							self.props.setTerm("")
 						end
 					end,
@@ -84,9 +87,9 @@ function Search:render()
 							focus = false,
 						})
 					end,
-				})
+				}),
 			})
-		end)
+		end),
 	})
 end
 

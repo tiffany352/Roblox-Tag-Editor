@@ -39,9 +39,9 @@ local function Group(props)
 					-- FIXME: This needs a non-hardcoded icon color.
 					-- The studio theme API doesn't have a class for this :(
 					ImageColor3 = isDarkTheme and Color3.fromRGB(242, 242, 242) or Color3.fromRGB(25, 25, 25),
-				})
+				}),
 			})
-		end)
+		end),
 	})
 end
 

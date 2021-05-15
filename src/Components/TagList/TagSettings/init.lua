@@ -108,7 +108,7 @@ local function TagSettings(props)
 						ARConstraint = Roact.createElement("UIAspectRatioConstraint", {
 							AspectRatio = 1,
 							DominantAxis = "Height",
-						})
+						}),
 					})
 				end),
 			}),
@@ -136,7 +136,7 @@ local function TagSettings(props)
 					Position = UDim2.new(0, 30, 0, 0),
 					Text = "Always on top",
 					TextSize = 16,
-				})
+				}),
 			}),
 			VisualizationKind = Roact.createElement("Frame", {
 				Size = UDim2.new(1, 0, 0, 30),
@@ -157,14 +157,21 @@ local function TagSettings(props)
 				Dropdown = Roact.createElement(Dropdown, {
 					LayoutOrder = 2,
 					Size = UDim2.new(1, -75, 0, 30),
-					Options = { "None", "Icon", "Outline", "Box", "Sphere", "Text" },
+					Options = {
+						"None",
+						"Icon",
+						"Outline",
+						"Box",
+						"Sphere",
+						"Text",
+					},
 					CurrentOption = props.tagDrawType,
 					onOptionSelected = function(option)
 						TagManager.Get():SetDrawType(props.tagMenu, option)
 					end,
-				})
-			})
-		})
+				}),
+			}),
+		}),
 	})
 end
 
@@ -173,7 +180,7 @@ local function mapStateToProps(state)
 	local drawType
 	local color
 	local alwaysOnTop = false
-	for _,v in pairs(state.TagData) do
+	for _, v in pairs(state.TagData) do
 		if v.Name == state.TagMenu then
 			icon = v.Icon
 			drawType = v.DrawType or "Box"

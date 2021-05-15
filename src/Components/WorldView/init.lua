@@ -13,7 +13,7 @@ local function WorldView(props)
 					partsList = partsList,
 					tags = props.tags,
 				})
-			end
+			end,
 		})
 	else
 		return nil

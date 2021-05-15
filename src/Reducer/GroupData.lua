@@ -1,7 +1,7 @@
 return function(state, action)
 	state = state or {}
 
-	if action.type == 'SetGroupData' then
+	if action.type == "SetGroupData" then
 		return action.data
 	end
 

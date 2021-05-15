@@ -7,7 +7,7 @@ local Item = require(Modules.Plugin.Components.ListItem)
 
 local function GroupItem(props)
 	return Roact.createElement(Item, {
-		Icon = 'folder',
+		Icon = "folder",
 		Text = props.Name,
 		Active = props.Active,
 		LayoutOrder = props.LayoutOrder,

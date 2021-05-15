@@ -5,7 +5,9 @@ local Icon = require(Modules.Plugin.Components.Icon)
 local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 
 local function matchesSearch(term, subject)
-	if not term then return true end
+	if not term then
+		return true
+	end
 	return subject:find(term) ~= nil
 end
 
@@ -22,7 +24,7 @@ function Category:render()
 	})
 
 	local numMatched = 0
-	for i,icon in pairs(props.Icons) do
+	for i, icon in pairs(props.Icons) do
 		local matches = matchesSearch(props.search, icon)
 		if matches then
 			numMatched = numMatched + 1
@@ -54,7 +56,7 @@ function Category:render()
 				Size = UDim2.new(0, 16, 0, 16),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = UDim2.new(0.5, 0, 0.5, 0),
-			})
+			}),
 		})
 	end
 
@@ -78,7 +80,7 @@ function Category:render()
 				spawn(function()
 					local stride = cellSize
 					local epsilon = 0.001
-					local w = math.floor((rbx.AbsoluteSize.X) / stride + epsilon)
+					local w = math.floor(rbx.AbsoluteSize.X / stride + epsilon)
 					local h = math.ceil(numMatched / w)
 
 					rbx.Size = UDim2.new(1, 0, 0, h * stride)
@@ -87,7 +89,7 @@ function Category:render()
 					end
 				end)
 			end,
-		}, children)
+		}, children),
 	})
 end
 

@@ -1,6 +1,6 @@
 return function(data)
 	return {
-		type = 'SetUnknownTags',
+		type = "SetUnknownTags",
 		data = data,
 	}
 end

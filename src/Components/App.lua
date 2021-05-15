@@ -22,12 +22,12 @@ end
 function App:render()
 	return Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
-		[Roact.Ref] = self._rootRef
+		[Roact.Ref] = self._rootRef,
 	}, {
 		Background = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement("Frame", {
 				Size = UDim2.new(1, 0, 1, 0),
-				BackgroundColor3 = theme:GetColor('MainBackground'),
+				BackgroundColor3 = theme:GetColor("MainBackground"),
 				ZIndex = -100,
 			})
 		end),

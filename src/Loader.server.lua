@@ -23,7 +23,7 @@ local currentRoot = source
 if useDevSource then
 	if devSource ~= nil then
 		source = devSource
-	currentRoot = source
+		currentRoot = source
 	else
 		warn("Tag editor development source is not present, running using built-in source.")
 	end
@@ -152,7 +152,7 @@ function PluginFacade:_watch(instance)
 		self:_watch(instance)
 	end)
 
-	local connections = {connection1, connection2}
+	local connections = { connection1, connection2 }
 
 	self._watching[instance] = connections
 

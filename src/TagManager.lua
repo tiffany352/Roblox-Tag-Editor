@@ -96,13 +96,15 @@ function TagManager.new(store)
 	if self.tagsFolder then
 		local oldTags = {}
 
-		for _,child in pairs(self.tagsFolder:GetChildren()) do
+		for _, child in pairs(self.tagsFolder:GetChildren()) do
 			if child:IsA("StringValue") then
-				oldTags[#oldTags+1] = child
+				oldTags[#oldTags + 1] = child
 			end
 		end
 
-		table.sort(oldTags, function(a,b) return a.Name < b.Name end)
+		table.sort(oldTags, function(a, b)
+			return a.Name < b.Name
+		end)
 
 		for i = 1, #oldTags do
 			local oldTag = oldTags[i]
@@ -159,7 +161,7 @@ function TagManager:_doUpdateStore()
 	local data = {}
 	local sel = Selection:Get()
 
-	for name,tag in pairs(self.tags) do
+	for name, tag in pairs(self.tags) do
 		local hasAny = false
 		local missingAny = false
 		local entry = {
@@ -181,7 +183,7 @@ function TagManager:_doUpdateStore()
 		end
 		entry.HasAll = hasAny and not missingAny
 		entry.HasSome = hasAny and missingAny
-		data[#data+1] = entry
+		data[#data + 1] = entry
 	end
 
 	table.sort(data, function(a, b)
@@ -191,18 +193,18 @@ function TagManager:_doUpdateStore()
 	self.store:dispatch(Actions.SetTagData(data))
 
 	local unknownTagsMap = {}
-	for _,obj in pairs(sel) do
+	for _, obj in pairs(sel) do
 		local tags = Collection:GetTags(obj)
-		for _,tag in pairs(tags) do
+		for _, tag in pairs(tags) do
 			-- Ignore unknown tags that start with a dot.
-			if not self.tags[tag] and tag:sub(1,1) ~= '.' then
+			if not self.tags[tag] and tag:sub(1, 1) ~= "." then
 				unknownTagsMap[tag] = true
 			end
 		end
 	end
 	local unknownTags = {}
-	for tag,_ in pairs(unknownTagsMap) do
-		unknownTags[#unknownTags+1] = tag
+	for tag, _ in pairs(unknownTagsMap) do
+		unknownTags[#unknownTags + 1] = tag
 	end
 	table.sort(unknownTags)
 
@@ -210,8 +212,8 @@ function TagManager:_doUpdateStore()
 
 	local data = {}
 
-	for name,group in pairs(self.groups) do
-		data[#data+1] = {
+	for name, group in pairs(self.groups) do
+		data[#data + 1] = {
 			Name = name,
 		}
 	end
@@ -236,7 +238,7 @@ end
 function TagManager:_setProp(tagName, key, value)
 	local tag = self.tags[tagName]
 	if not tag then
-		error("Setting property of non-existent tag `"..tostring(tagName).."`")
+		error("Setting property of non-existent tag `" .. tostring(tagName) .. "`")
 	end
 	assert(tag.Folder)
 
@@ -261,7 +263,7 @@ function TagManager:_setProp(tagName, key, value)
 	elseif valueObj then
 		valueObj:Destroy()
 	end
-	for func,_ in pairs(self.onTagChangedFuncs) do
+	for func, _ in pairs(self.onTagChangedFuncs) do
 		func(tagName, key, value)
 	end
 
@@ -294,7 +296,7 @@ function TagManager:AddTag(name)
 	folder.Parent = self:_tagsFolder()
 
 	self:_updateStore()
-	for func,_ in pairs(self.onTagAddedFuncs) do
+	for func, _ in pairs(self.onTagAddedFuncs) do
 		func(name)
 	end
 	ChangeHistory:SetWaypoint(string.format("Created tag %q", name))
@@ -331,7 +333,7 @@ function TagManager:DelTag(name)
 	end
 
 	ChangeHistory:SetWaypoint(string.format("Deleting tag %q", name))
-	for func,_ in pairs(self.onTagRemovedFuncs) do
+	for func, _ in pairs(self.onTagRemovedFuncs) do
 		func(name)
 	end
 
@@ -341,7 +343,7 @@ function TagManager:DelTag(name)
 		tag.Folder:Destroy()
 	end
 
-	for _,inst in pairs(Collection:GetTagged(name)) do
+	for _, inst in pairs(Collection:GetTagged(name)) do
 		Collection:RemoveTag(inst, name)
 	end
 
@@ -365,7 +367,7 @@ function TagManager:OnTagRemoved(func)
 	return {
 		Disconnect = function(_self)
 			self.onTagRemovedFuncs[func] = nil
-		end
+		end,
 	}
 end
 
@@ -375,7 +377,7 @@ function TagManager:OnTagChanged(func)
 	return {
 		Disconnect = function(_self)
 			self.onTagChangedFuncs[func] = nil
-		end
+		end,
 	}
 end
 
@@ -386,7 +388,7 @@ function TagManager:SetTag(name, value)
 	else
 		ChangeHistory:SetWaypoint(string.format("Removing tag %q from selection", name))
 	end
-	for _,obj in pairs(sel) do
+	for _, obj in pairs(sel) do
 		if value then
 			Collection:AddTag(obj, name)
 		else
@@ -438,7 +440,7 @@ function TagManager:DelGroup(name)
 	ChangeHistory:SetWaypoint(string.format("Deleting tag group %q", name))
 
 	self.groups[name] = nil
-	for _,tag in pairs(self.tags) do
+	for _, tag in pairs(self.tags) do
 		if tag.Group == name then
 			tag.Group = nil
 		end
@@ -455,7 +457,9 @@ end
 local doLog = false
 
 function TagManager:InstanceAdded(instance)
-	if doLog then print("TagManager:InstanceAdded(",instance,")") end
+	if doLog then
+		print("TagManager:InstanceAdded(", instance, ")")
+	end
 	if not self.tagsFolder and instance.Parent == TagsRoot and instance.Name == TagsFolderName then
 		self.tagsFolder = instance
 	end
@@ -486,7 +490,7 @@ function TagManager:InstanceAdded(instance)
 		end
 		self.tags[instance.Name] = tag
 
-		for func,_ in pairs(self.onTagAddedFuncs) do
+		for func, _ in pairs(self.onTagAddedFuncs) do
 			func(instance.Name)
 		end
 
@@ -502,11 +506,16 @@ function TagManager:InstanceAdded(instance)
 		self:_updateStore()
 	end
 
-	if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value then
+	if
+		instance.Parent
+		and instance.Parent.Parent == self.tagsFolder
+		and self.tags[instance.Parent.Name]
+		and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value
+	then
 		-- set property
 		self.tags[instance.Parent.Name][instance.Name] = instance.Value
 
-		for func,_ in pairs(self.onTagChangedFuncs) do
+		for func, _ in pairs(self.onTagChangedFuncs) do
 			func(instance.Parent.Name, instance.Name, instance.Value)
 		end
 
@@ -515,11 +524,13 @@ function TagManager:InstanceAdded(instance)
 end
 
 function TagManager:InstanceRemoving(instance, instanceName)
-	if doLog then print("TagManager:InstanceRemoved(",instance,", ",instanceName,")") end
+	if doLog then
+		print("TagManager:InstanceRemoved(", instance, ", ", instanceName, ")")
+	end
 	if instance.Parent == TagsRoot and instance == self.tagsFolder then
 		self.tagsFolder = nil
-		for name,_ in pairs(self.tags) do
-			for func,_ in pairs(self.onTagRemovedFuncs) do
+		for name, _ in pairs(self.tags) do
+			for func, _ in pairs(self.onTagRemovedFuncs) do
 				func(instanceName)
 			end
 		end
@@ -534,7 +545,7 @@ function TagManager:InstanceRemoving(instance, instanceName)
 	end
 
 	if instance.Parent == self.tagsFolder and self.tags[instanceName] then
-		for func,_ in pairs(self.onTagRemovedFuncs) do
+		for func, _ in pairs(self.onTagRemovedFuncs) do
 			func(instanceName)
 		end
 		self.tags[instanceName] = nil
@@ -543,11 +554,11 @@ function TagManager:InstanceRemoving(instance, instanceName)
 
 	if instance.Parent == self.groupsFolder and self.groups[instanceName] then
 		self.groups[instanceName] = nil
-		for tagName,tag in pairs(self.tags) do
+		for tagName, tag in pairs(self.tags) do
 			if tag.Group == instanceName then
 				tag.Group = nil
-				for func,_ in pairs(self.onTagChangedFuncs) do
-					func(tagName, 'Group', nil)
+				for func, _ in pairs(self.onTagChangedFuncs) do
+					func(tagName, "Group", nil)
 				end
 			end
 		end
@@ -556,7 +567,7 @@ function TagManager:InstanceRemoving(instance, instanceName)
 
 	if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] then
 		self.tags[instance.Parent.Name][instanceName] = nil
-		for func,_ in pairs(self.onTagChangedFuncs) do
+		for func, _ in pairs(self.onTagChangedFuncs) do
 			func(instance.Parent.Name, instanceName, nil)
 		end
 		self:_updateStore()
@@ -564,10 +575,17 @@ function TagManager:InstanceRemoving(instance, instanceName)
 end
 
 function TagManager:InstanceChanged(instance, oldValue, newValue)
-	if doLog then print("TagManager:InstanceChanged(",instance,", ",oldValue,", ",newValue,")") end
-	if instance.Parent and instance.Parent.Parent == self.tagsFolder and self.tags[instance.Parent.Name] and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value then
+	if doLog then
+		print("TagManager:InstanceChanged(", instance, ", ", oldValue, ", ", newValue, ")")
+	end
+	if
+		instance.Parent
+		and instance.Parent.Parent == self.tagsFolder
+		and self.tags[instance.Parent.Name]
+		and self.tags[instance.Parent.Name][instance.Name] ~= instance.Value
+	then
 		self.tags[instance.Parent.Name][instance.Name] = newValue
-		for func,_ in pairs(self.onTagChangedFuncs) do
+		for func, _ in pairs(self.onTagChangedFuncs) do
 			func(instance.Parent.Name, instance.Name, newValue)
 		end
 		self:_updateStore()

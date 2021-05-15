@@ -24,7 +24,7 @@ end
 
 function TaggedInstanceProvider:updateState(tagName)
 	local selected = {}
-	for _,instance in pairs(Selection:Get()) do
+	for _, instance in pairs(Selection:Get()) do
 		selected[instance] = true
 	end
 
@@ -33,7 +33,7 @@ function TaggedInstanceProvider:updateState(tagName)
 		parts = Collection:GetTagged(tagName)
 	end
 
-	for i,part in pairs(parts) do
+	for i, part in pairs(parts) do
 		local path = {}
 		local cur = part.Parent
 		while cur and cur ~= game do
@@ -55,15 +55,27 @@ function TaggedInstanceProvider:updateState(tagName)
 		}
 	end
 
-	table.sort(parts, function(a,b)
-		if a.path < b.path then return true end
-		if b.path < a.path then return false end
+	table.sort(parts, function(a, b)
+		if a.path < b.path then
+			return true
+		end
+		if b.path < a.path then
+			return false
+		end
 
-		if a.instance.Name < b.instance.Name then return true end
-		if b.instance.Name < b.instance.Name then return false end
+		if a.instance.Name < b.instance.Name then
+			return true
+		end
+		if b.instance.Name < b.instance.Name then
+			return false
+		end
 
-		if a.instance.ClassName < b.instance.ClassName then return true end
-		if b.instance.ClassName < b.instance.ClassName then return false end
+		if a.instance.ClassName < b.instance.ClassName then
+			return true
+		end
+		if b.instance.ClassName < b.instance.ClassName then
+			return false
+		end
 
 		return false
 	end)
@@ -90,10 +102,10 @@ function TaggedInstanceProvider:didUpdate(prevProps, prevState)
 			self.instanceRemovedConn:Disconnect()
 			self.instanceRemovedConn = nil
 		end
-		for _,conn in pairs(self.ancestryChangedConns) do
+		for _, conn in pairs(self.ancestryChangedConns) do
 			conn:Disconnect()
 		end
-		for _,conn in pairs(self.nameChangedConns) do
+		for _, conn in pairs(self.nameChangedConns) do
 			conn:Disconnect()
 		end
 		self.ancestryChangedConns = {}
@@ -117,7 +129,7 @@ function TaggedInstanceProvider:didUpdate(prevProps, prevState)
 			end)
 		end
 
-		for _,entry in pairs(parts) do
+		for _, entry in pairs(parts) do
 			local part = entry.instance
 			self.nameChangedConns[part] = part:GetPropertyChangedSignal("Name"):Connect(function()
 				self:updateState(tagName)
@@ -137,10 +149,10 @@ function TaggedInstanceProvider:willUnmount()
 		self.instanceRemovedConn:Disconnect()
 	end
 	self.selectionChangedConn:Disconnect()
-	for _,conn in pairs(self.ancestryChangedConns) do
+	for _, conn in pairs(self.ancestryChangedConns) do
 		conn:Disconnect()
 	end
-	for _,conn in pairs(self.nameChangedConns) do
+	for _, conn in pairs(self.nameChangedConns) do
 		conn:Disconnect()
 	end
 end

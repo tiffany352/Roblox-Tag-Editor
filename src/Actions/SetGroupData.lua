@@ -1,6 +1,6 @@
 return function(data)
 	return {
-		type = 'SetGroupData',
+		type = "SetGroupData",
 		data = data,
 	}
 end

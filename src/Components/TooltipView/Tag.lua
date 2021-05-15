@@ -15,15 +15,15 @@ local function Tag(props)
 	}, {
 		Divider = Roact.createElement("Frame", {
 			Size = UDim2.new(1, -20, 0, 1),
-			Position = UDim2.new(.5, 0, 0, 0),
-			AnchorPoint = Vector2.new(.5, 0),
+			Position = UDim2.new(0.5, 0, 0, 0),
+			AnchorPoint = Vector2.new(0.5, 0),
 			BorderSizePixel = 0,
 			BackgroundColor3 = Constants.LightGrey,
 		}),
 		Holder = Roact.createElement("Frame", {
 			Size = UDim2.new(1, -20, 0, size.y),
-			Position = UDim2.new(.5, 0, .5, 0),
-			AnchorPoint = Vector2.new(.5, .5),
+			Position = UDim2.new(0.5, 0, 0.5, 0),
+			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundTransparency = 1.0,
 		}, {
 			UIListLayout = Roact.createElement("UIListLayout", {
@@ -41,7 +41,7 @@ local function Tag(props)
 				LayoutOrder = 2,
 				TextWrapped = true,
 				Size = UDim2.new(1, -20, 0, size.y),
-			})
+			}),
 		}),
 	})
 end

@@ -1,6 +1,6 @@
 return function(icon)
 	return {
-		type = 'SetHoveredIcon',
+		type = "SetHoveredIcon",
 		icon = icon,
 	}
 end

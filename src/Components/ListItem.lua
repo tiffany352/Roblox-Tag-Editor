@@ -8,10 +8,10 @@ local ListItemChrome = require(script.Parent.ListItemChrome)
 
 local function merge(orig, new)
 	local t = {}
-	for k,v in pairs(orig or {}) do
+	for k, v in pairs(orig or {}) do
 		t[k] = v
 	end
-	for k,v in pairs(new or {}) do
+	for k, v in pairs(new or {}) do
 		t[k] = v
 	end
 	return t
@@ -42,13 +42,13 @@ function Item:render()
 
 		mouseEnter = function(rbx)
 			self:setState({
-				Hover = true
+				Hover = true,
 			})
 		end,
 
 		mouseLeave = function(rbx)
 			self:setState({
-				Hover = false
+				Hover = false,
 			})
 		end,
 
@@ -71,44 +71,47 @@ function Item:render()
 						AnchorPoint = Vector2.new(0.5, 0.5),
 						Position = UDim2.new(0, 24, 0.5, 0),
 					}),
-					Name = Roact.createElement(props.IsInput and "TextBox" or "TextLabel", merge({
-						BackgroundTransparency = 1.0,
-						TextXAlignment = Enum.TextXAlignment.Left,
-						Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
-						Size = UDim2.new(1, -40, 1, 0),
-						Text = props.IsInput and "" or props.Text,
-						PlaceholderText = props.IsInput and props.Text or nil,
-						PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
-						Font = Enum.Font.SourceSans,
-						TextSize = 20,
-						TextColor3 = theme:GetColor("MainText"),
+					Name = Roact.createElement(
+						props.IsInput and "TextBox" or "TextLabel",
+						merge({
+							BackgroundTransparency = 1.0,
+							TextXAlignment = Enum.TextXAlignment.Left,
+							Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
+							Size = UDim2.new(1, -40, 1, 0),
+							Text = props.IsInput and "" or props.Text,
+							PlaceholderText = props.IsInput and props.Text or nil,
+							PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
+							Font = Enum.Font.SourceSans,
+							TextSize = 20,
+							TextColor3 = theme:GetColor("MainText"),
 
-						[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
-							local text = rbx.Text
-							rbx.Text = ""
-							if props.onSubmit and enterPressed then
-								props.onSubmit(rbx, text)
-							end
-						end or nil,
-					}, props.TextProps or {})),
+							[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
+								local text = rbx.Text
+								rbx.Text = ""
+								if props.onSubmit and enterPressed then
+									props.onSubmit(rbx, text)
+								end
+							end or nil,
+						}, props.TextProps or {})
+					),
 					Visibility = props.onSetVisible and Roact.createElement(Icon, {
 						Name = props.Visible and "lightbulb" or "lightbulb_off",
-						Position = UDim2.new(1, -4, .5, 0),
-						AnchorPoint = Vector2.new(1, .5),
+						Position = UDim2.new(1, -4, 0.5, 0),
+						AnchorPoint = Vector2.new(1, 0.5),
 
 						onClick = props.onSetVisible,
 					}),
 					Settings = props.onSettings and Roact.createElement(Icon, {
-						Name = 'cog',
-						Position = UDim2.new(1, -24, .5, 0),
-						AnchorPoint = Vector2.new(1, .5),
+						Name = "cog",
+						Position = UDim2.new(1, -24, 0.5, 0),
+						AnchorPoint = Vector2.new(1, 0.5),
 
 						onClick = props.onSettings,
 					}),
 					Delete = props.onDelete and Roact.createElement(Icon, {
 						Name = "cancel",
-						Position = UDim2.new(1, -4, .5, 0),
-						AnchorPoint = Vector2.new(1, .5),
+						Position = UDim2.new(1, -4, 0.5, 0),
+						AnchorPoint = Vector2.new(1, 0.5),
 
 						onClick = props.onDelete,
 					}),
@@ -118,9 +121,9 @@ function Item:render()
 					Position = UDim2.new(0, 0, 0, 26),
 					BackgroundColor3 = theme:GetColor("MainBackground"),
 					BorderSizePixel = 0,
-				}, props[Roact.Children])
+				}, props[Roact.Children]),
 			})
-		end)
+		end),
 	})
 end
 

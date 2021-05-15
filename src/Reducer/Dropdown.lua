@@ -1,7 +1,7 @@
 return function(state, action)
 	state = state or false
 
-	if action.type == 'OpenDropdown' then
+	if action.type == "OpenDropdown" then
 		return action.open
 	end
 
