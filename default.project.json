@@ -1,30 +1,30 @@
 {
-  "name": "Roblox-Tag-Editor",
-  "tree": {
-    "$className": "DataModel",
-    "HttpService": {
-      "$className": "HttpService",
-      "$properties": {
-        "HttpEnabled": true
-      }
-    },
-    "ServerStorage": {
-      "$className": "ServerStorage",
-      "TagEditor": {
-        "$className": "Folder",
-        "Plugin": {
-          "$path": "src"
-        },
-        "Roact": {
-          "$path": "roact/src"
-        },
-        "Rodux": {
-          "$path": "rodux/lib"
-        },
-        "RoactRodux": {
-          "$path": "roact-rodux/lib"
-        }
-      }
-    }
-  }
+	"name": "Roblox-Tag-Editor",
+	"tree": {
+		"$className": "DataModel",
+		"HttpService": {
+			"$className": "HttpService",
+			"$properties": {
+				"HttpEnabled": true
+			}
+		},
+		"ServerStorage": {
+			"$className": "ServerStorage",
+			"TagEditor": {
+				"$className": "Folder",
+				"Plugin": {
+					"$path": "src"
+				},
+				"Roact": {
+					"$path": "roact/src"
+				},
+				"Rodux": {
+					"$path": "rodux/lib"
+				},
+				"RoactRodux": {
+					"$path": "roact-rodux/lib"
+				}
+			}
+		}
+	}
 }
