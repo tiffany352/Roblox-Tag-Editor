@@ -99,7 +99,7 @@ function PluginFacade:beforeUnload(callback)
 end
 
 function PluginFacade:_load(savedState)
-	local ok, result = pcall(require, currentRoot.Plugin.Main)
+	local ok, result: any = pcall(require, currentRoot.Plugin.Main)
 
 	if not ok then
 		warn("Plugin failed to load: " .. result)
@@ -142,14 +142,14 @@ function PluginFacade:_watch(instance)
 		return
 	end
 
-	local connection1 = instance.Changed:Connect(function(prop)
+	local connection1 = instance.Changed:Connect(function(_prop)
 		print("Reloading due to", instance:GetFullName())
 
 		self:_reload()
 	end)
 
-	local connection2 = instance.ChildAdded:Connect(function(instance)
-		self:_watch(instance)
+	local connection2 = instance.ChildAdded:Connect(function(child)
+		self:_watch(child)
 	end)
 
 	local connections = { connection1, connection2 }

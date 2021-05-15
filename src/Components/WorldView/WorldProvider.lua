@@ -57,7 +57,7 @@ function WorldProvider:didMount()
 			self:updateParts()
 		end
 	end)
-	self.onTagChangedConn = manager:OnTagChanged(function(name, prop, value)
+	self.onTagChangedConn = manager:OnTagChanged(function(name, _prop, _value)
 		local tag = manager.tags[name]
 		local wasVisible = (self.trackedTags[name] ~= nil)
 		local nowVisible = tag.DrawType ~= "None" and tag.Visible ~= false
@@ -181,10 +181,10 @@ function WorldProvider:updateParts()
 
 		if #outlines > 0 then
 			local r, g, b = 0, 0, 0
-			for i = 1, #outlines do
-				r = r + outlines[i].r
-				g = g + outlines[i].g
-				b = b + outlines[i].b
+			for j = 1, #outlines do
+				r = r + outlines[j].r
+				g = g + outlines[j].g
+				b = b + outlines[j].b
 			end
 			r = r / #outlines
 			g = g / #outlines
@@ -201,10 +201,10 @@ function WorldProvider:updateParts()
 
 		if #boxes > 0 then
 			local r, g, b = 0, 0, 0
-			for i = 1, #boxes do
-				r = r + boxes[i].r
-				g = g + boxes[i].g
-				b = b + boxes[i].b
+			for j = 1, #boxes do
+				r = r + boxes[j].r
+				g = g + boxes[j].g
+				b = b + boxes[j].b
 			end
 			r = r / #boxes
 			g = g / #boxes
@@ -245,10 +245,10 @@ function WorldProvider:updateParts()
 
 		if #spheres > 0 then
 			local r, g, b = 0, 0, 0
-			for i = 1, #spheres do
-				r = r + spheres[i].r
-				g = g + spheres[i].g
-				b = b + spheres[i].b
+			for j = 1, #spheres do
+				r = r + spheres[j].r
+				g = g + spheres[j].g
+				b = b + spheres[j].b
 			end
 			r = r / #spheres
 			g = g / #spheres
@@ -292,7 +292,7 @@ function WorldProvider:updateParts()
 		end
 	end
 	if not isNew then
-		for key, oldValue in pairs(oldMap) do
+		for key, _oldValue in pairs(oldMap) do
 			if not adornMap[key] then
 				isNew = true
 				break
@@ -342,7 +342,7 @@ local function isTypeAllowed(instance)
 end
 
 function WorldProvider:tagAdded(tagName)
-	assert(not self.trackedTags[tagName])
+	assert(not self.trackedTags[tagName], "Newly added tag must not already be tracked")
 	self.trackedTags[tagName] = true
 	for _, obj in pairs(Collection:GetTagged(tagName)) do
 		if isTypeAllowed(obj) then
@@ -394,7 +394,7 @@ function WorldProvider:tagAdded(tagName)
 end
 
 function WorldProvider:tagRemoved(tagName)
-	assert(self.trackedTags[tagName])
+	assert(self.trackedTags[tagName], "Attempted to remove a tag that isn't tracked")
 	self.trackedTags[tagName] = nil
 	for _, obj in pairs(Collection:GetTagged(tagName)) do
 		if obj:IsDescendantOf(workspace) then

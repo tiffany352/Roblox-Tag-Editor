@@ -28,7 +28,7 @@ function TooltipView:didMount()
 			ray = Ray.new(ray.Origin, ray.Direction.Unit * 1000)
 
 			local ignore = {}
-			for i = 1, 10 do
+			for _i = 1, 10 do
 				local obj = workspace:FindPartOnRayWithIgnoreList(ray, ignore, true)
 				local objTags = obj and Collection:GetTags(obj)
 				if objTags then
@@ -38,7 +38,7 @@ function TooltipView:didMount()
 						end
 					end
 				end
-				local model = obj and obj.Parent and obj.Parent:IsA("Model") and obj.Parent
+				local model = obj and obj.Parent and obj.Parent:IsA("Model") and obj.Parent or nil
 				local modelTags = model and Collection:GetTags(model)
 				if objTags and #objTags > 0 then
 					part = obj

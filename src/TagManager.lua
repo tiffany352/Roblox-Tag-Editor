@@ -210,15 +210,15 @@ function TagManager:_doUpdateStore()
 
 	self.store:dispatch(Actions.SetUnknownTags(unknownTags))
 
-	local data = {}
+	local groupList = {}
 
-	for name, group in pairs(self.groups) do
-		data[#data + 1] = {
+	for name, _group in pairs(self.groups) do
+		groupList[#groupList + 1] = {
 			Name = name,
 		}
 	end
 
-	self.store:dispatch(Actions.SetGroupData(data))
+	self.store:dispatch(Actions.SetGroupData(groupList))
 end
 
 function TagManager:GetTags()
@@ -240,7 +240,7 @@ function TagManager:_setProp(tagName, key, value)
 	if not tag then
 		error("Setting property of non-existent tag `" .. tostring(tagName) .. "`")
 	end
-	assert(tag.Folder)
+	assert(tag.Folder, "Folder must exist")
 
 	-- don't do unnecessary updates
 	if tag[key] == value then
@@ -529,7 +529,7 @@ function TagManager:InstanceRemoving(instance, instanceName)
 	end
 	if instance.Parent == TagsRoot and instance == self.tagsFolder then
 		self.tagsFolder = nil
-		for name, _ in pairs(self.tags) do
+		for _, _ in pairs(self.tags) do
 			for func, _ in pairs(self.onTagRemovedFuncs) do
 				func(instanceName)
 			end

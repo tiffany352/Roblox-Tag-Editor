@@ -7,7 +7,7 @@ FamFamFam.Table = require(script.SpritesheetData)
 
 -- Returns a new ImageLabel object representing the icon.
 function FamFamFam.Create(name)
-	assert(typeof(name) == "string", string.format("expected string name, got " .. typeof(name)))
+	assert(typeof(name) == "string", string.format("expected string name, got %s", typeof(name)))
 	local data = FamFamFam.Table[name]
 	assert(data, "no such icon named `" .. name .. "`")
 	local img = Instance.new("ImageLabel")
@@ -23,7 +23,7 @@ end
 -- Returns a table with the keys Image, ImageRectOffset, and
 -- ImageRectSize which correspond to properties on ImageLabel.
 function FamFamFam.Lookup(name)
-	assert(typeof(name) == "string", string.format("expected string name, got " .. typeof(name)))
+	assert(typeof(name) == "string", string.format("expected string name, got %s", typeof(name)))
 	local data = FamFamFam.Table[name]
 	assert(data, "no such icon named `" .. name .. "`")
 

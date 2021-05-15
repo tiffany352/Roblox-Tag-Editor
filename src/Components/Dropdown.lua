@@ -32,7 +32,7 @@ function Dropdown:init()
 	self._listRef = Roact.createRef()
 end
 
-function Dropdown.getDerivedStateFromProps(nextProps, lastState)
+function Dropdown.getDerivedStateFromProps(nextProps, _lastState)
 	return {
 		dropdownHeight = math.min(120, #nextProps.Options * 26),
 	}
@@ -56,7 +56,7 @@ function Dropdown:render()
 		})
 	end
 
-	return StudioThemeAccessor.withTheme(function(theme, isDarkTheme)
+	return StudioThemeAccessor.withTheme(function(_theme, isDarkTheme)
 		return Roact.createElement(Button, {
 			Size = props.Size,
 			LayoutOrder = props.LayoutOrder,

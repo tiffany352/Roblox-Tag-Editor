@@ -15,26 +15,26 @@ function Button:init()
 		press = false,
 	}
 
-	self._mouseEnter = function(rbx)
+	self._mouseEnter = function(_rbx)
 		self:setState({
 			hover = true,
 		})
 	end
 
-	self._mouseLeave = function(rbx)
+	self._mouseLeave = function(_rbx)
 		self:setState({
 			hover = false,
 			press = false,
 		})
 	end
 
-	self._mouseDown = function(rbx)
+	self._mouseDown = function(_rbx)
 		self:setState({
 			press = true,
 		})
 	end
 
-	self._mouseUp = function(rbx)
+	self._mouseUp = function(_rbx)
 		self:setState({
 			press = false,
 		})

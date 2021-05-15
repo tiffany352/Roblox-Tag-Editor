@@ -46,7 +46,7 @@ local function GroupPicker(props)
 		Icon = "folder_add",
 		IsInput = true,
 
-		onSubmit = function(rbx, text)
+		onSubmit = function(_rbx, text)
 			TagManager.Get():AddGroup(text)
 		end,
 	})

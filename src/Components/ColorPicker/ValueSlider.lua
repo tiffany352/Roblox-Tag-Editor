@@ -32,7 +32,7 @@ function ValueSlider:render()
 			BorderColor3 = theme:GetColor("Border"),
 			[Roact.Ref] = self._rootRef,
 
-			[Roact.Event.MouseButton1Down] = function(rbx, x, y)
+			[Roact.Event.MouseButton1Down] = function(_rbx, x, _y)
 				self:setState({
 					valueMouseDown = true,
 				})
@@ -55,7 +55,7 @@ function ValueSlider:render()
 					ZIndex = 100,
 					Size = self.state.valueMouseDown and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 0, 0, 0),
 					Visible = self.state.valueMouseDown,
-					[Roact.Event.MouseButton1Up] = function(rbx, x, y)
+					[Roact.Event.MouseButton1Up] = function(_rbx, x, _y)
 						if self.state.valueMouseDown then
 							self:setState({
 								valueMouseDown = false,
@@ -64,7 +64,7 @@ function ValueSlider:render()
 							self.props.updatePosition(self:xToAlpha(x))
 						end
 					end,
-					[Roact.Event.MouseMoved] = function(rbx, x, y)
+					[Roact.Event.MouseMoved] = function(_rbx, x, _y)
 						if self.state.valueMouseDown then
 							self.props.updatePosition(self:xToAlpha(x))
 						end

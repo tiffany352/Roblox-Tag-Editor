@@ -93,13 +93,16 @@ function Watcher:WatcherStop()
 	self.running = false
 end
 
-function Watcher:InstanceAdded(instance)
+function Watcher:InstanceAdded(_instance)
+	-- Abstract method
 end
 
-function Watcher:InstanceRemoving(instance)
+function Watcher:InstanceRemoving(_instance, _name)
+	-- Abstract method
 end
 
-function Watcher:ValueChanged(instance, oldValue, newValue)
+function Watcher:ValueChanged(_instance, _oldValue, _newValue)
+	-- Abstract method
 end
 
 return Watcher
