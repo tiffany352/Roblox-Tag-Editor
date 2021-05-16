@@ -35,13 +35,13 @@ function Search:render()
 				BorderSizePixel = 1,
 				BorderColor3 = theme:GetColor("InputFieldBorder", searchBarState),
 
-				[Roact.Event.MouseEnter] = function(rbx)
+				[Roact.Event.MouseEnter] = function(_rbx)
 					self:setState({
 						hover = true,
 					})
 				end,
 
-				[Roact.Event.MouseLeave] = function(rbx)
+				[Roact.Event.MouseLeave] = function(_rbx)
 					self:setState({
 						hover = false,
 					})
@@ -67,7 +67,7 @@ function Search:render()
 						end
 					end,
 
-					[Roact.Event.InputBegan] = function(rbx, input)
+					[Roact.Event.InputBegan] = function(_rbx, input)
 						if
 							input.UserInputType == Enum.UserInputType.MouseButton2
 							and input.UserInputState == Enum.UserInputState.Begin
@@ -80,9 +80,12 @@ function Search:render()
 						self:setState({
 							focus = true,
 						})
+						rbx.InputEnded:Wait()
+						rbx.SelectionStart = 1
+						rbx.CursorPosition = string.len(rbx.Text) + 1
 					end,
 
-					[Roact.Event.FocusLost] = function(rbx, enterPressed)
+					[Roact.Event.FocusLost] = function(_rbx, _enterPressed)
 						self:setState({
 							focus = false,
 						})
