@@ -208,7 +208,7 @@ local function mapDispatchToProps(dispatch)
 			dispatch(Actions.ToggleIconPicker(tagMenu))
 		end,
 		colorPicker = function(tagMenu)
-			PluginGlobals.promptPickColor(tagMenu)
+			PluginGlobals.promptPickColor(dispatch, tagMenu)
 		end,
 		groupPicker = function(tagMenu)
 			dispatch(Actions.ToggleGroupPicker(tagMenu))
