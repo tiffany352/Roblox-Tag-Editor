@@ -15,6 +15,7 @@ local function IconAdorn(props)
 		children[i] = Roact.createElement(Icon, {
 			Name = icon,
 			Size = UDim2.new(1 / #props.Icon, 0, 1, 0),
+			TextScaled = true,
 		})
 	end
 	return Roact.createElement("BillboardGui", {

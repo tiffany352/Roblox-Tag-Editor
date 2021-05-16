@@ -10,6 +10,7 @@ local function EmojiIcon(props)
 		BackgroundTransparency = 1.0,
 		Font = Enum.Font.SourceSans,
 		TextSize = 22,
+		TextScaled = props.TextScaled,
 		TextColor3 = Color3.fromRGB(0, 0, 0),
 
 		[Roact.Event.MouseButton1Click] = props.onClick,
@@ -67,30 +68,32 @@ end
 
 local function Icon(props)
 	if props.Name:sub(1, 13) == "rbxassetid://" then
-		return Roact.createElement(ImageIcon, Util.merge(props, {
-			Name = Roact.None,
-			Image = props.Name,
-		}))
+		return Roact.createElement(
+			ImageIcon,
+			Util.merge(props, {
+				Name = Roact.None,
+				TextScaled = Roact.None,
+				Image = props.Name,
+			})
+		)
 	elseif props.Name:sub(1, 6) == "emoji:" then
 		local text = props.Name:sub(7, -1)
-		local emoji = Emoji.getNamedEmoji(text)
-		if emoji then
-			return Roact.createElement(EmojiIcon, Util.merge(props, {
+		local emoji = Emoji.getNamedEmoji(text) or text
+		return Roact.createElement(
+			EmojiIcon,
+			Util.merge(props, {
 				Name = Roact.None,
 				Text = emoji,
-			}))
-		else
-			return Roact.createElement(EmojiIcon, Util.merge(props, {
-				Name = Roact.None,
-				Text = text,
-			}))
-		end
+				TextScaled = props.TextScaled,
+			})
+		)
 	else
 		local imageProps = Icons.Lookup(props.Name) or Icons.Lookup("computer_error")
 		return Roact.createElement(
 			ImageIcon,
 			Util.merge(props, {
 				Name = Roact.None,
+				TextScaled = Roact.None,
 				Image = imageProps.Image,
 				ImageRectOffset = imageProps.ImageRectOffset,
 				ImageRectSize = imageProps.ImageRectSize,
