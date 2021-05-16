@@ -335,11 +335,15 @@ function WorldProvider:instanceRemoved(inst)
 	end
 
 	if self.trackedParts[inst] <= 1 then
-		self.trackedParts[inst] = nil
-		self.partIds[inst] = nil
+		self:removeInstance(inst)
 	else
 		self.trackedParts[inst] = self.trackedParts[inst] - 1
 	end
+end
+
+function WorldProvider:removeInstance(inst)
+	self.trackedParts[inst] = nil
+	self.partIds[inst] = nil
 end
 
 local function isTypeAllowed(instance)
@@ -369,7 +373,7 @@ function WorldProvider:tagAdded(tagName)
 						self:instanceAdded(obj)
 						self:updateParts()
 					elseif self.trackedParts[obj] and not obj:IsDescendantOf(workspace) then
-						self:instanceRemoved(obj)
+						self:removeInstance(obj)
 						self:updateParts()
 					end
 				end)
@@ -383,8 +387,6 @@ function WorldProvider:tagAdded(tagName)
 		if obj:IsDescendantOf(workspace) then
 			self:instanceAdded(obj)
 			self:updateParts()
-		else
-			print("outside workspace", obj)
 		end
 		if not self.instanceAncestryChangedConns[obj] then
 			self.instanceAncestryChangedConns[obj] = obj.AncestryChanged:Connect(function()
@@ -392,7 +394,7 @@ function WorldProvider:tagAdded(tagName)
 					self:instanceAdded(obj)
 					self:updateParts()
 				elseif self.trackedParts[obj] and not obj:IsDescendantOf(workspace) then
-					self:instanceRemoved(obj)
+					self:removeInstance(obj)
 					self:updateParts()
 				end
 			end)
@@ -424,6 +426,7 @@ function WorldProvider:willUnmount()
 
 	self.instanceAddedConns:clean()
 	self.instanceRemovedConns:clean()
+	self.instanceAncestryChangedConns:clean()
 	self.maid:clean()
 end
 
