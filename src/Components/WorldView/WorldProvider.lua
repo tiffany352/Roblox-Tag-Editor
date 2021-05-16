@@ -43,6 +43,9 @@ function WorldProvider:didMount()
 	local manager = TagManager.Get()
 
 	for _, tag in pairs(manager:GetTags()) do
+		if tag.Visible == false or tag.DrawType == "None" then
+			continue
+		end
 		self:tagAdded(tag.Name)
 	end
 	self.onTagsUpdatedConn = manager:OnTagsUpdated(function(newTags, oldTags)
