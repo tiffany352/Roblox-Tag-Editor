@@ -12,7 +12,7 @@ local Group = require(script.Group)
 local ScrollingFrame = require(Modules.Plugin.Components.ScrollingFrame)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 
-local TagList = Roact.Component:extend("TagList")
+local TagList = Roact.PureComponent:extend("TagList")
 
 function TagList:render()
 	local props = self.props

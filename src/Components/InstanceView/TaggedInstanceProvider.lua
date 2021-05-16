@@ -4,7 +4,7 @@ local Selection = game:GetService("Selection")
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
-local TaggedInstanceProvider = Roact.Component:extend("TaggedInstanceProvider")
+local TaggedInstanceProvider = Roact.PureComponent:extend("TaggedInstanceProvider")
 
 function TaggedInstanceProvider:init()
 	self.nextId = 1

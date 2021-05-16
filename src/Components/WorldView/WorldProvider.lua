@@ -6,7 +6,7 @@ local Roact = require(Modules.Roact)
 local TagManager = require(Modules.Plugin.TagManager)
 local Maid = require(Modules.Plugin.Maid)
 
-local WorldProvider = Roact.Component:extend("WorldProvider")
+local WorldProvider = Roact.PureComponent:extend("WorldProvider")
 
 function WorldProvider:init()
 	self.state = {

@@ -11,7 +11,7 @@ local Category = require(script.Category)
 local IconPreview = require(script.IconPreview)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
-local IconPicker = Roact.Component:extend("IconPicker")
+local IconPicker = Roact.PureComponent:extend("IconPicker")
 
 function IconPicker:init()
 	self.closeFunc = function()

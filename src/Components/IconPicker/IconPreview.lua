@@ -5,7 +5,7 @@ local Icons = require(Modules.Plugin.FamFamFam)
 local Constants = require(Modules.Plugin.Constants)
 local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 
-local IconPreview = Roact.Component:extend("IconPreview")
+local IconPreview = Roact.PureComponent:extend("IconPreview")
 
 function IconPreview:render()
 	local scaleFactor = 3

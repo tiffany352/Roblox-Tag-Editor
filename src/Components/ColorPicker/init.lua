@@ -11,7 +11,7 @@ local Button = require(script.Parent.Button)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local ValueSlider = require(script.ValueSlider)
 
-local ColorPicker = Roact.Component:extend("ColorPicker")
+local ColorPicker = Roact.PureComponent:extend("ColorPicker")
 
 function ColorPicker:init()
 	self.state = {

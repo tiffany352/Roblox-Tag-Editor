@@ -8,7 +8,7 @@ local Checkbox = require(script.Parent.Checkbox)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local ListItemChrome = require(script.Parent.ListItemChrome)
 
-local Item = Roact.Component:extend("Item")
+local Item = Roact.PureComponent:extend("Item")
 
 function Item:init()
 	self.textboxRef = Roact.createRef()

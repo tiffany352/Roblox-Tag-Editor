@@ -14,7 +14,7 @@ local Tag = require(script.Tag)
 
 local TooltipGrey = Color3.fromRGB(238, 238, 238)
 
-local TooltipView = Roact.Component:extend("TooltipView")
+local TooltipView = Roact.PureComponent:extend("TooltipView")
 
 function TooltipView:didMount()
 	self.mouseSunk = false
