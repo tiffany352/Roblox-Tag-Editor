@@ -1,3 +1,6 @@
+local Modules = script.Parent.Parent
+local Roact = require(Modules.Roact)
+
 local function findIf(array, func: (any) -> boolean)
 	for _, item in pairs(array) do
 		if func(item) then
@@ -81,15 +84,20 @@ local function escapeTagName(name: string, theme: StudioTheme): string
 	return table.concat(output)
 end
 
-local function merge(orig, new)
-	local t = {}
-	for k, v in pairs(orig or {}) do
-		t[k] = v
+local function merge(...)
+	local map = {}
+
+	for i = 1, select("#", ...) do
+		for key, value in pairs(select(i, ...)) do
+			if value == Roact.None then
+				map[key] = nil
+			else
+				map[key] = value
+			end
+		end
 	end
-	for k, v in pairs(new or {}) do
-		t[k] = v
-	end
-	return t
+
+	return map
 end
 
 return {

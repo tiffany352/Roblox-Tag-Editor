@@ -1,14 +1,15 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local Icons = require(Modules.Plugin.FamFamFam)
+local Util = require(Modules.Plugin.Util)
 
-local function Icon(props)
-	local data = typeof(props.Name) == "string" and Icons.Lookup(props.Name) or Icons.Lookup("computer_error")
-	local newProps = {
-		Size = props.Size or UDim2.new(0, 16, 0, 16),
-		BackgroundTransparency = props.BackgroundTransparency or 1.0,
-		Position = props.Position,
-		AnchorPoint = props.AnchorPoint,
+local function EmojiIcon(props)
+	local defaultProps = {
+		Size = UDim2.new(0, 16, 0, 16),
+		BackgroundTransparency = 1.0,
+		Font = Enum.Font.SourceSans,
+		TextSize = 16,
+		TextColor3 = Color3.fromRGB(0, 0, 0),
 
 		[Roact.Event.MouseButton1Click] = props.onClick,
 
@@ -25,17 +26,68 @@ local function Icon(props)
 		end,
 	}
 
-	for k, v in pairs(data) do
-		newProps[k] = v
-	end
+	return Roact.createElement(
+		props.onClick and "TextButton" or "TextLabel",
+		Util.merge(defaultProps, props, {
+			onClick = Roact.None,
+			onHover = Roact.None,
+		})
+	)
+end
 
-	for k, v in pairs(props) do
-		if k ~= "Name" and k ~= "onClick" and k ~= "onHover" then
-			newProps[k] = v
-		end
-	end
+local function ImageIcon(props)
+	local defaultProps = {
+		Size = UDim2.new(0, 16, 0, 16),
+		BackgroundTransparency = 1.0,
 
-	return Roact.createElement(props.onClick and "ImageButton" or "ImageLabel", newProps)
+		[Roact.Event.MouseButton1Click] = props.onClick,
+
+		[Roact.Event.MouseEnter] = function()
+			if props.onHover then
+				props.onHover(true)
+			end
+		end,
+
+		[Roact.Event.MouseLeave] = function()
+			if props.onHover then
+				props.onHover(false)
+			end
+		end,
+	}
+
+	return Roact.createElement(
+		props.onClick and "ImageButton" or "ImageLabel",
+		Util.merge(defaultProps, props, {
+			onClick = Roact.None,
+			onHover = Roact.None,
+		})
+	)
+end
+
+local function Icon(props)
+	if props.Name:sub(1, 13) == "rbxassetid://" then
+		return Roact.createElement(ImageIcon, Util.merge(props, {
+			Name = Roact.None,
+			Image = props.Name,
+		}))
+	elseif props.Name:sub(1, 6) == "emoji:" then
+		local text = props.Name:sub(7, -1)
+		return Roact.createElement(EmojiIcon, Util.merge(props, {
+			Name = Roact.None,
+			Text = text,
+		}))
+	else
+		local imageProps = Icons.Lookup(props.Name) or Icons.Lookup("computer_error")
+		return Roact.createElement(
+			ImageIcon,
+			Util.merge(props, {
+				Name = Roact.None,
+				Image = imageProps.Image,
+				ImageRectOffset = imageProps.ImageRectOffset,
+				ImageRectSize = imageProps.ImageRectSize,
+			})
+		)
+	end
 end
 
 return Icon
