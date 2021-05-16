@@ -2,14 +2,15 @@ local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(Modules.Plugin.Actions)
-local IconCategories = require(Modules.Plugin.IconCategories)
 
 local Page = require(script.Parent.Page)
 local Search = require(script.Parent.Search)
-local ScrollingFrame = require(script.Parent.ScrollingFrame)
-local Category = require(script.Category)
-local IconPreview = require(script.IconPreview)
-local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
+local Preview = require(script.Preview)
+local IconsPage = require(script.IconsPage)
+local EmojiPage = require(script.EmojiPage)
+local CustomPage = require(script.CustomPage)
+local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
+local TabLayout = require(Modules.Plugin.Components.TabLayout)
 
 local IconPicker = Roact.PureComponent:extend("IconPicker")
 
@@ -28,49 +29,6 @@ end
 
 function IconPicker:render()
 	local props = self.props
-	local children = {}
-	local cats = {}
-	for name, icons in pairs(IconCategories) do
-		cats[#cats + 1] = {
-			Name = name,
-			Icons = icons,
-		}
-	end
-
-	table.sort(cats, function(a, b)
-		local aIsUncat = a.Name == "Uncategorized" and 1 or 0
-		local bIsUncat = b.Name == "Uncategorized" and 1 or 0
-
-		if aIsUncat < bIsUncat then
-			return true
-		end
-		if bIsUncat < aIsUncat then
-			return false
-		end
-
-		return a.Name < b.Name
-	end)
-
-	for i = 1, #cats do
-		local name = cats[i].Name
-		local icons = cats[i].Icons
-		children[name] = Roact.createElement(Category, {
-			LayoutOrder = i,
-			CategoryName = name,
-			Icons = icons,
-			tagName = props.tagName,
-			search = props.search,
-			close = self.closeFunc,
-			onHover = self.onHoverFunc,
-		})
-	end
-
-	children.UIPadding = Roact.createElement("UIPadding", {
-		PaddingLeft = UDim.new(0, 4),
-		PaddingRight = UDim.new(0, 4),
-		PaddingTop = UDim.new(0, 4),
-		PaddingBottom = UDim.new(0, 4),
-	})
 
 	return Roact.createElement(Page, {
 		visible = props.tagName ~= nil,
@@ -81,11 +39,45 @@ function IconPicker:render()
 			props.close()
 		end,
 	}, {
-		IconList = Roact.createElement(ScrollingFrame, {
+		TabLayout = Roact.createElement(TabLayout, {
 			Size = UDim2.new(1, 0, 1, -64),
 			Position = UDim2.new(0, 0, 0, 64),
-			List = true,
-		}, children),
+			tabs = {
+				{
+					name = "Icons",
+					render = function()
+						return Roact.createElement(IconsPage, {
+							tagName = props.tagName,
+							search = props.search,
+							closeFunc = self.closeFunc,
+							onHoverFunc = self.onHoverFunc,
+						})
+					end,
+				},
+				{
+					name = "Emoji",
+					render = function()
+						return Roact.createElement(EmojiPage, {
+							tagName = props.tagName,
+							search = props.search,
+							closeFunc = self.closeFunc,
+							onHoverFunc = self.onHoverFunc,
+						})
+					end,
+				},
+				{
+					name = "Custom",
+					render = function()
+						return Roact.createElement(CustomPage, {
+							tagName = props.tagName,
+							search = props.search,
+							closeFunc = self.closeFunc,
+							onHoverFunc = self.onHoverFunc,
+						})
+					end,
+				},
+			},
+		}),
 		TopBar = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement("Frame", {
 				BackgroundColor3 = theme:GetColor("Titlebar"),
@@ -102,7 +94,7 @@ function IconPicker:render()
 						props.setTerm(term)
 					end,
 				}),
-				Preview = Roact.createElement(IconPreview, {
+				Preview = Roact.createElement(Preview, {
 					Position = UDim2.new(0, 8, 0, 8),
 				}),
 				Separator = Roact.createElement("Frame", {

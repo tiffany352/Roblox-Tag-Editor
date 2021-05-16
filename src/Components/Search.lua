@@ -21,19 +21,24 @@ function Search:render()
 		searchBarState = "Hover"
 	end
 
+	local error = self.state.focus and self.props.error
+
 	return Roact.createElement("Frame", {
 		Size = self.props.Size,
 		Position = self.props.Position,
 		BackgroundTransparency = 1.0,
 	}, {
 		SearchBarContainer = StudioThemeAccessor.withTheme(function(theme)
+			local errorColor = theme:GetColor("ErrorText")
+			local borderColor = theme:GetColor("InputFieldBorder", searchBarState)
+
 			return Roact.createElement("Frame", {
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = UDim2.new(0.5, 0, 0.5, 0),
 				Size = UDim2.new(1, -16, 1, -16),
 				BackgroundColor3 = theme:GetColor("InputFieldBackground", "Default"),
 				BorderSizePixel = 1,
-				BorderColor3 = theme:GetColor("InputFieldBorder", searchBarState),
+				BorderColor3 = error and errorColor or borderColor,
 
 				[Roact.Event.MouseEnter] = function(_rbx)
 					self:setState({
@@ -55,7 +60,7 @@ function Search:render()
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Font = Enum.Font.SourceSans,
 					TextSize = 20,
-					PlaceholderText = "Search",
+					PlaceholderText = self.props.PlaceholderText or "Search",
 					PlaceholderColor3 = theme:GetColor("DimmedText"),
 					TextColor3 = theme:GetColor("MainText"),
 					Text = self.props.term,
@@ -85,10 +90,13 @@ function Search:render()
 						rbx.CursorPosition = string.len(rbx.Text) + 1
 					end,
 
-					[Roact.Event.FocusLost] = function(_rbx, _enterPressed)
+					[Roact.Event.FocusLost] = function(rbx, enterPressed)
 						self:setState({
 							focus = false,
 						})
+						if self.props.onFocusLost then
+							self.props.onFocusLost(rbx, enterPressed)
+						end
 					end,
 				}),
 			})

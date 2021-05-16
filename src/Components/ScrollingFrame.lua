@@ -2,31 +2,19 @@ local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
+local Util = require(Modules.Plugin.Util)
 
 local function ScrollingFrame(props)
 	local children = {}
 
 	if props.List then
-		local newProps = {}
-		newProps[Roact.Ref] = function(rbx)
-			if not rbx then
-				return
-			end
-			local function update()
-				if not rbx.Parent then
-					return
-				end
-				local cs = rbx.AbsoluteContentSize
-				rbx.Parent.CanvasSize = UDim2.new(0, 0, 0, cs.y)
-			end
-			rbx:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
-			update()
-		end
-		newProps.SortOrder = Enum.SortOrder.LayoutOrder
-		for key, value in pairs(props.List == true and {} or props.List) do
-			newProps[key] = value
-		end
-		children.UIListLayout = Roact.createElement("UIListLayout", newProps)
+		local listProps = props.List == true and {} or props.List
+		children.UIListLayout = Roact.createElement(
+			"UIListLayout",
+			Util.merge({
+				SortOrder = Enum.SortOrder.LayoutOrder,
+			}, listProps)
+		)
 	end
 
 	for key, value in pairs(props[Roact.Children]) do
@@ -64,6 +52,8 @@ local function ScrollingFrame(props)
 				MidImage = "rbxasset://textures/StudioToolbox/ScrollBarMiddle.png",
 				BottomImage = "rbxasset://textures/StudioToolbox/ScrollBarBottom.png",
 				ScrollBarImageColor3 = isDarkTheme and Color3.fromRGB(85, 85, 85) or Color3.fromRGB(245, 245, 245), --theme:GetColor("ScrollBar"),
+				CanvasSize = UDim2.new(0, 0, 0, 0),
+				AutomaticCanvasSize = Enum.AutomaticSize.Y,
 			}, children),
 		})
 	end)

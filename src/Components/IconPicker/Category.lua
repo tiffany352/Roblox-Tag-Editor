@@ -65,6 +65,7 @@ function Category:render()
 		LayoutOrder = props.LayoutOrder,
 		BackgroundTransparency = 1.0,
 		Visible = numMatched > 0,
+		AutomaticSize = Enum.AutomaticSize.Y,
 	}, {
 		Label = Roact.createElement(ThemedTextLabel, {
 			Text = props.CategoryName,
@@ -75,20 +76,7 @@ function Category:render()
 			Size = UDim2.new(1, 0, 0, 0),
 			Position = UDim2.new(0, 0, 0, 20),
 			BackgroundTransparency = 1.0,
-
-			[Roact.Change.AbsoluteSize] = function(rbx)
-				spawn(function()
-					local stride = cellSize
-					local epsilon = 0.001
-					local w = math.floor(rbx.AbsoluteSize.X / stride + epsilon)
-					local h = math.ceil(numMatched / w)
-
-					rbx.Size = UDim2.new(1, 0, 0, h * stride)
-					if rbx.Parent then
-						rbx.Parent.Size = UDim2.new(1, 0, 0, h * stride + 24)
-					end
-				end)
-			end,
+			AutomaticSize = Enum.AutomaticSize.Y,
 		}, children),
 	})
 end

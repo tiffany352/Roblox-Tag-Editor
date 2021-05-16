@@ -8,7 +8,7 @@ local function EmojiIcon(props)
 		Size = UDim2.new(0, 16, 0, 16),
 		BackgroundTransparency = 1.0,
 		Font = Enum.Font.SourceSans,
-		TextSize = 16,
+		TextSize = 22,
 		TextColor3 = Color3.fromRGB(0, 0, 0),
 
 		[Roact.Event.MouseButton1Click] = props.onClick,
