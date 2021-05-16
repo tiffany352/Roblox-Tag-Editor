@@ -164,7 +164,7 @@ local function mapStateToProps(state)
 
 	for _, tag in pairs(state.TagData) do
 		-- todo: LCS
-		local passSearch = not state.Search or tag.Name:lower():find(state.Search:lower())
+		local passSearch = not state.Search or tag.Name:lower():find(state.Search:lower(), 1, true)
 		if passSearch then
 			tags[#tags + 1] = tag
 		end
@@ -173,7 +173,7 @@ local function mapStateToProps(state)
 	local unknownTags = {}
 	for _, tag in pairs(state.UnknownTags) do
 		-- todo: LCS
-		local passSearch = not state.Search or tag:lower():find(state.Search:lower())
+		local passSearch = not state.Search or tag:lower():find(state.Search:lower(), 1, true)
 		if passSearch then
 			unknownTags[#unknownTags + 1] = tag
 		end
