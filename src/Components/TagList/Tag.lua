@@ -33,11 +33,11 @@ local function Tag(props)
 			end
 		end,
 
-		leftClick = function(rbx)
+		leftClick = function(_rbx)
 			TagManager.Get():SetTag(props.Tag, not props.HasAll)
 		end,
 
-		rightClick = function(rbx)
+		rightClick = function(_rbx)
 			if not isOpen then
 				props.openTagMenu(props.Tag)
 			else

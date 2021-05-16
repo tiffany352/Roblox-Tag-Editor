@@ -3,6 +3,7 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(Modules.Plugin.Actions)
 local TagManager = require(Modules.Plugin.TagManager)
+local Util = require(Modules.Plugin.Util)
 
 local Page = require(script.Parent.Page)
 local ScrollingFrame = require(script.Parent.ScrollingFrame)
@@ -30,8 +31,7 @@ local function GroupPicker(props)
 		return a.Name < b.Name
 	end)
 
-	for i, entry in pairs(props.groups) do
-		local group = entry.Name
+	for i, group in pairs(props.groups) do
 		children["Group " .. group] = Roact.createElement(GroupItem, {
 			Name = group,
 			Group = group,
@@ -66,7 +66,10 @@ local function GroupPicker(props)
 end
 
 local function mapStateToProps(state)
-	local tag = state.GroupPicker and TagManager.Get().tags[state.GroupPicker]
+	local tag = state.GroupPicker
+		and Util.findIf(state.TagData, function(item)
+			return item.Name == state.GroupPicker
+		end)
 
 	return {
 		groupPicker = state.GroupPicker,

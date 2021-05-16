@@ -25,9 +25,9 @@ function WorldProvider:init()
 	local function cameraAdded(camera)
 		self.maid.cameraMovedConn = nil
 		if camera then
-			local origPos = camera.CFrame.p
+			local origPos = camera.CFrame.Position
 			self.maid.cameraMovedConn = camera:GetPropertyChangedSignal("CFrame"):Connect(function()
-				local newPos = camera.CFrame.p
+				local newPos = camera.CFrame.Position
 				if (origPos - newPos).Magnitude > 50 then
 					origPos = newPos
 					self:updateParts()
@@ -42,28 +42,33 @@ end
 function WorldProvider:didMount()
 	local manager = TagManager.Get()
 
-	for name, _ in pairs(manager:GetTags()) do
-		self:tagAdded(name)
+	for _, tag in pairs(manager:GetTags()) do
+		self:tagAdded(tag.Name)
 	end
-	self.onTagAddedConn = manager:OnTagAdded(function(name)
-		if manager.tags[name].Visible ~= false and manager.tags[name].DrawType ~= "None" then
-			self:tagAdded(name)
-			self:updateParts()
+	self.onTagsUpdatedConn = manager:OnTagsUpdated(function(newTags, oldTags)
+		local added = {}
+		local removed = {}
+		for _, tag in pairs(newTags) do
+			if tag.Visible == false or tag.DrawType == "None" then
+				continue
+			end
+			added[tag.Name] = tag
 		end
-	end)
-	self.onTagRemovedConn = manager:OnTagRemoved(function(name)
-		if manager.tags[name].Visible ~= false and manager.tags[name].DrawType ~= "None" then
-			self:tagRemoved(name)
-			self:updateParts()
+		for _, tag in pairs(oldTags) do
+			if tag.Visible == false or tag.DrawType == "None" then
+				continue
+			end
+			if added[tag.Name] then
+				added[tag.Name] = nil
+			else
+				removed[tag.Name] = tag
+			end
 		end
-	end)
-	self.onTagChangedConn = manager:OnTagChanged(function(name, _prop, _value)
-		local tag = manager.tags[name]
-		local wasVisible = (self.trackedTags[name] ~= nil)
-		local nowVisible = tag.DrawType ~= "None" and tag.Visible ~= false
-		if nowVisible and not wasVisible then
+
+		for name in pairs(added) do
 			self:tagAdded(name)
-		elseif wasVisible and not nowVisible then
+		end
+		for name in pairs(removed) do
 			self:tagRemoved(name)
 		end
 		self:updateParts()
@@ -97,7 +102,7 @@ function WorldProvider:updateParts()
 	if not cam then
 		return
 	end
-	local camPos = cam.CFrame.p
+	local camPos = cam.CFrame.Position
 
 	local function sortFunc(a, b)
 		return a.AngularSize > b.AngularSize
@@ -147,6 +152,11 @@ function WorldProvider:updateParts()
 		end
 	end
 
+	local tagsMap = {}
+	for _, tag in pairs(TagManager.Get():GetTags()) do
+		tagsMap[tag.Name] = tag
+	end
+
 	local adornMap = {}
 	for i = 1, #newList do
 		local tags = Collection:GetTags(newList[i].Instance)
@@ -158,7 +168,7 @@ function WorldProvider:updateParts()
 		local anyAlwaysOnTop = false
 		for j = 1, #tags do
 			local tagName = tags[j]
-			local tag = TagManager.Get().tags[tagName]
+			local tag = tagsMap[tagName]
 			if self.trackedTags[tagName] and tag then
 				if tag.DrawType == "Outline" then
 					outlines[#outlines + 1] = tag.Color
@@ -406,9 +416,7 @@ function WorldProvider:tagRemoved(tagName)
 end
 
 function WorldProvider:willUnmount()
-	self.onTagAddedConn:Disconnect()
-	self.onTagRemovedConn:Disconnect()
-	self.onTagChangedConn:Disconnect()
+	self.onTagsUpdatedConn:Disconnect()
 
 	self.instanceAddedConns:clean()
 	self.instanceRemovedConns:clean()

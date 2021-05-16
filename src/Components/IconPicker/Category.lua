@@ -34,7 +34,7 @@ function Category:render()
 			Text = "",
 			Visible = matches,
 			LayoutOrder = i,
-			[Roact.Event.MouseButton1Click] = function(rbx)
+			[Roact.Event.MouseButton1Click] = function(_rbx)
 				TagManager.Get():SetIcon(props.tagName, icon)
 				props.close()
 			end,

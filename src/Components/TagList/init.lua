@@ -109,7 +109,7 @@ function TagList:render()
 				Font = Enum.Font.SourceSansItalic,
 			},
 
-			leftClick = function(rbx)
+			leftClick = function(_rbx)
 				TagManager.Get():AddTag(tag)
 			end,
 		})
@@ -141,7 +141,7 @@ function TagList:render()
 			Text = string.format("Add tag %q...", props.searchTerm),
 			Icon = "tag_blue_add",
 
-			leftClick = function(rbx)
+			leftClick = function(_rbx)
 				TagManager.Get():AddTag(props.searchTerm)
 				props.setSearch("")
 			end,
@@ -153,7 +153,7 @@ function TagList:render()
 			Icon = "tag_blue_add",
 			IsInput = true,
 
-			onSubmit = function(rbx, text)
+			onSubmit = function(_rbx, text)
 				TagManager.Get():AddTag(text)
 			end,
 		})

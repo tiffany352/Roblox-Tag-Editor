@@ -12,7 +12,7 @@ local function GroupItem(props)
 		Active = props.Active,
 		LayoutOrder = props.LayoutOrder,
 
-		leftClick = function(rbx)
+		leftClick = function(_rbx)
 			TagManager.Get():SetGroup(props.Tag, props.Group)
 			props.close()
 		end,

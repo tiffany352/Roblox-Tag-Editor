@@ -1,8 +1,8 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local TagManager = require(Modules.Plugin.TagManager)
 local Actions = require(Modules.Plugin.Actions)
+local Util = require(Modules.Plugin.Util)
 
 local InstanceList = require(script.InstanceList)
 local TaggedInstanceProvider = require(script.TaggedInstanceProvider)
@@ -24,7 +24,10 @@ local function InstanceView(props)
 end
 
 local function mapStateToProps(state)
-	local tag = state.InstanceView and TagManager.Get().tags[state.InstanceView]
+	local tag = state.InstanceView
+		and Util.findIf(state.TagData, function(item)
+			return item.Name == state.InstanceView
+		end)
 
 	return {
 		tagName = state.InstanceView,
