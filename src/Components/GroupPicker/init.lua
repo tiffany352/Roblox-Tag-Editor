@@ -27,9 +27,7 @@ local function GroupPicker(props)
 		LayoutOrder = -1,
 	})
 
-	table.sort(props.groups, function(a, b)
-		return a.Name < b.Name
-	end)
+	table.sort(props.groups)
 
 	for i, group in pairs(props.groups) do
 		children["Group " .. group] = Roact.createElement(GroupItem, {
@@ -47,7 +45,8 @@ local function GroupPicker(props)
 		IsInput = true,
 
 		onSubmit = function(_rbx, text)
-			TagManager.Get():AddGroup(text)
+			TagManager.Get():SetGroup(props.groupPicker, text)
+			props.close()
 		end,
 	})
 
