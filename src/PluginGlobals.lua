@@ -1,3 +1,5 @@
+local CoreGui = game:GetService("CoreGui")
+
 local Actions = require(script.Parent.Actions)
 local TagManager = require(script.Parent.TagManager)
 
@@ -20,6 +22,24 @@ type Exports = {
 
 local exports: Exports = {}
 
+function exports.promptPickColor(dispatch, tag: string)
+	local module = CoreGui:FindFirstChild("ColorPane")
+	if module and module:IsA("ModuleScript") then
+		local manager = TagManager.Get()
+		local ColorPane = require(module)
+
+		ColorPane.PromptForColor({
+			PromptTitle = string.format("%s - Select a color", tag),
+			InitialColor = manager:GetColor(tag),
+			OnColorChanged = function(color: Color3)
+				manager:SetColor(tag, color)
+			end,
+		})
+	else
+		dispatch(Actions.ToggleColorPicker(tag))
+	end
+end
+
 function exports.showTagMenu(dispatch, tag: string)
 	coroutine.wrap(function()
 		local visualTypes = {
@@ -38,7 +58,7 @@ function exports.showTagMenu(dispatch, tag: string)
 		elseif action == exports.changeGroupAction then
 			dispatch(Actions.ToggleGroupPicker(tag))
 		elseif action == exports.changeColorAction then
-			dispatch(Actions.ToggleColorPicker(tag))
+			exports.promptPickColor(dispatch, tag)
 		elseif action == exports.viewTaggedAction then
 			dispatch(Actions.OpenInstanceView(tag))
 		elseif action == exports.deleteAction then

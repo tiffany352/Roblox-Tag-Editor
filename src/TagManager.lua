@@ -329,6 +329,19 @@ function TagManager:_setProp(tagName: string, key: string, value: any)
 	return true
 end
 
+function TagManager:_getProp(tagName: string, key: string)
+	if not self.tagsFolder then
+		return nil
+	end
+
+	local instance = self.tagsFolder:FindFirstChild(tagName)
+	if not instance then
+		return nil
+	end
+
+	return instance:GetAttribute(key)
+end
+
 function TagManager:AddTag(name)
 	-- Early out if tag already exists.
 	if self.tagsFolder and self.tagsFolder:FindFirstChild(name) then
@@ -370,6 +383,30 @@ end
 
 function TagManager:SelectAll(tag: string)
 	Selection:Set(Collection:GetTagged(tag))
+end
+
+function TagManager:GetIcon(name: string): string
+	return self:_getProp(name, "Icon") or defaultValues.Icon
+end
+
+function TagManager:GetVisible(name: string): boolean
+	return self:_getProp(name, "Visible") or defaultValues.Visible
+end
+
+function TagManager:GetDrawType(name: string): string
+	return self:_getProp(name, "DrawType") or defaultValues.DrawType
+end
+
+function TagManager:GetColor(name: string): Color3
+	return self:_getProp(name, "Color") or defaultValues.Color
+end
+
+function TagManager:GetAlwaysOnTop(name: string): boolean
+	return self:_getProp(name, "AlwaysOnTop") or defaultValues.AlwaysOnTop
+end
+
+function TagManager:GetGroup(name: string): string
+	return self:_getProp(name, "Group") or defaultValues.Group
 end
 
 function TagManager:SetIcon(name: string, icon: string?)

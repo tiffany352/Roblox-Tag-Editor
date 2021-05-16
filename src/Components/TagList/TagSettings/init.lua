@@ -3,6 +3,7 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local Actions = require(Modules.Plugin.Actions)
 local TagManager = require(Modules.Plugin.TagManager)
+local PluginGlobals = require(Modules.Plugin.PluginGlobals)
 
 local Button = require(Modules.Plugin.Components.Button)
 local Checkbox = require(Modules.Plugin.Components.Checkbox)
@@ -207,7 +208,7 @@ local function mapDispatchToProps(dispatch)
 			dispatch(Actions.ToggleIconPicker(tagMenu))
 		end,
 		colorPicker = function(tagMenu)
-			dispatch(Actions.ToggleColorPicker(tagMenu))
+			PluginGlobals.promptPickColor(tagMenu)
 		end,
 		groupPicker = function(tagMenu)
 			dispatch(Actions.ToggleGroupPicker(tagMenu))
