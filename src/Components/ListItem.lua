@@ -10,6 +10,10 @@ local ListItemChrome = require(script.Parent.ListItemChrome)
 
 local Item = Roact.Component:extend("Item")
 
+function Item:init()
+	self.textboxRef = Roact.createRef()
+end
+
 function Item:render()
 	local props = self.props
 	local ignoresMenuOpen = props.ignoresMenuOpen
@@ -31,13 +35,13 @@ function Item:render()
 		height = height,
 		showDivider = props.ShowDivider,
 
-		mouseEnter = function(rbx)
+		mouseEnter = function(_rbx)
 			self:setState({
 				Hover = true,
 			})
 		end,
 
-		mouseLeave = function(rbx)
+		mouseLeave = function(_rbx)
 			self:setState({
 				Hover = false,
 			})
@@ -76,7 +80,14 @@ function Item:render()
 							TextXAlignment = Enum.TextXAlignment.Left,
 							Position = props.Icon and UDim2.new(0, 48 + 16, 0, 0) or UDim2.new(0, 14, 0, 0),
 							Size = UDim2.new(1, -40, 1, 0),
-							Text = props.IsInput and "" or props.Text,
+							Text = props.IsInput and (props.TextBoxText or "") or props.Text,
+							ClearTextOnFocus = (function()
+								if props.IsInput then
+									return props.ClearTextOnFocus
+								else
+									return nil
+								end
+							end)(),
 							RichText = props.RichText and not props.IsInput,
 							PlaceholderText = props.IsInput and props.Text or nil,
 							PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
@@ -89,8 +100,12 @@ function Item:render()
 								rbx.Text = ""
 								if props.onSubmit and enterPressed then
 									props.onSubmit(rbx, text)
+								elseif props.onFocusLost then
+									props.onFocusLost(rbx, text)
 								end
 							end or nil,
+
+							[Roact.Ref] = self.textboxRef,
 						}, props.TextProps or {})
 					),
 					Visibility = props.onSetVisible and Roact.createElement(Icon, {
@@ -124,6 +139,20 @@ function Item:render()
 			})
 		end),
 	})
+end
+
+function Item:didUpdate(previousProps, _previousState)
+	local instance = self.textboxRef.current
+	if
+		previousProps.IsInput == false
+		and self.props.IsInput == true
+		and self.props.CaptureFocusOnBecomeInput
+		and instance ~= nil
+	then
+		instance:CaptureFocus()
+		instance.SelectionStart = 1
+		instance.CursorPosition = string.len(instance.Text) + 1
+	end
 end
 
 local function mapStateToProps(state)

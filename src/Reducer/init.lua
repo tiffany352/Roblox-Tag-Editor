@@ -12,6 +12,7 @@ local Dropdown = require(script.Dropdown)
 local InstanceView = require(script.InstanceView)
 local HoveredIcon = require(script.HoveredIcon)
 local SelectionActive = require(script.SelectionActive)
+local RenamingTag = require(script.RenamingTag)
 
 return function(state, action)
 	state = state or {}
@@ -30,5 +31,6 @@ return function(state, action)
 		InstanceView = InstanceView(state.InstanceView, action),
 		HoveredIcon = HoveredIcon(state.HoveredIcon, action),
 		SelectionActive = SelectionActive(state.SelectionActive, action),
+		RenamingTag = RenamingTag(state.RenamingTag, action),
 	}
 end

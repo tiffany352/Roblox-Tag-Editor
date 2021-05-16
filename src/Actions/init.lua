@@ -13,6 +13,7 @@ local Actions = {
 	OpenInstanceView = require(script.OpenInstanceView),
 	SetHoveredIcon = require(script.SetHoveredIcon),
 	SetSelectionActive = require(script.SetSelectionActive),
+	SetRenaming = require(script.SetRenaming),
 }
 
 return Actions

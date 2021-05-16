@@ -79,6 +79,12 @@ return function(plugin, savedState)
 		"Change the color of the tag."
 	)
 
+	local renameAction = plugin:createAction(
+		prefix .. "Rename",
+		"Rename",
+		"Rename the tag, updating every instance currently tagged."
+	)
+
 	local deleteAction = plugin:createAction(
 		prefix .. "Delete",
 		"Delete",
@@ -132,6 +138,7 @@ return function(plugin, savedState)
 	tagMenu:AddAction(viewTaggedAction)
 	tagMenu:AddMenu(visualizeMenu)
 	tagMenu:AddSeparator()
+	tagMenu:AddAction(renameAction)
 	tagMenu:AddAction(changeIconAction)
 	tagMenu:AddAction(changeColorAction)
 	tagMenu:AddAction(changeGroupAction)
@@ -141,6 +148,7 @@ return function(plugin, savedState)
 	PluginGlobals.changeIconAction = changeIconAction
 	PluginGlobals.changeGroupAction = changeGroupAction
 	PluginGlobals.changeColorAction = changeColorAction
+	PluginGlobals.renameAction = renameAction
 	PluginGlobals.deleteAction = deleteAction
 	PluginGlobals.viewTaggedAction = viewTaggedAction
 	PluginGlobals.visualizeBox = visualizeBox

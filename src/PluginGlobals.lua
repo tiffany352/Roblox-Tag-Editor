@@ -8,6 +8,7 @@ type Exports = {
 	changeColorAction: PluginAction?,
 	deleteAction: PluginAction?,
 	viewTaggedAction: PluginAction?,
+	renameAction: PluginAction?,
 	visualizeBox: PluginAction?,
 	visualizeSphere: PluginAction?,
 	visualizeOutline: PluginAction?,
@@ -38,6 +39,8 @@ function exports.showTagMenu(dispatch, tag: string)
 			dispatch(Actions.OpenInstanceView(tag))
 		elseif action == exports.deleteAction then
 			TagManager.Get():DelTag(tag)
+		elseif action == exports.renameAction then
+			dispatch(Actions.SetRenaming(tag, true))
 		elseif visualTypes[action] then
 			TagManager.Get():SetDrawType(tag, visualTypes[action])
 		elseif action ~= nil then

@@ -351,6 +351,23 @@ function TagManager:AddTag(name)
 	ChangeHistory:SetWaypoint(string.format("Created tag %q", name))
 end
 
+function TagManager:Rename(oldName, newName)
+	local instance = self.tagsFolder and self.tagsFolder:FindFirstChild(oldName)
+	if not instance then
+		return
+	end
+
+	ChangeHistory:SetWaypoint(string.format("Renaming tag %q to %q", oldName, newName))
+
+	instance.Name = newName
+	for _, taggedInstance in pairs(Collection:GetTagged(oldName)) do
+		Collection:RemoveTag(taggedInstance, oldName)
+		Collection:AddTag(taggedInstance, newName)
+	end
+
+	ChangeHistory:SetWaypoint(string.format("Renamed tag %q to %q", oldName, newName))
+end
+
 function TagManager:SetIcon(name: string, icon: string?)
 	self:_setProp(name, "Icon", icon or "")
 end

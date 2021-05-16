@@ -10,10 +10,8 @@ local Util = require(Modules.Plugin.Util)
 local PluginGlobals = require(Modules.Plugin.PluginGlobals)
 
 local function Tag(props)
-	local isOpen = props.tagWithOpenMenu == props.Tag
-
 	local function openMenu(_rbx)
-		if not isOpen then
+		if not props.isMenuOpen then
 			props.openTagMenu(props.Tag)
 		else
 			props.openTagMenu(nil)
@@ -36,14 +34,17 @@ local function Tag(props)
 			Text = Util.escapeTagName(props.Tag, theme),
 			RichText = true,
 			Icon = props.Icon,
-			IsInput = false,
+			IsInput = props.isBeingRenamed,
+			ClearTextOnFocus = false,
+			CaptureFocusOnBecomeInput = true,
+			TextBoxText = props.Tag,
 			LayoutOrder = props.LayoutOrder,
 			Visible = props.Visible,
 			Checked = checked,
-			Active = isOpen,
+			Active = props.isMenuOpen,
 			Hidden = props.Hidden,
 			Indent = props.Group and 10 or 0,
-			Height = isOpen and 171 or 26,
+			Height = props.isMenuOpen and 171 or 26,
 
 			onSetVisible = function()
 				TagManager.Get():SetVisible(props.Tag, not props.Visible)
@@ -53,19 +54,26 @@ local function Tag(props)
 				TagManager.Get():SetTag(props.Tag, not props.HasAll)
 			end,
 
+			onSubmit = function(_rbx, newName)
+				props.stopRenaming()
+				TagManager.Get():Rename(props.Tag, newName)
+			end,
+
+			onFocusLost = props.stopRenaming,
 			leftClick = openMenu,
 			rightClick = function(_rbx)
 				props.showContextMenu(props.Tag)
 			end,
 		}, {
-			Settings = isOpen and Roact.createElement(TagSettings, {}),
+			Settings = props.isMenuOpen and Roact.createElement(TagSettings, {}),
 		})
 	end)
 end
 
-local function mapStateToProps(state)
+local function mapStateToProps(state, props)
 	return {
-		tagWithOpenMenu = state.TagMenu,
+		isMenuOpen = state.TagMenu == props.Tag,
+		isBeingRenamed = state.RenamingTag == props.Tag,
 	}
 end
 
@@ -76,6 +84,9 @@ local function mapDispatchToProps(dispatch)
 		end,
 		showContextMenu = function(tag)
 			PluginGlobals.showTagMenu(dispatch, tag)
+		end,
+		stopRenaming = function(tag)
+			dispatch(Actions.SetRenaming(tag, false))
 		end,
 	}
 end
