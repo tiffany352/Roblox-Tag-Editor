@@ -78,7 +78,12 @@ local function Icon(props)
 		)
 	elseif props.Name:sub(1, 6) == "emoji:" then
 		local text = props.Name:sub(7, -1)
-		local emoji = Emoji.getNamedEmoji(text) or text
+		local emoji = Emoji.getNamedEmoji(text)
+		if not emoji and not text:match("^[a-zA-Z%-_]+$") then
+			emoji = text
+		elseif not emoji then
+			emoji = "❌"
+		end
 		return Roact.createElement(
 			EmojiIcon,
 			Util.merge(props, {

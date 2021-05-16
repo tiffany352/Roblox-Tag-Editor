@@ -9,7 +9,7 @@ function IconPreview:render()
 
 	local function update()
 		local Vector2new = Vector2.new
-		local image = self.props.icon and Icons.Lookup(self.props.icon)
+		local image = self.props.icon and Icons.Lookup(self.props.icon) or Icons.Lookup("computer_error")
 		local rect = image and image.ImageRectOffset or Vector2.new(10000, 10000)
 		for y = 0, 16 - 1 do
 			for x = 0, 16 - 1 do

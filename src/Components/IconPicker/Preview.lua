@@ -12,7 +12,12 @@ local function Preview(props)
 	local icon = props.icon
 	if icon and icon:sub(1, 6) == "emoji:" then
 		local text = icon:sub(7, -1)
-		local emoji = Emoji.getNamedEmoji(text) or text
+		local emoji = Emoji.getNamedEmoji(text)
+		if not emoji and not text:match("^[a-zA-Z%-_]+$") then
+			emoji = text
+		elseif not emoji then
+			emoji = "❌"
+		end
 		child = Roact.createElement("TextLabel", {
 			Size = SIZE,
 			TextSize = 48,

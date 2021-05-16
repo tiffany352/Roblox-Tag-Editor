@@ -25,7 +25,9 @@ end
 function FamFamFam.Lookup(name)
 	assert(typeof(name) == "string", string.format("expected string name, got %s", typeof(name)))
 	local data = FamFamFam.Table[name]
-	assert(data, "no such icon named `" .. name .. "`")
+	if not data then
+		return nil
+	end
 
 	return {
 		Image = FamFamFam.Asset,
