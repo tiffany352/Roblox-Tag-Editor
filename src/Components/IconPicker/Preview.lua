@@ -3,6 +3,7 @@ local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local IconPreview = require(script.Parent.IconPreview)
 local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
+local Emoji = require(Modules.Plugin.Emoji)
 
 local SIZE = UDim2.new(0, 48, 0, 48)
 
@@ -10,10 +11,12 @@ local function Preview(props)
 	local child
 	local icon = props.icon
 	if icon and icon:sub(1, 6) == "emoji:" then
+		local text = icon:sub(7, -1)
+		local emoji = Emoji.getNamedEmoji(text) or text
 		child = Roact.createElement("TextLabel", {
 			Size = SIZE,
 			TextSize = 48,
-			Text = icon:sub(7, -1),
+			Text = emoji,
 			Font = Enum.Font.SourceSans,
 			TextColor3 = Color3.fromRGB(0, 0, 0),
 			BackgroundTransparency = 1.0,

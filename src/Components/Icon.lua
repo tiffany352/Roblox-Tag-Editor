@@ -1,6 +1,7 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local Icons = require(Modules.Plugin.FamFamFam)
+local Emoji = require(Modules.Plugin.Emoji)
 local Util = require(Modules.Plugin.Util)
 
 local function EmojiIcon(props)
@@ -72,10 +73,18 @@ local function Icon(props)
 		}))
 	elseif props.Name:sub(1, 6) == "emoji:" then
 		local text = props.Name:sub(7, -1)
-		return Roact.createElement(EmojiIcon, Util.merge(props, {
-			Name = Roact.None,
-			Text = text,
-		}))
+		local emoji = Emoji.getNamedEmoji(text)
+		if emoji then
+			return Roact.createElement(EmojiIcon, Util.merge(props, {
+				Name = Roact.None,
+				Text = emoji,
+			}))
+		else
+			return Roact.createElement(EmojiIcon, Util.merge(props, {
+				Name = Roact.None,
+				Text = text,
+			}))
+		end
 	else
 		local imageProps = Icons.Lookup(props.Name) or Icons.Lookup("computer_error")
 		return Roact.createElement(

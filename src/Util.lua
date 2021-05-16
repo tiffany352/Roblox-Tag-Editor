@@ -88,7 +88,12 @@ local function merge(...)
 	local map = {}
 
 	for i = 1, select("#", ...) do
-		for key, value in pairs(select(i, ...)) do
+		local arg = select(i, ...)
+		local ty = typeof(arg)
+		if ty ~= "table" then
+			error("Expected table for argument #" .. i .. ", got " .. ty)
+		end
+		for key, value in pairs(arg) do
 			if value == Roact.None then
 				map[key] = nil
 			else
