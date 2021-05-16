@@ -330,6 +330,10 @@ function WorldProvider:instanceAdded(inst)
 end
 
 function WorldProvider:instanceRemoved(inst)
+	if not self.trackedParts[inst] then
+		return
+	end
+
 	if self.trackedParts[inst] <= 1 then
 		self.trackedParts[inst] = nil
 		self.partIds[inst] = nil
