@@ -79,6 +79,7 @@ function Item:render()
 							Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
 							Size = UDim2.new(1, -40, 1, 0),
 							Text = props.IsInput and "" or props.Text,
+							RichText = props.RichText and not props.IsInput,
 							PlaceholderText = props.IsInput and props.Text or nil,
 							PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
 							Font = Enum.Font.SourceSans,

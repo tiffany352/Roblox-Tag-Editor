@@ -4,11 +4,13 @@ local RoactRodux = require(Modules.RoactRodux)
 local Constants = require(Modules.Plugin.Constants)
 local Actions = require(Modules.Plugin.Actions)
 local TagManager = require(Modules.Plugin.TagManager)
+local Util = require(Modules.Plugin.Util)
 
 local Item = require(script.Parent.ListItem)
 local Tag = require(script.Tag)
 local Group = require(script.Group)
 local ScrollingFrame = require(Modules.Plugin.Components.ScrollingFrame)
+local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 
 local function merge(orig, new)
 	local t = {}
@@ -100,19 +102,22 @@ function TagList:render()
 
 	for i = 1, #unknownTags do
 		local tag = unknownTags[i]
-		children[tag] = Roact.createElement(Item, {
-			Text = string.format("%s (click to import)", tag),
-			Icon = "help",
-			ButtonColor = Constants.LightRed,
-			LayoutOrder = itemCount,
-			TextProps = {
-				Font = Enum.Font.SourceSansItalic,
-			},
+		children[tag] = StudioThemeAccessor.withTheme(function(theme)
+			return Roact.createElement(Item, {
+				Text = string.format("%s (click to import)", Util.escapeTagName(tag, theme)),
+				RichText = true,
+				Icon = "help",
+				ButtonColor = Constants.LightRed,
+				LayoutOrder = itemCount,
+				TextProps = {
+					Font = Enum.Font.SourceSansItalic,
+				},
 
-			leftClick = function(_rbx)
-				TagManager.Get():AddTag(tag)
-			end,
-		})
+				leftClick = function(_rbx)
+					TagManager.Get():AddTag(tag)
+				end,
+			})
+		end)
 		itemCount = itemCount + 1
 	end
 
