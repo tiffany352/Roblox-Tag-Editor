@@ -1,21 +1,12 @@
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
+local Util = require(Modules.Plugin.Util)
 
 local Icon = require(script.Parent.Icon)
+local Checkbox = require(script.Parent.Checkbox)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local ListItemChrome = require(script.Parent.ListItemChrome)
-
-local function merge(orig, new)
-	local t = {}
-	for k, v in pairs(orig or {}) do
-		t[k] = v
-	end
-	for k, v in pairs(new or {}) do
-		t[k] = v
-	end
-	return t
-end
 
 local Item = Roact.Component:extend("Item")
 
@@ -66,17 +57,24 @@ function Item:render()
 					Size = UDim2.new(1, -indent, 0, 26),
 					Position = UDim2.new(0, indent, 0, 0),
 				}, {
+					Checkbox = props.Checked ~= nil and Roact.createElement(Checkbox, {
+						Checked = props.Checked,
+						Disabled = props.CheckDisabled,
+						AnchorPoint = Vector2.new(0.5, 0.5),
+						Position = UDim2.new(0, 24, 0.5, 0),
+						leftClick = props.onCheck,
+					}),
 					Icon = props.Icon and Roact.createElement(Icon, {
 						Name = props.Icon,
 						AnchorPoint = Vector2.new(0.5, 0.5),
-						Position = UDim2.new(0, 24, 0.5, 0),
+						Position = UDim2.new(0, 24 + 24, 0.5, 0),
 					}),
 					Name = Roact.createElement(
 						props.IsInput and "TextBox" or "TextLabel",
-						merge({
+						Util.merge({
 							BackgroundTransparency = 1.0,
 							TextXAlignment = Enum.TextXAlignment.Left,
-							Position = props.Icon and UDim2.new(0, 40, 0, 0) or UDim2.new(0, 14, 0, 0),
+							Position = props.Icon and UDim2.new(0, 48 + 16, 0, 0) or UDim2.new(0, 14, 0, 0),
 							Size = UDim2.new(1, -40, 1, 0),
 							Text = props.IsInput and "" or props.Text,
 							RichText = props.RichText and not props.IsInput,

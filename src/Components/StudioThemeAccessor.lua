@@ -35,7 +35,7 @@ function StudioThemeAccessor:render()
 	return render(self.state.theme, self.state.isDarkTheme)
 end
 
-function StudioThemeAccessor.withTheme(render)
+function StudioThemeAccessor.withTheme(render: (StudioTheme) -> any)
 	return Roact.createElement(StudioThemeAccessor, {}, {
 		render = render,
 	})

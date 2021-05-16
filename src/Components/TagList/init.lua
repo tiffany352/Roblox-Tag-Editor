@@ -12,17 +12,6 @@ local Group = require(script.Group)
 local ScrollingFrame = require(Modules.Plugin.Components.ScrollingFrame)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 
-local function merge(orig, new)
-	local t = {}
-	for k, v in pairs(orig or {}) do
-		t[k] = v
-	end
-	for k, v in pairs(new or {}) do
-		t[k] = v
-	end
-	return t
-end
-
 local TagList = Roact.Component:extend("TagList")
 
 function TagList:render()
@@ -89,8 +78,9 @@ function TagList:render()
 		end
 		children[tags[i].Name] = Roact.createElement(
 			Tag,
-			merge(tags[i], {
+			Util.merge(tags[i], {
 				Hidden = self.state["Hide" .. groupName],
+				Disabled = not props.selectionActive,
 				Tag = tags[i].Name,
 				LayoutOrder = itemCount,
 			})
@@ -192,8 +182,8 @@ local function mapStateToProps(state)
 	return {
 		Tags = tags,
 		searchTerm = state.Search,
-		menuOpen = state.TagMenu,
 		unknownTags = unknownTags,
+		selectionActive = state.SelectionActive,
 	}
 end
 

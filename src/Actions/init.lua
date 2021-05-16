@@ -12,6 +12,7 @@ local Actions = {
 	OpenDropdown = require(script.OpenDropdown),
 	OpenInstanceView = require(script.OpenInstanceView),
 	SetHoveredIcon = require(script.SetHoveredIcon),
+	SetSelectionActive = require(script.SetSelectionActive),
 }
 
 return Actions

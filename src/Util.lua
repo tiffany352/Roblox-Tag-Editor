@@ -81,7 +81,19 @@ local function escapeTagName(name: string, theme: StudioTheme): string
 	return table.concat(output)
 end
 
+local function merge(orig, new)
+	local t = {}
+	for k, v in pairs(orig or {}) do
+		t[k] = v
+	end
+	for k, v in pairs(new or {}) do
+		t[k] = v
+	end
+	return t
+end
+
 return {
 	findIf = findIf,
 	escapeTagName = escapeTagName,
+	merge = merge,
 }

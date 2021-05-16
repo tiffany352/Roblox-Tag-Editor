@@ -110,6 +110,9 @@ function TagManager.new(store)
 	self.selectionChanged = Selection.SelectionChanged:Connect(function()
 		self:_updateStore()
 		self:_updateUnknown()
+
+		local sel = Selection:Get()
+		self.store:dispatch(Actions.SetSelectionActive(#sel > 0))
 	end)
 
 	if self.tagsFolder then

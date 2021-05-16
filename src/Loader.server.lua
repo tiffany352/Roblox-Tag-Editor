@@ -32,6 +32,8 @@ end
 local PluginFacade = {
 	_toolbars = {},
 	_pluginGuis = {},
+	_pluginMenus = {},
+	_pluginActions = {},
 	_buttons = {},
 	_watching = {},
 	_beforeUnload = nil,
@@ -89,6 +91,39 @@ function PluginFacade:createDockWidgetPluginGui(name, ...)
 	self._pluginGuis[name] = gui
 
 	return gui
+end
+
+function PluginFacade:createMenu(id: string, title: string?, icon: string?)
+	if self._pluginMenus[id] then
+		local menu: PluginMenu = self._pluginMenus[id]
+		if title then
+			menu.Title = title
+		end
+		if icon then
+			menu.Icon = icon
+		end
+		menu:Clear()
+		return menu
+	end
+
+	local menu = plugin:CreatePluginMenu(id, title, icon)
+	self._pluginMenus[id] = menu
+
+	return menu
+end
+
+function PluginFacade:createAction(id: string, text: string, statusTip: string, icon: string?, allowBinding: boolean?)
+	if allowBinding == nil then
+		allowBinding = true
+	end
+
+	if self._pluginActions[id] then
+		return self._pluginActions[id]
+	end
+
+	local action = plugin:CreatePluginAction(id, text, statusTip, icon or "", allowBinding)
+	self._pluginActions[id] = action
+	return action
 end
 
 --[[

@@ -4,9 +4,14 @@ local Roact = require(Modules.Roact)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 
 local function Checkbox(props)
-	local state = props.Checked and "Selected" or "Default"
+	local state = Enum.StudioStyleGuideModifier.Default
+	if props.Disabled then
+		state = Enum.StudioStyleGuideModifier.Disabled
+	elseif props.Checked then
+		state = Enum.StudioStyleGuideModifier.Selected
+	end
 
-	return StudioThemeAccessor.withTheme(function(theme)
+	return StudioThemeAccessor.withTheme(function(theme: StudioTheme)
 		return Roact.createElement("ImageButton", {
 			Size = UDim2.new(0, 20, 0, 20),
 			BackgroundColor3 = theme:GetColor("CheckedFieldBackground", state),

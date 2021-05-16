@@ -7,9 +7,29 @@ local Item = require(Modules.Plugin.Components.ListItem)
 local TagSettings = require(Modules.Plugin.Components.TagList.TagSettings)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 local Util = require(Modules.Plugin.Util)
+local PluginGlobals = require(Modules.Plugin.PluginGlobals)
 
 local function Tag(props)
 	local isOpen = props.tagWithOpenMenu == props.Tag
+
+	local function openMenu(_rbx)
+		if not isOpen then
+			props.openTagMenu(props.Tag)
+		else
+			props.openTagMenu(nil)
+		end
+	end
+
+	local checked = nil
+	if not props.Disabled then
+		if props.HasAll then
+			checked = true
+		elseif props.HasSome then
+			checked = "ambiguous"
+		else
+			checked = false
+		end
+	end
 
 	return StudioThemeAccessor.withTheme(function(theme)
 		return Roact.createElement(Item, {
@@ -19,8 +39,8 @@ local function Tag(props)
 			IsInput = false,
 			LayoutOrder = props.LayoutOrder,
 			Visible = props.Visible,
-			Active = props.HasAll,
-			SemiActive = props.HasSome,
+			Checked = checked,
+			Active = isOpen,
 			Hidden = props.Hidden,
 			Indent = props.Group and 10 or 0,
 			Height = isOpen and 171 or 26,
@@ -29,24 +49,13 @@ local function Tag(props)
 				TagManager.Get():SetVisible(props.Tag, not props.Visible)
 			end,
 
-			onSettings = function()
-				if not isOpen then
-					props.openTagMenu(props.Tag)
-				else
-					props.openTagMenu(nil)
-				end
-			end,
-
-			leftClick = function(_rbx)
+			onCheck = function(_rbx)
 				TagManager.Get():SetTag(props.Tag, not props.HasAll)
 			end,
 
+			leftClick = openMenu,
 			rightClick = function(_rbx)
-				if not isOpen then
-					props.openTagMenu(props.Tag)
-				else
-					props.openTagMenu(nil)
-				end
+				props.showContextMenu(props.Tag)
 			end,
 		}, {
 			Settings = isOpen and Roact.createElement(TagSettings, {}),
@@ -64,6 +73,9 @@ local function mapDispatchToProps(dispatch)
 	return {
 		openTagMenu = function(tag)
 			dispatch(Actions.OpenTagMenu(tag))
+		end,
+		showContextMenu = function(tag)
+			PluginGlobals.showTagMenu(dispatch, tag)
 		end,
 	}
 end
