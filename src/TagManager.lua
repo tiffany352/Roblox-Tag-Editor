@@ -368,6 +368,10 @@ function TagManager:Rename(oldName, newName)
 	ChangeHistory:SetWaypoint(string.format("Renamed tag %q to %q", oldName, newName))
 end
 
+function TagManager:SelectAll(tag: string)
+	Selection:Set(Collection:GetTagged(tag))
+end
+
 function TagManager:SetIcon(name: string, icon: string?)
 	self:_setProp(name, "Icon", icon or "")
 end

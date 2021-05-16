@@ -3,6 +3,7 @@ local TagManager = require(script.Parent.TagManager)
 
 type Exports = {
 	tagMenu: PluginMenu?,
+	currentTagMenu: string?,
 	changeIconAction: PluginAction?,
 	changeGroupAction: PluginAction?,
 	changeColorAction: PluginAction?,
@@ -14,6 +15,7 @@ type Exports = {
 	visualizeOutline: PluginAction?,
 	visualizeText: PluginAction?,
 	visualizeIcon: PluginAction?,
+	selectAllAction: PluginAction?,
 }
 
 local exports: Exports = {}
@@ -28,7 +30,9 @@ function exports.showTagMenu(dispatch, tag: string)
 			[exports.visualizeIcon] = "Icon",
 		}
 
+		exports.currentTagMenu = tag
 		local action = exports.TagMenu:ShowAsync()
+		exports.currentTagMenu = nil
 		if action == exports.changeIconAction then
 			dispatch(Actions.ToggleIconPicker(tag))
 		elseif action == exports.changeGroupAction then
@@ -43,7 +47,7 @@ function exports.showTagMenu(dispatch, tag: string)
 			dispatch(Actions.SetRenaming(tag, true))
 		elseif visualTypes[action] then
 			TagManager.Get():SetDrawType(tag, visualTypes[action])
-		elseif action ~= nil then
+		elseif action ~= nil and action ~= exports.selectAllAction then
 			print("Missing handler for action " .. action.Title)
 		end
 	end)()

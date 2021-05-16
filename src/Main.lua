@@ -88,43 +88,71 @@ return function(plugin, savedState)
 	local deleteAction = plugin:createAction(
 		prefix .. "Delete",
 		"Delete",
-		"Delete the tag and remove it from all instances."
+		"Delete the tag and remove it from all instances.",
+		nil,
+		false
 	)
 
 	local viewTaggedAction = plugin:createAction(
 		prefix .. "ViewTagged",
 		"View tagged instances",
-		"Show a list of all instances that have this tag."
+		"Show a list of instances that have this tag.",
+		nil,
+		false
 	)
+
+	local selectAllAction: PluginAction = plugin:createAction(
+		prefix .. "SelectAll",
+		"Select all",
+		"Select all instances with this tag."
+	)
+
+	local selectAllConn = selectAllAction.Triggered:Connect(function()
+		local state = store:getState()
+		local tag = state.InstanceView or PluginGlobals.currentTagMenu or state.TagMenu
+		if tag then
+			TagManager.Get():SelectAll(tag)
+		end
+	end)
 
 	local visualizeBox = plugin:createAction(
 		prefix .. "Visualize_Box",
 		"Box",
-		"Render this tag as a box when the overlay is enabled."
+		"Render this tag as a box when the overlay is enabled.",
+		nil,
+		false
 	)
 
 	local visualizeSphere = plugin:createAction(
 		prefix .. "Visualize_Sphere",
 		"Sphere",
-		"Render this tag as a sphere when the overlay is enabled."
+		"Render this tag as a sphere when the overlay is enabled.",
+		nil,
+		false
 	)
 
 	local visualizeOutline = plugin:createAction(
 		prefix .. "Visualize_Outline",
 		"Outline",
-		"Render this tag as an outline around parts when the overlay is enabled."
+		"Render this tag as an outline around parts when the overlay is enabled.",
+		nil,
+		false
 	)
 
 	local visualizeText = plugin:createAction(
 		prefix .. "Visualize_Text",
 		"Text",
-		"Render this tag as a floating text label when the overlay is enabled."
+		"Render this tag as a floating text label when the overlay is enabled.",
+		nil,
+		false
 	)
 
 	local visualizeIcon = plugin:createAction(
 		prefix .. "Visualize_Icon",
 		"Icon",
-		"Render the tag's icon when the overlay is enabled."
+		"Render the tag's icon when the overlay is enabled.",
+		nil,
+		false
 	)
 
 	local visualizeMenu: PluginMenu = plugin:createMenu(prefix .. "TagMenu_VisualizeAs", "Change draw mode")
@@ -136,6 +164,7 @@ return function(plugin, savedState)
 
 	local tagMenu: PluginMenu = plugin:createMenu(prefix .. "TagMenu")
 	tagMenu:AddAction(viewTaggedAction)
+	tagMenu:AddAction(selectAllAction)
 	tagMenu:AddMenu(visualizeMenu)
 	tagMenu:AddSeparator()
 	tagMenu:AddAction(renameAction)
@@ -150,6 +179,7 @@ return function(plugin, savedState)
 	PluginGlobals.changeColorAction = changeColorAction
 	PluginGlobals.renameAction = renameAction
 	PluginGlobals.deleteAction = deleteAction
+	PluginGlobals.selectAllAction = selectAllAction
 	PluginGlobals.viewTaggedAction = viewTaggedAction
 	PluginGlobals.visualizeBox = visualizeBox
 	PluginGlobals.visualizeSphere = visualizeSphere
@@ -172,6 +202,7 @@ return function(plugin, savedState)
 		connection:Disconnect()
 		worldViewConnection:Disconnect()
 		manager:Destroy()
+		selectAllConn:Disconnect()
 		return store:getState()
 	end)
 end
