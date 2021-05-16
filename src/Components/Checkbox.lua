@@ -27,9 +27,9 @@ local function Checkbox(props)
 				BackgroundTransparency = 1,
 				Position = UDim2.new(0.5, 0, 0.5, 0),
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				Visible = props.Checked == true,
+				Visible = not not props.Checked,
 				ImageColor3 = theme:GetColor("CheckedFieldIndicator", state),
-				Image = "rbxassetid://2617163557",
+				Image = props.Checked == true and "rbxassetid://2617163557" or "rbxassetid://6826221991",
 			}),
 		})
 	end)

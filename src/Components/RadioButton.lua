@@ -42,6 +42,10 @@ function RadioButton:init()
 	end
 end
 
+local function colorEq(c1: Color3, c2: Color3): boolean
+	return c1.R == c2.R and c1.G == c2.G and c1.B == c2.B
+end
+
 function RadioButton:render()
 	local props = self.props
 	local buttonState = "Default"
@@ -57,12 +61,17 @@ function RadioButton:render()
 	end
 
 	return StudioThemeAccessor.withTheme(function(theme)
+		local bg = theme:GetColor("CheckedFieldBackground", buttonState)
+		if buttonState == "Selected" and colorEq(bg, theme:GetColor("CheckedFieldBackground")) then
+			bg = theme:GetColor("CheckedFieldIndicator")
+		end
+
 		return Roact.createElement(
 			"TextButton",
 			{
 				AnchorPoint = props.AnchorPoint,
 				AutoButtonColor = false,
-				BackgroundColor3 = theme:GetColor("CheckedFieldBackground", buttonState),
+				BackgroundColor3 = bg,
 				BorderColor3 = theme:GetColor("CheckedFieldBorder", buttonState),
 				BorderSizePixel = 1,
 				Font = props.Font,
