@@ -213,7 +213,6 @@ function TagManager:_updateStore()
 end
 
 function TagManager:_doUpdateStore()
-	print("TagManager: updating")
 	self.updateTriggered = false
 	local tags: { [number]: Tag } = {}
 	local groups: { [string]: boolean } = {}
