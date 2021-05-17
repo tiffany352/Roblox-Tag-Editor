@@ -5,6 +5,12 @@ Check out the [Roblox Developer Forum post](https://devforum.roblox.com/t/tag-ed
 
 ## Changelog
 
+### v3.0.0 and later
+
+Go to the releases tab to see changelogs for version 3 and later.
+
+https://github.com/tiffany352/Roblox-Tag-Editor/releases
+
 ### v2.1.1
 
 - Fixed a critical error on startup due the `UI Theme` property being removed from the API.
