@@ -1,3 +1,5 @@
+local TextService = game:GetService("TextService")
+
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
@@ -5,12 +7,16 @@ local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccesso
 local function Tab(props)
 	local state = props.selected and Enum.StudioStyleGuideModifier.Selected or Enum.StudioStyleGuideModifier.Default
 
+	-- Ugly workaround due to an AutomaticSize bug.
+	local width = TextService:GetTextSize(props.name, 16, Enum.Font.SourceSans, Vector2.new()).X
+
 	return StudioThemeAccessor.withTheme(function(theme: StudioTheme)
 		return Roact.createElement("Frame", {
 			BorderSizePixel = 0,
 			BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.Border),
-			Size = UDim2.fromScale(0, 1),
-			AutomaticSize = Enum.AutomaticSize.X,
+			-- Size = UDim2.fromScale(0, 1),
+			-- AutomaticSize = Enum.AutomaticSize.X,
+			Size = UDim2.new(0, width + 18, 1, 0),
 			LayoutOrder = props.index,
 		}, {
 			Label = Roact.createElement("TextButton", {
@@ -19,7 +25,7 @@ local function Tab(props)
 				Text = props.name,
 				AutoButtonColor = false,
 				Size = UDim2.fromScale(1, 1),
-				AutomaticSize = Enum.AutomaticSize.X,
+				-- AutomaticSize = Enum.AutomaticSize.X,
 				Font = Enum.Font.SourceSans,
 				TextSize = 16,
 				TextColor3 = theme:GetColor(Enum.StudioStyleGuideColor.MainText),
