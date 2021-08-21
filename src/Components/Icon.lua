@@ -41,6 +41,7 @@ local function ImageIcon(props)
 	local defaultProps = {
 		Size = UDim2.new(0, 16, 0, 16),
 		BackgroundTransparency = 1.0,
+		ResampleMode = Enum.ResamplerMode.Pixelated,
 
 		[Roact.Event.MouseButton1Click] = props.onClick,
 
@@ -73,6 +74,7 @@ local function Icon(props)
 			Util.merge(props, {
 				Name = Roact.None,
 				TextScaled = Roact.None,
+				TextSize = Roact.None,
 				Image = props.Name,
 			})
 		)
@@ -99,9 +101,12 @@ local function Icon(props)
 			Util.merge(props, {
 				Name = Roact.None,
 				TextScaled = Roact.None,
+				TextSize = Roact.None,
 				Image = imageProps.Image,
-				ImageRectOffset = imageProps.ImageRectOffset,
-				ImageRectSize = imageProps.ImageRectSize,
+				-- Adding these super tiny offsets prevents bleedover from
+				-- neighboring pixels.
+				ImageRectOffset = imageProps.ImageRectOffset + Vector2.new(0.001, 0.001),
+				ImageRectSize = imageProps.ImageRectSize - Vector2.new(0.0005, 0.0005),
 			})
 		)
 	end

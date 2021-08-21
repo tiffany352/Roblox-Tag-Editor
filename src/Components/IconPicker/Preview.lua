@@ -1,44 +1,12 @@
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local IconPreview = require(script.Parent.IconPreview)
+local Icon = require(Modules.Plugin.Components.Icon)
 local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
-local Emoji = require(Modules.Plugin.Emoji)
 
 local SIZE = UDim2.new(0, 48, 0, 48)
 
 local function Preview(props)
-	local child
-	local icon = props.icon
-	if icon and icon:sub(1, 6) == "emoji:" then
-		local text = icon:sub(7, -1)
-		local emoji = Emoji.getNamedEmoji(text)
-		if not emoji and not text:match("^[a-zA-Z%-_]+$") then
-			emoji = text
-		elseif not emoji then
-			emoji = "❌"
-		end
-		child = Roact.createElement("TextLabel", {
-			Size = SIZE,
-			TextSize = 48,
-			Text = emoji,
-			Font = Enum.Font.SourceSans,
-			TextColor3 = Color3.fromRGB(0, 0, 0),
-			BackgroundTransparency = 1.0,
-		})
-	elseif icon and icon:sub(1, 13) == "rbxassetid://" then
-		child = Roact.createElement("ImageLabel", {
-			Size = SIZE,
-			BackgroundTransparency = 1.0,
-			Image = icon,
-		})
-	else
-		child = Roact.createElement(IconPreview, {
-			Size = SIZE,
-			icon = icon,
-		})
-	end
-
 	return Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 0, 56),
 		Position = props.Position,
@@ -50,10 +18,14 @@ local function Preview(props)
 			Size = UDim2.new(1, -56, 0, 20 * 3),
 			Position = UDim2.new(0, 56, 0, 32),
 			TextWrapped = true,
-			Text = icon or "",
+			Text = props.icon or "",
 			TextYAlignment = Enum.TextYAlignment.Top,
 		}),
-		Preview = child,
+		Preview = Roact.createElement(Icon, {
+			Name = props.icon or "tag_green",
+			Size = SIZE,
+			TextSize = 48,
+		}),
 	})
 end
 
