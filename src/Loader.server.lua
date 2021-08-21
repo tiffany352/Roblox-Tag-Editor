@@ -3,6 +3,9 @@ if not plugin then
 	error("Hot reloader must be executed as a plugin!")
 end
 
+-- Prevent clones of the script from running.
+script.Disabled = true
+
 -- Change to true to enable hot reloading support. Opening a place
 -- containing the code synced via Rojo will cause the plugin to be
 -- reloaded in edit mode. (No need for play solo or the hotswap plugin.)
@@ -134,21 +137,11 @@ function PluginFacade:beforeUnload(callback)
 end
 
 function PluginFacade:_load(savedState)
-	local ok, result: any = pcall(require, currentRoot.Plugin.Main)
+	task.spawn(function()
+		local pluginMain = require(currentRoot.Plugin.Main)
 
-	if not ok then
-		warn("Plugin failed to load: " .. result)
-		return
-	end
-
-	local Plugin = result
-
-	ok, result = pcall(Plugin, PluginFacade, savedState)
-
-	if not ok then
-		warn("Plugin failed to run: " .. result)
-		return
-	end
+		pluginMain(PluginFacade, savedState)
+	end)
 end
 
 function PluginFacade:unload()
