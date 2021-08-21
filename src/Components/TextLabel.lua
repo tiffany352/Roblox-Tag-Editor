@@ -31,13 +31,16 @@ local function TextLabel(props)
 		LayoutOrder = props.LayoutOrder,
 		Position = props.Position,
 		Size = props.Size or props.TextWrapped and UDim2.new(1, 0, 0, 0) or nil,
+		AutomaticSize = props.AutomaticSize,
 		BackgroundTransparency = 1.0,
 
 		Font = props.Font or Enum.Font.SourceSans,
 		TextSize = props.TextSize or 20,
 		TextColor3 = props.TextColor3 or Color3.fromRGB(0, 0, 0),
 		Text = props.Text or "<Text Not Set>",
+		RichText = props.RichText,
 		TextWrapped = props.TextWrapped,
+		TextTruncate = props.TextTruncate,
 		TextXAlignment = props.TextXAlignment or Enum.TextXAlignment.Left,
 		TextYAlignment = props.TextYAlignment,
 

@@ -31,6 +31,12 @@ local function escape(char: number): string?
 	return nil
 end
 
+local xmlEscapes = {
+	[b("<")] = "&lt;",
+	[b(">")] = "&gt;",
+	[b("&")] = "&amp;",
+}
+
 local function formatColorAttr(color: Color3): string
 	return string.format('color="rgb(%d, %d, %d)"', color.R * 255, color.G * 255, color.B * 255)
 end
@@ -61,6 +67,8 @@ local function escapeTagName(name: string, theme: StudioTheme): string
 			local charStr = utf8.char(ch)
 			if escaped then
 				table.insert(output, escapeFmt:format(escaped))
+			elseif xmlEscapes[ch] then
+				table.insert(output, xmlEscapes[ch])
 			else
 				table.insert(output, charStr)
 			end
