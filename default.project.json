@@ -19,10 +19,10 @@
 					"$path": "roact/src"
 				},
 				"Rodux": {
-					"$path": "rodux/lib"
+					"$path": "rodux/src"
 				},
 				"RoactRodux": {
-					"$path": "roact-rodux/lib"
+					"$path": "roact-rodux/src"
 				}
 			}
 		}
