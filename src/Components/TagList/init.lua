@@ -105,6 +105,7 @@ function TagList:render()
 
 				leftClick = function(_rbx)
 					TagManager.Get():AddTag(tag)
+					props.openTagMenu(tag)
 				end,
 			})
 		end)
@@ -191,6 +192,9 @@ local function mapDispatchToProps(dispatch)
 	return {
 		setSearch = function(term)
 			dispatch(Actions.SetSearch(term))
+		end,
+		openTagMenu = function(tag)
+			dispatch(Actions.OpenTagMenu(tag))
 		end,
 	}
 end

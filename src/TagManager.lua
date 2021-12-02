@@ -185,14 +185,14 @@ function TagManager:_watchFolder()
 end
 
 function TagManager:_watchChild(instance: Configuration)
-	self:_updateStore()
+	self:_updateStore(true)
 
 	self.attributeChangedSignals[instance] = instance.AttributeChanged:Connect(function(_attribute)
 		self:_updateStore()
 	end)
 
 	self.nameChangedSignals[instance] = instance:GetPropertyChangedSignal("Name"):Connect(function(_attribute)
-		self:_updateStore()
+		self:_updateStore(true)
 	end)
 end
 
@@ -206,11 +206,14 @@ function TagManager:_getFolder()
 	return self.tagsFolder
 end
 
-function TagManager:_updateStore()
+function TagManager:_updateStore(updateUnknown: boolean?)
 	if not self.updateTriggered then
 		self.updateTriggered = true
 		spawn(function()
 			self:_doUpdateStore()
+			if updateUnknown then
+				self:_updateUnknown()
+			end
 		end)
 	end
 end
