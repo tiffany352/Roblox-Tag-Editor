@@ -66,6 +66,7 @@ function TagManager.new(store)
 		nameChangedSignals = {},
 		tags = {},
 		onUpdate = {},
+		_gaveDuplicateWarningsFor = {},
 	}, TagManager)
 
 	TagManager._global = self
@@ -220,15 +221,30 @@ end
 
 function TagManager:_doUpdateStore()
 	self.updateTriggered = false
-	local tags: { [number]: Tag } = {}
+	local tags: { Tag } = {}
 	local groups: { [string]: boolean } = {}
 	local sel = Selection:Get()
+	local tagNamesSeen: { [string]: boolean } = {}
 
 	if self.tagsFolder then
 		for _, inst in pairs(self.tagsFolder:GetChildren()) do
 			if not inst:IsA("Configuration") then
 				continue
 			end
+			if tagNamesSeen[inst.Name] then
+				if not self._gaveDuplicateWarningsFor[inst.Name] then
+					warn(
+						string.format(
+							"Multiple tags in ServerStorage.TagList are named %q, consider removing the duplicates.",
+							inst.Name
+						)
+					)
+					self._gaveDuplicateWarningsFor[inst.Name] = true
+				end
+				continue
+			end
+			tagNamesSeen[inst.Name] = true
+
 			local hasAny = false
 			local missingAny = false
 			local entry: Tag = {
