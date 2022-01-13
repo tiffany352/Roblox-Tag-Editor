@@ -5,6 +5,7 @@ local Selection = game:GetService("Selection")
 local ChangeHistory = game:GetService("ChangeHistoryService")
 
 local Actions = require(script.Parent.Actions)
+local Maid = require(script.Parent.Maid)
 
 local tagsRoot = game:GetService("ServerStorage")
 local tagsFolderName = "TagList"
@@ -57,15 +58,11 @@ end
 function TagManager.new(store)
 	local self = setmetatable({
 		store = store,
-		selectionChanged = nil,
 		updateTriggered = false,
 		tagsFolder = tagsRoot:FindFirstChild(tagsFolderName),
-		childAddedConn = nil,
-		childRemovedConn = nil,
-		attributeChangedSignals = {},
-		nameChangedSignals = {},
 		tags = {},
 		onUpdate = {},
+		_maid = Maid.new(),
 		_gaveDuplicateWarningsFor = {},
 	}, TagManager)
 
@@ -108,35 +105,23 @@ function TagManager.new(store)
 
 	self:_updateStore()
 
-	self.selectionChanged = Selection.SelectionChanged:Connect(function()
+	self._maid:give(Selection.SelectionChanged:Connect(function()
 		self:_updateStore()
 		self:_updateUnknown()
 
 		local sel = Selection:Get()
 		self.store:dispatch(Actions.SetSelectionActive(#sel > 0))
-	end)
+	end))
 
 	if self.tagsFolder then
-		self:_watchFolder()
+		self:_watchFolder(self.tagsFolder)
 	end
 
 	return self
 end
 
 function TagManager:Destroy()
-	self.selectionChanged:Disconnect()
-	if self.childAddedConn then
-		self.childAddedConn:Disconnect()
-	end
-	if self.childRemovedConn then
-		self.childRemovedConn:Disconnect()
-	end
-	for _, signal in pairs(self.attributeChangedSignals) do
-		signal:Disconnect()
-	end
-	for _, signal in pairs(self.nameChangedSignals) do
-		signal:Disconnect()
-	end
+	self._maid:destroy()
 end
 
 function TagManager.Get(): TagManager
@@ -157,44 +142,53 @@ function TagManager:OnTagsUpdated(func)
 	return connection
 end
 
-function TagManager:_watchFolder()
-	for _, child in pairs(self.tagsFolder:GetChildren()) do
+function TagManager:_stopWatchingFolder(folder: Folder)
+	self._maid[folder] = nil
+end
+
+function TagManager:_watchFolder(folder: Folder)
+	if self._maid[folder]  then
+		return
+	end
+
+	local maid = Maid.new()
+
+	for _, child in pairs(folder:GetChildren()) do
 		if child:IsA("Configuration") then
 			self:_watchChild(child)
 		end
 	end
-	self.childAddedConn = self.tagsFolder.ChildAdded:Connect(function(instance: Instance)
+
+	maid:give(folder.ChildAdded:Connect(function(instance: Instance)
 		if instance:IsA("Configuration") then
-			self:_watchChild(instance)
+			maid[instance] = self:_watchChild(instance)
 		end
-	end)
-	self.childRemovedConn = self.tagsFolder.ChildRemoved:Connect(function(instance)
+	end))
+
+	maid:give(folder.ChildRemoved:Connect(function(instance)
 		if instance:IsA("Configuration") then
+			maid[instance] = nil
 			self:_updateStore()
-			local nameChangedSignal = self.nameChangedSignals[instance]
-			if nameChangedSignal then
-				nameChangedSignal:Disconnect()
-				self.nameChangedSignals[instance] = nil
-			end
-			local attributeChangedSignal = self.attributeChangedSignals[instance]
-			if attributeChangedSignal then
-				attributeChangedSignal:Disconnect()
-				self.attributeChangedSignals[instance] = nil
-			end
 		end
-	end)
+	end))
+
+	self._maid[folder] = maid
 end
 
 function TagManager:_watchChild(instance: Configuration)
+	local maid = Maid.new()
+
 	self:_updateStore(true)
 
-	self.attributeChangedSignals[instance] = instance.AttributeChanged:Connect(function(_attribute)
+	maid:give(instance.AttributeChanged:Connect(function(_attribute)
 		self:_updateStore()
-	end)
+	end))
 
-	self.nameChangedSignals[instance] = instance:GetPropertyChangedSignal("Name"):Connect(function(_attribute)
+	maid:give(instance:GetPropertyChangedSignal("Name"):Connect(function(_attribute)
 		self:_updateStore(true)
-	end)
+	end))
+
+	return maid
 end
 
 function TagManager:_getFolder()
@@ -202,7 +196,7 @@ function TagManager:_getFolder()
 		self.tagsFolder = Instance.new("Folder")
 		self.tagsFolder.Name = tagsFolderName
 		self.tagsFolder.Parent = tagsRoot
-		self:_watchFolder()
+		self:_watchFolder(self.tagsFolder)
 	end
 	return self.tagsFolder
 end
