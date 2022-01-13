@@ -191,7 +191,7 @@ function TagManager:_watchChild(instance: Configuration)
 	return maid
 end
 
-function TagManager:_getDefaultFolder()
+function TagManager:_ensureDefaultFolder()
 	if not self._defaultTagsFolder then
 		self._defaultTagsFolder = Instance.new("Folder")
 		self._defaultTagsFolder.Name = tagsFolderName
@@ -324,8 +324,7 @@ function TagManager:_updateUnknown()
 end
 
 function TagManager:_setProp(tagName: string, key: string, value: any)
-	local defaultTagsFolder = self:_getDefaultFolder()
-	local tag = defaultTagsFolder:FindFirstChild(tagName)
+	local tag = self:_findTagInst(tagName)
 	if not tag then
 		error("Setting property of non-existent tag `" .. tostring(tagName) .. "`")
 	end
@@ -343,11 +342,7 @@ function TagManager:_setProp(tagName: string, key: string, value: any)
 end
 
 function TagManager:_getProp(tagName: string, key: string)
-	if not self._defaultTagsFolder then
-		return nil
-	end
-
-	local instance = self._defaultTagsFolder:FindFirstChild(tagName)
+	local instance = self:_findTagInst(tagName)
 	if not instance then
 		return nil
 	end
@@ -355,15 +350,23 @@ function TagManager:_getProp(tagName: string, key: string)
 	return instance:GetAttribute(key)
 end
 
+function TagManager:_findTagInst(tagName: string)
+	if self._defaultTagsFolder then
+		return nil
+	end
+
+	return self._defaultTagsFolder:FindFirstChild(tagName)
+end
+
 function TagManager:AddTag(name)
 	-- Early out if tag already exists.
-	if self._defaultTagsFolder and self._defaultTagsFolder:FindFirstChild(name) then
+	if self:_findTagInst(name) then
 		return
 	end
 
 	ChangeHistory:SetWaypoint(string.format("Creating tag %q", name))
 
-	local defaultTagsFolder = self:_getDefaultFolder()
+	local defaultTagsFolder = self:_ensureDefaultFolder()
 	local instance = Instance.new("Configuration")
 	instance.Name = name
 	instance:SetAttribute("Icon", defaultValues.Icon)
@@ -378,7 +381,7 @@ function TagManager:AddTag(name)
 end
 
 function TagManager:Rename(oldName, newName)
-	local instance = self._defaultTagsFolder and self._defaultTagsFolder:FindFirstChild(oldName)
+	local instance = self:_findTagInst(oldName)
 	if not instance then
 		return
 	end
@@ -447,11 +450,7 @@ function TagManager:SetGroup(name: string, value: string?)
 end
 
 function TagManager:DelTag(name: string)
-	local defaultTagsFolder = self._defaultTagsFolder
-	if not defaultTagsFolder then
-		return
-	end
-	local instance = defaultTagsFolder:FindFirstChild(name)
+	local instance = self:_findTagInst(name)
 	if not instance then
 		return
 	end
