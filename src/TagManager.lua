@@ -59,9 +59,9 @@ function TagManager.new(store)
 	local self = setmetatable({
 		store = store,
 		updateTriggered = false,
-		tagsFolder = tagsRoot:FindFirstChild(tagsFolderName),
 		tags = {},
 		onUpdate = {},
+		_defaultTagsFolder = tagsRoot:FindFirstChild(tagsFolderName),
 		_maid = Maid.new(),
 		_gaveDuplicateWarningsFor = {},
 	}, TagManager)
@@ -69,11 +69,11 @@ function TagManager.new(store)
 	TagManager._global = self
 
 	-- Migration path to new attribute based format.
-	if self.tagsFolder then
+	if self._defaultTagsFolder then
 		ChangeHistory:SetWaypoint("Migrating tags folder")
 
 		local migrateCount = 0
-		for _, tagInstance in pairs(self.tagsFolder:GetChildren()) do
+		for _, tagInstance in pairs(self._defaultTagsFolder:GetChildren()) do
 			if tagInstance:IsA("Folder") then
 				local newInstance = Instance.new("Configuration")
 				newInstance.Name = tagInstance.Name
@@ -91,7 +91,7 @@ function TagManager.new(store)
 					end
 					newInstance:SetAttribute(name, value)
 				end
-				newInstance.Parent = self.tagsFolder
+				newInstance.Parent = self._defaultTagsFolder
 				tagInstance.Parent = nil
 				migrateCount += 1
 			end
@@ -113,8 +113,8 @@ function TagManager.new(store)
 		self.store:dispatch(Actions.SetSelectionActive(#sel > 0))
 	end))
 
-	if self.tagsFolder then
-		self:_watchFolder(self.tagsFolder)
+	if self._defaultTagsFolder then
+		self:_watchFolder(self._defaultTagsFolder)
 	end
 
 	return self
@@ -191,14 +191,14 @@ function TagManager:_watchChild(instance: Configuration)
 	return maid
 end
 
-function TagManager:_getFolder()
-	if not self.tagsFolder then
-		self.tagsFolder = Instance.new("Folder")
-		self.tagsFolder.Name = tagsFolderName
-		self.tagsFolder.Parent = tagsRoot
-		self:_watchFolder(self.tagsFolder)
+function TagManager:_getDefaultFolder()
+	if not self._defaultTagsFolder then
+		self._defaultTagsFolder = Instance.new("Folder")
+		self._defaultTagsFolder.Name = tagsFolderName
+		self._defaultTagsFolder.Parent = tagsRoot
+		self:_watchFolder(self._defaultTagsFolder)
 	end
-	return self.tagsFolder
+	return self._defaultTagsFolder
 end
 
 function TagManager:_updateStore(updateUnknown: boolean?)
@@ -220,8 +220,8 @@ function TagManager:_doUpdateStore()
 	local sel = Selection:Get()
 	local tagNamesSeen: { [string]: boolean } = {}
 
-	if self.tagsFolder then
-		for _, inst in pairs(self.tagsFolder:GetChildren()) do
+	if self._defaultTagsFolder then
+		for _, inst in pairs(self._defaultTagsFolder:GetChildren()) do
 			if not inst:IsA("Configuration") then
 				continue
 			end
@@ -324,8 +324,8 @@ function TagManager:_updateUnknown()
 end
 
 function TagManager:_setProp(tagName: string, key: string, value: any)
-	local tagsFolder = self:_getFolder()
-	local tag = tagsFolder:FindFirstChild(tagName)
+	local defaultTagsFolder = self:_getDefaultFolder()
+	local tag = defaultTagsFolder:FindFirstChild(tagName)
 	if not tag then
 		error("Setting property of non-existent tag `" .. tostring(tagName) .. "`")
 	end
@@ -343,11 +343,11 @@ function TagManager:_setProp(tagName: string, key: string, value: any)
 end
 
 function TagManager:_getProp(tagName: string, key: string)
-	if not self.tagsFolder then
+	if not self._defaultTagsFolder then
 		return nil
 	end
 
-	local instance = self.tagsFolder:FindFirstChild(tagName)
+	local instance = self._defaultTagsFolder:FindFirstChild(tagName)
 	if not instance then
 		return nil
 	end
@@ -357,13 +357,13 @@ end
 
 function TagManager:AddTag(name)
 	-- Early out if tag already exists.
-	if self.tagsFolder and self.tagsFolder:FindFirstChild(name) then
+	if self._defaultTagsFolder and self._defaultTagsFolder:FindFirstChild(name) then
 		return
 	end
 
 	ChangeHistory:SetWaypoint(string.format("Creating tag %q", name))
 
-	local tagsFolder = self:_getFolder()
+	local defaultTagsFolder = self:_getDefaultFolder()
 	local instance = Instance.new("Configuration")
 	instance.Name = name
 	instance:SetAttribute("Icon", defaultValues.Icon)
@@ -372,13 +372,13 @@ function TagManager:AddTag(name)
 	instance:SetAttribute("AlwaysOnTop", defaultValues.AlwaysOnTop)
 	instance:SetAttribute("Group", defaultValues.Group)
 	instance:SetAttribute("Color", genColor(name))
-	instance.Parent = tagsFolder
+	instance.Parent = defaultTagsFolder
 
 	ChangeHistory:SetWaypoint(string.format("Created tag %q", name))
 end
 
 function TagManager:Rename(oldName, newName)
-	local instance = self.tagsFolder and self.tagsFolder:FindFirstChild(oldName)
+	local instance = self._defaultTagsFolder and self._defaultTagsFolder:FindFirstChild(oldName)
 	if not instance then
 		return
 	end
@@ -447,11 +447,11 @@ function TagManager:SetGroup(name: string, value: string?)
 end
 
 function TagManager:DelTag(name: string)
-	local tagsFolder = self.tagsFolder
-	if not tagsFolder then
+	local defaultTagsFolder = self._defaultTagsFolder
+	if not defaultTagsFolder then
 		return
 	end
-	local instance = tagsFolder:FindFirstChild(name)
+	local instance = defaultTagsFolder:FindFirstChild(name)
 	if not instance then
 		return
 	end
