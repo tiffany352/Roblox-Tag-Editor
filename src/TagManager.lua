@@ -10,6 +10,12 @@ local Maid = require(script.Parent.Maid)
 local tagsRoot = game:GetService("ServerStorage")
 local tagsFolderName = "TagList"
 
+--[=[
+	Anything tagged with this value will be treated as a source for tag editor
+	tags.
+]=]
+local TAG_FOLDER_TAG = "TagEditorTagContainer"
+
 local TagManager = {}
 TagManager.__index = TagManager
 
@@ -61,6 +67,7 @@ function TagManager.new(store)
 		updateTriggered = false,
 		tags = {},
 		onUpdate = {},
+		_tagFolderSet = {},
 		_defaultTagsFolder = tagsRoot:FindFirstChild(tagsFolderName),
 		_maid = Maid.new(),
 		_gaveDuplicateWarningsFor = {},
@@ -100,6 +107,8 @@ function TagManager.new(store)
 			print(string.format("TagEditor: Converted %d tags to attribute-based format.", migrateCount))
 		end
 
+		-- Ensure discovery
+		Collection:AddTag(self._defaultTagsFolder, TAG_FOLDER_TAG)
 		ChangeHistory:SetWaypoint("Migrated tags folder")
 	end
 
@@ -115,6 +124,19 @@ function TagManager.new(store)
 
 	if self._defaultTagsFolder then
 		self:_watchFolder(self._defaultTagsFolder)
+	end
+
+	self._maid:give(Collection:GetInstanceAddedSignal(TAG_FOLDER_TAG):Connect(function(inst)
+		self:_watchFolder(inst)
+	end))
+	self._maid:give(Collection:GetInstanceRemovedSignal(TAG_FOLDER_TAG):Connect(function(inst)
+		if inst ~= self._defaultTagsFolder then
+			self:_stopWatchingFolder(inst)
+		end
+	end))
+
+	for _, item in pairs(Collection:GetTagged(TAG_FOLDER_TAG)) do
+		self:_watchFolder(item)
 	end
 
 	return self
@@ -143,7 +165,10 @@ function TagManager:OnTagsUpdated(func)
 end
 
 function TagManager:_stopWatchingFolder(folder: Folder)
-	self._maid[folder] = nil
+	if self._maid[folder] then
+		self._maid[folder] = nil
+		self:_updateStore(true)
+	end
 end
 
 function TagManager:_watchFolder(folder: Folder)
@@ -152,6 +177,11 @@ function TagManager:_watchFolder(folder: Folder)
 	end
 
 	local maid = Maid.new()
+
+	self._tagFolderSet[folder] = true
+	maid:give(function()
+		self._tagFolderSet[folder] = nil
+	end)
 
 	for _, child in pairs(folder:GetChildren()) do
 		if child:IsA("Configuration") then
@@ -196,6 +226,10 @@ function TagManager:_ensureDefaultFolder()
 		self._defaultTagsFolder = Instance.new("Folder")
 		self._defaultTagsFolder.Name = tagsFolderName
 		self._defaultTagsFolder.Parent = tagsRoot
+
+		-- Ensure discovery
+		Collection:AddTag(self._defaultTagsFolder, TAG_FOLDER_TAG)
+
 		self:_watchFolder(self._defaultTagsFolder)
 	end
 	return self._defaultTagsFolder
@@ -218,10 +252,10 @@ function TagManager:_doUpdateStore()
 	local tags: { Tag } = {}
 	local groups: { [string]: boolean } = {}
 	local sel = Selection:Get()
-	local tagNamesSeen: { [string]: boolean } = {}
+	local tagNamesSeen: { [string]: string } = {}
 
-	if self._defaultTagsFolder then
-		for _, inst in pairs(self._defaultTagsFolder:GetChildren()) do
+	local function update(folder)
+		for _, inst in pairs(folder:GetChildren()) do
 			if not inst:IsA("Configuration") then
 				continue
 			end
@@ -229,7 +263,9 @@ function TagManager:_doUpdateStore()
 				if not self._gaveDuplicateWarningsFor[inst.Name] then
 					warn(
 						string.format(
-							"Multiple tags in ServerStorage.TagList are named %q, consider removing the duplicates.",
+							"Multiple tags in %s and %s are named %q, consider removing the duplicates.",
+							tagNamesSeen[inst.Name],
+							inst:GetFullName(),
 							inst.Name
 						)
 					)
@@ -237,7 +273,7 @@ function TagManager:_doUpdateStore()
 				end
 				continue
 			end
-			tagNamesSeen[inst.Name] = true
+			tagNamesSeen[inst.Name] = inst:GetFullName()
 
 			local hasAny = false
 			local missingAny = false
@@ -272,6 +308,19 @@ function TagManager:_doUpdateStore()
 			if entry.Group then
 				groups[entry.Group] = true
 			end
+		end
+	end
+
+	-- always update the default folder first
+	-- so we can override tags as a user.
+	if self._defaultTagsFolder then
+		update(self._defaultTagsFolder)
+	end
+
+	-- update other folders
+	for folder, _ in pairs(self._tagFolderSet) do
+		if folder ~= self._defaultTagsFolder then
+			update(folder)
 		end
 	end
 
@@ -352,10 +401,22 @@ end
 
 function TagManager:_findTagInst(tagName: string)
 	if self._defaultTagsFolder then
-		return nil
+		-- prefer the default tag folder first as users may override this
+		-- value
+		local result = self._defaultTagsFolder:FindFirstChild(tagName)
+		if result then
+			return result
+		end
 	end
 
-	return self._defaultTagsFolder:FindFirstChild(tagName)
+	for folder, _ in pairs(self._tagFolderSet) do
+		local result = folder:FindFirstChild(tagName)
+		if result then
+			return result
+		end
+	end
+
+	return nil
 end
 
 function TagManager:AddTag(name)
