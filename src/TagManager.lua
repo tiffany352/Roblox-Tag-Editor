@@ -5,9 +5,16 @@ local Selection = game:GetService("Selection")
 local ChangeHistory = game:GetService("ChangeHistoryService")
 
 local Actions = require(script.Parent.Actions)
+local Maid = require(script.Parent.Maid)
 
 local tagsRoot = game:GetService("ServerStorage")
 local tagsFolderName = "TagList"
+
+--[=[
+	Anything tagged with this value will be treated as a source for tag editor
+	tags.
+]=]
+local TAG_FOLDER_TAG = "TagEditorTagContainer"
 
 local TagManager = {}
 TagManager.__index = TagManager
@@ -57,26 +64,23 @@ end
 function TagManager.new(store)
 	local self = setmetatable({
 		store = store,
-		selectionChanged = nil,
 		updateTriggered = false,
-		tagsFolder = tagsRoot:FindFirstChild(tagsFolderName),
-		childAddedConn = nil,
-		childRemovedConn = nil,
-		attributeChangedSignals = {},
-		nameChangedSignals = {},
 		tags = {},
 		onUpdate = {},
+		_tagFolderSet = {},
+		_defaultTagsFolder = tagsRoot:FindFirstChild(tagsFolderName),
+		_maid = Maid.new(),
 		_gaveDuplicateWarningsFor = {},
 	}, TagManager)
 
 	TagManager._global = self
 
 	-- Migration path to new attribute based format.
-	if self.tagsFolder then
+	if self._defaultTagsFolder then
 		ChangeHistory:SetWaypoint("Migrating tags folder")
 
 		local migrateCount = 0
-		for _, tagInstance in pairs(self.tagsFolder:GetChildren()) do
+		for _, tagInstance in pairs(self._defaultTagsFolder:GetChildren()) do
 			if tagInstance:IsA("Folder") then
 				local newInstance = Instance.new("Configuration")
 				newInstance.Name = tagInstance.Name
@@ -94,7 +98,7 @@ function TagManager.new(store)
 					end
 					newInstance:SetAttribute(name, value)
 				end
-				newInstance.Parent = self.tagsFolder
+				newInstance.Parent = self._defaultTagsFolder
 				tagInstance.Parent = nil
 				migrateCount += 1
 			end
@@ -103,40 +107,43 @@ function TagManager.new(store)
 			print(string.format("TagEditor: Converted %d tags to attribute-based format.", migrateCount))
 		end
 
+		-- Ensure discovery
+		Collection:AddTag(self._defaultTagsFolder, TAG_FOLDER_TAG)
 		ChangeHistory:SetWaypoint("Migrated tags folder")
 	end
 
 	self:_updateStore()
 
-	self.selectionChanged = Selection.SelectionChanged:Connect(function()
+	self._maid:give(Selection.SelectionChanged:Connect(function()
 		self:_updateStore()
 		self:_updateUnknown()
 
 		local sel = Selection:Get()
 		self.store:dispatch(Actions.SetSelectionActive(#sel > 0))
-	end)
+	end))
 
-	if self.tagsFolder then
-		self:_watchFolder()
+	if self._defaultTagsFolder then
+		self:_watchFolder(self._defaultTagsFolder)
+	end
+
+	self._maid:give(Collection:GetInstanceAddedSignal(TAG_FOLDER_TAG):Connect(function(inst)
+		self:_watchFolder(inst)
+	end))
+	self._maid:give(Collection:GetInstanceRemovedSignal(TAG_FOLDER_TAG):Connect(function(inst)
+		if inst ~= self._defaultTagsFolder then
+			self:_stopWatchingFolder(inst)
+		end
+	end))
+
+	for _, item in pairs(Collection:GetTagged(TAG_FOLDER_TAG)) do
+		self:_watchFolder(item)
 	end
 
 	return self
 end
 
 function TagManager:Destroy()
-	self.selectionChanged:Disconnect()
-	if self.childAddedConn then
-		self.childAddedConn:Disconnect()
-	end
-	if self.childRemovedConn then
-		self.childRemovedConn:Disconnect()
-	end
-	for _, signal in pairs(self.attributeChangedSignals) do
-		signal:Disconnect()
-	end
-	for _, signal in pairs(self.nameChangedSignals) do
-		signal:Disconnect()
-	end
+	self._maid:destroy()
 end
 
 function TagManager.Get(): TagManager
@@ -157,54 +164,75 @@ function TagManager:OnTagsUpdated(func)
 	return connection
 end
 
-function TagManager:_watchFolder()
-	for _, child in pairs(self.tagsFolder:GetChildren()) do
+function TagManager:_stopWatchingFolder(folder: Folder)
+	if self._maid[folder] then
+		self._maid[folder] = nil
+		self:_updateStore(true)
+	end
+end
+
+function TagManager:_watchFolder(folder: Folder)
+	if self._maid[folder]  then
+		return
+	end
+
+	local maid = Maid.new()
+
+	self._tagFolderSet[folder] = true
+	maid:give(function()
+		self._tagFolderSet[folder] = nil
+	end)
+
+	for _, child in pairs(folder:GetChildren()) do
 		if child:IsA("Configuration") then
-			self:_watchChild(child)
+			maid[instance] = self:_watchChild(child)
 		end
 	end
-	self.childAddedConn = self.tagsFolder.ChildAdded:Connect(function(instance: Instance)
+
+	maid:give(folder.ChildAdded:Connect(function(instance: Instance)
 		if instance:IsA("Configuration") then
-			self:_watchChild(instance)
+			maid[instance] = self:_watchChild(instance)
 		end
-	end)
-	self.childRemovedConn = self.tagsFolder.ChildRemoved:Connect(function(instance)
+	end))
+
+	maid:give(folder.ChildRemoved:Connect(function(instance)
 		if instance:IsA("Configuration") then
+			maid[instance] = nil
 			self:_updateStore()
-			local nameChangedSignal = self.nameChangedSignals[instance]
-			if nameChangedSignal then
-				nameChangedSignal:Disconnect()
-				self.nameChangedSignals[instance] = nil
-			end
-			local attributeChangedSignal = self.attributeChangedSignals[instance]
-			if attributeChangedSignal then
-				attributeChangedSignal:Disconnect()
-				self.attributeChangedSignals[instance] = nil
-			end
 		end
-	end)
+	end))
+
+	self._maid[folder] = maid
 end
 
 function TagManager:_watchChild(instance: Configuration)
+	local maid = Maid.new()
+
 	self:_updateStore(true)
 
-	self.attributeChangedSignals[instance] = instance.AttributeChanged:Connect(function(_attribute)
+	maid:give(instance.AttributeChanged:Connect(function(_attribute)
 		self:_updateStore()
-	end)
+	end))
 
-	self.nameChangedSignals[instance] = instance:GetPropertyChangedSignal("Name"):Connect(function(_attribute)
+	maid:give(instance:GetPropertyChangedSignal("Name"):Connect(function(_attribute)
 		self:_updateStore(true)
-	end)
+	end))
+
+	return maid
 end
 
-function TagManager:_getFolder()
-	if not self.tagsFolder then
-		self.tagsFolder = Instance.new("Folder")
-		self.tagsFolder.Name = tagsFolderName
-		self.tagsFolder.Parent = tagsRoot
-		self:_watchFolder()
+function TagManager:_ensureDefaultFolder()
+	if not self._defaultTagsFolder then
+		self._defaultTagsFolder = Instance.new("Folder")
+		self._defaultTagsFolder.Name = tagsFolderName
+		self._defaultTagsFolder.Parent = tagsRoot
+
+		-- Ensure discovery
+		Collection:AddTag(self._defaultTagsFolder, TAG_FOLDER_TAG)
+
+		self:_watchFolder(self._defaultTagsFolder)
 	end
-	return self.tagsFolder
+	return self._defaultTagsFolder
 end
 
 function TagManager:_updateStore(updateUnknown: boolean?)
@@ -224,10 +252,10 @@ function TagManager:_doUpdateStore()
 	local tags: { Tag } = {}
 	local groups: { [string]: boolean } = {}
 	local sel = Selection:Get()
-	local tagNamesSeen: { [string]: boolean } = {}
+	local tagNamesSeen: { [string]: string } = {}
 
-	if self.tagsFolder then
-		for _, inst in pairs(self.tagsFolder:GetChildren()) do
+	local function update(folder)
+		for _, inst in pairs(folder:GetChildren()) do
 			if not inst:IsA("Configuration") then
 				continue
 			end
@@ -235,7 +263,9 @@ function TagManager:_doUpdateStore()
 				if not self._gaveDuplicateWarningsFor[inst.Name] then
 					warn(
 						string.format(
-							"Multiple tags in ServerStorage.TagList are named %q, consider removing the duplicates.",
+							"Multiple tags in %s and %s are named %q, consider removing the duplicates.",
+							tagNamesSeen[inst.Name],
+							inst:GetFullName(),
 							inst.Name
 						)
 					)
@@ -243,7 +273,7 @@ function TagManager:_doUpdateStore()
 				end
 				continue
 			end
-			tagNamesSeen[inst.Name] = true
+			tagNamesSeen[inst.Name] = inst:GetFullName()
 
 			local hasAny = false
 			local missingAny = false
@@ -278,6 +308,19 @@ function TagManager:_doUpdateStore()
 			if entry.Group then
 				groups[entry.Group] = true
 			end
+		end
+	end
+
+	-- always update the default folder first
+	-- so we can override tags as a user.
+	if self._defaultTagsFolder then
+		update(self._defaultTagsFolder)
+	end
+
+	-- update other folders
+	for folder, _ in pairs(self._tagFolderSet) do
+		if folder ~= self._defaultTagsFolder then
+			update(folder)
 		end
 	end
 
@@ -330,8 +373,7 @@ function TagManager:_updateUnknown()
 end
 
 function TagManager:_setProp(tagName: string, key: string, value: any)
-	local tagsFolder = self:_getFolder()
-	local tag = tagsFolder:FindFirstChild(tagName)
+	local tag = self:_findTagInst(tagName)
 	if not tag then
 		error("Setting property of non-existent tag `" .. tostring(tagName) .. "`")
 	end
@@ -349,11 +391,7 @@ function TagManager:_setProp(tagName: string, key: string, value: any)
 end
 
 function TagManager:_getProp(tagName: string, key: string)
-	if not self.tagsFolder then
-		return nil
-	end
-
-	local instance = self.tagsFolder:FindFirstChild(tagName)
+	local instance = self:_findTagInst(tagName)
 	if not instance then
 		return nil
 	end
@@ -361,15 +399,35 @@ function TagManager:_getProp(tagName: string, key: string)
 	return instance:GetAttribute(key)
 end
 
+function TagManager:_findTagInst(tagName: string)
+	if self._defaultTagsFolder then
+		-- prefer the default tag folder first as users may override this
+		-- value
+		local result = self._defaultTagsFolder:FindFirstChild(tagName)
+		if result then
+			return result
+		end
+	end
+
+	for folder, _ in pairs(self._tagFolderSet) do
+		local result = folder:FindFirstChild(tagName)
+		if result then
+			return result
+		end
+	end
+
+	return nil
+end
+
 function TagManager:AddTag(name)
 	-- Early out if tag already exists.
-	if self.tagsFolder and self.tagsFolder:FindFirstChild(name) then
+	if self:_findTagInst(name) then
 		return
 	end
 
 	ChangeHistory:SetWaypoint(string.format("Creating tag %q", name))
 
-	local tagsFolder = self:_getFolder()
+	local defaultTagsFolder = self:_ensureDefaultFolder()
 	local instance = Instance.new("Configuration")
 	instance.Name = name
 	instance:SetAttribute("Icon", defaultValues.Icon)
@@ -378,13 +436,13 @@ function TagManager:AddTag(name)
 	instance:SetAttribute("AlwaysOnTop", defaultValues.AlwaysOnTop)
 	instance:SetAttribute("Group", defaultValues.Group)
 	instance:SetAttribute("Color", genColor(name))
-	instance.Parent = tagsFolder
+	instance.Parent = defaultTagsFolder
 
 	ChangeHistory:SetWaypoint(string.format("Created tag %q", name))
 end
 
 function TagManager:Rename(oldName, newName)
-	local instance = self.tagsFolder and self.tagsFolder:FindFirstChild(oldName)
+	local instance = self:_findTagInst(oldName)
 	if not instance then
 		return
 	end
@@ -453,11 +511,7 @@ function TagManager:SetGroup(name: string, value: string?)
 end
 
 function TagManager:DelTag(name: string)
-	local tagsFolder = self.tagsFolder
-	if not tagsFolder then
-		return
-	end
-	local instance = tagsFolder:FindFirstChild(name)
+	local instance = self:_findTagInst(name)
 	if not instance then
 		return
 	end

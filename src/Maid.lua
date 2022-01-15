@@ -21,6 +21,10 @@ function Maid:__newindex(key, newTask)
 	end
 	local tasks = self._tasks
 	local oldTask = tasks[key]
+	if oldTask == newTask then
+		return
+	end
+
 	tasks[key] = newTask
 
 	if oldTask then
