@@ -185,7 +185,7 @@ function TagManager:_watchFolder(folder: Folder)
 
 	for _, child in pairs(folder:GetChildren()) do
 		if child:IsA("Configuration") then
-			self:_watchChild(child)
+			maid[instance] = self:_watchChild(child)
 		end
 	end
 
