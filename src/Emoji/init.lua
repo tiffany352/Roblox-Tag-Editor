@@ -27,7 +27,7 @@ local function getLookup()
 	return nameLookup
 end
 
-local function getNamedEmoji(name: string): string | null
+local function getNamedEmoji(name: string): string?
 	local lookup = getLookup()
 	if lookup[name] then
 		return lookup[name].base

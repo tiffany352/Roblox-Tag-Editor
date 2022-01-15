@@ -172,7 +172,7 @@ function TagManager:_stopWatchingFolder(folder: Folder)
 end
 
 function TagManager:_watchFolder(folder: Folder)
-	if self._maid[folder]  then
+	if self._maid[folder] then
 		return
 	end
 
@@ -238,7 +238,7 @@ end
 function TagManager:_updateStore(updateUnknown: boolean?)
 	if not self.updateTriggered then
 		self.updateTriggered = true
-		spawn(function()
+		task.spawn(function()
 			self:_doUpdateStore()
 			if updateUnknown then
 				self:_updateUnknown()
