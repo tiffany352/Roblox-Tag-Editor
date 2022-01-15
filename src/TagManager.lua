@@ -185,7 +185,7 @@ function TagManager:_watchFolder(folder: Folder)
 
 	for _, child in pairs(folder:GetChildren()) do
 		if child:IsA("Configuration") then
-			maid[instance] = self:_watchChild(child)
+			maid[child] = self:_watchChild(child)
 		end
 	end
 
@@ -252,9 +252,9 @@ function TagManager:_doUpdateStore()
 	local tags: { Tag } = {}
 	local groups: { [string]: boolean } = {}
 	local sel = Selection:Get()
-	local tagNamesSeen: { [string]: string } = {}
 
 	local function update(folder)
+		local tagNamesSeen: { [string]: boolean } = {}
 		for _, inst in pairs(folder:GetChildren()) do
 			if not inst:IsA("Configuration") then
 				continue
@@ -263,9 +263,8 @@ function TagManager:_doUpdateStore()
 				if not self._gaveDuplicateWarningsFor[inst.Name] then
 					warn(
 						string.format(
-							"Multiple tags in %s and %s are named %q, consider removing the duplicates.",
-							tagNamesSeen[inst.Name],
-							inst:GetFullName(),
+							"Multiple tags in %s are named %q, consider removing the duplicates.",
+							folder:GetFullName(),
 							inst.Name
 						)
 					)
@@ -273,7 +272,7 @@ function TagManager:_doUpdateStore()
 				end
 				continue
 			end
-			tagNamesSeen[inst.Name] = inst:GetFullName()
+			tagNamesSeen[inst.Name] = true
 
 			local hasAny = false
 			local missingAny = false
