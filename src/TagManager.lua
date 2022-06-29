@@ -61,6 +61,20 @@ local function genColor(name: string): Color3
 	return Color3.fromHSV(h, s, v)
 end
 
+local function needsMigration(folder: Folder): boolean
+	if not folder then
+		return false
+	end
+
+	for _, child in folder:GetChildren() do
+		if child:IsA("Folder") then
+			return true
+		end
+	end
+
+	return false
+end
+
 function TagManager.new(store)
 	local self = setmetatable({
 		store = store,
@@ -76,7 +90,7 @@ function TagManager.new(store)
 	TagManager._global = self
 
 	-- Migration path to new attribute based format.
-	if self._defaultTagsFolder then
+	if needsMigration(self._defaultTagsFolder) then
 		ChangeHistory:SetWaypoint("Migrating tags folder")
 
 		local migrateCount = 0
