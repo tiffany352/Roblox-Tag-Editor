@@ -66,14 +66,14 @@ function TaggedInstanceProvider:updateState(tagName)
 		if a.instance.Name < b.instance.Name then
 			return true
 		end
-		if b.instance.Name < b.instance.Name then
+		if b.instance.Name < a.instance.Name then
 			return false
 		end
 
 		if a.instance.ClassName < b.instance.ClassName then
 			return true
 		end
-		if b.instance.ClassName < b.instance.ClassName then
+		if b.instance.ClassName < a.instance.ClassName then
 			return false
 		end
 
