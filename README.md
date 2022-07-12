@@ -1,9 +1,20 @@
-# Roblox-Tag-Editor
-A plugin for manipulating CollectionService in Roblox Studio.
+# Tag Editor
+
+A Roblox Studio plugin for manipulating [CollectionService](https://create.roblox.com/docs/reference/engine/classes/CollectionService).
 
 You can install it via the Roblox plugin marketplace, here: https://www.roblox.com/library/948084095/Tag-Editor
 
-Check out the [Roblox Developer Forum post](https://devforum.roblox.com/t/tag-editor-plugin/101465) for information about what this plugin does.
+Check out the [Roblox Developer Forum post](https://devforum.roblox.com/t/tag-editor-plugin/101133) for information about what this plugin does.
+
+## Features
+
+- Adding and removing tags from instances.
+- Manages a list of tags that have custom properties like an icon, color, and more.
+- Tags can be grouped in sections for large projects.
+- View a list of instances that have a given tag, and select them all by pressing <kbd>Ctrl</kbd> + <kbd>A</kbd>.
+- World View toggle that shows all tagged objects in 3D, with quick visibility toggles and different modes that can be selected per-tag.
+- Hovering over parts to see which tags that part has (only in World View mode).
+- Matches Studio look and feel, and supports both light and dark themes.
 
 ## Changelog
 
