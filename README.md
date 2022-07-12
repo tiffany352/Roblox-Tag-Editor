@@ -1,6 +1,8 @@
 # Roblox-Tag-Editor
 A plugin for manipulating CollectionService in Roblox Studio.
 
+You can install it via the Roblox plugin marketplace, here: https://www.roblox.com/library/948084095/Tag-Editor
+
 Check out the [Roblox Developer Forum post](https://devforum.roblox.com/t/tag-editor-plugin/101465) for information about what this plugin does.
 
 ## Changelog
