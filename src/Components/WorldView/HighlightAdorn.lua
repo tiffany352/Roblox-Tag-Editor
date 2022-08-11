@@ -3,7 +3,7 @@ local Roact = require(Modules.Roact)
 
 local function HighlightAdorn(props)
 	return Roact.createElement("Highlight", {
-		FillTransparency = 0.5,
+		FillTransparency = 0.7,
 		Adornee = props.Adornee.ClassName == "Attachment" and props.Adornee.Parent or props.Adornee,
 		FillColor = props.Color,
 		OutlineColor = props.Color,
