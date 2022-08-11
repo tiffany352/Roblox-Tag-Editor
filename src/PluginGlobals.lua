@@ -17,6 +17,7 @@ type Exports = {
 	visualizeOutline: PluginAction?,
 	visualizeText: PluginAction?,
 	visualizeIcon: PluginAction?,
+	visualizeHighlight: PluginAction?,
 	selectAllAction: PluginAction?,
 }
 
@@ -48,6 +49,7 @@ function exports.showTagMenu(dispatch, tag: string)
 			[exports.visualizeOutline] = "Outline",
 			[exports.visualizeText] = "Text",
 			[exports.visualizeIcon] = "Icon",
+			[exports.visualizeHighlight] = "Highlight"
 		}
 
 		exports.currentTagMenu = tag

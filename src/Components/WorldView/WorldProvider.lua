@@ -166,6 +166,7 @@ function WorldProvider:updateParts()
 		local outlines = {}
 		local boxes = {}
 		local icons = {}
+		local Highlights = {}
 		local labels = {}
 		local spheres = {}
 		local anyAlwaysOnTop = false
@@ -179,6 +180,8 @@ function WorldProvider:updateParts()
 					boxes[#boxes + 1] = tag.Color
 				elseif tag.DrawType == "Icon" then
 					icons[#icons + 1] = tag.Icon
+				elseif tag.DrawType == "Highlight" then
+					Highlights[#Highlights+1] = tag.Color
 				elseif tag.DrawType == "Text" then
 					labels[#labels + 1] = tagName
 				elseif tag.DrawType == "Sphere" then
@@ -238,6 +241,25 @@ function WorldProvider:updateParts()
 				Part = newList[i].Instance,
 				DrawType = "Icon",
 				Icon = icons,
+				AlwaysOnTop = anyAlwaysOnTop,
+			}
+		end
+		if #Highlights > 0 then
+			local r, g, b = 0, 0, 0
+			for j = 1, #Highlights do
+				r = r + Highlights[j].r
+				g = g + Highlights[j].g
+				b = b + Highlights[j].b
+			end
+			r = r / #Highlights
+			g = g / #Highlights
+			b = b / #Highlights
+			local avg = Color3.new(r, g, b)
+			adornMap["Highlight:" .. partId] = {
+				Id = partId,
+				Part = newList[i].Instance,
+				DrawType = "Highlight",
+				Color = avg,
 				AlwaysOnTop = anyAlwaysOnTop,
 			}
 		end

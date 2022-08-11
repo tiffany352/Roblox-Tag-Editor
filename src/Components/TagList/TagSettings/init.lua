@@ -161,6 +161,7 @@ local function TagSettings(props)
 					Options = {
 						"None",
 						"Icon",
+						"Highlight",
 						"Outline",
 						"Box",
 						"Sphere",
