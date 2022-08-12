@@ -2,6 +2,7 @@ local TextService = game:GetService("TextService")
 
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
+local tr = require(script.Parent.Parent.tr)
 
 local function TextLabel(props)
 	local update
@@ -37,7 +38,8 @@ local function TextLabel(props)
 		Font = props.Font or Enum.Font.SourceSans,
 		TextSize = props.TextSize or 20,
 		TextColor3 = props.TextColor3 or Color3.fromRGB(0, 0, 0),
-		Text = props.Text or "<Text Not Set>",
+		Text = if props.textKey then tr(props.textKey, props.textArgs) else props.Text or "<Text Not Set>",
+		AutoLocalize = props.textKey == nil,
 		RichText = props.RichText,
 		TextWrapped = props.TextWrapped,
 		TextTruncate = props.TextTruncate,

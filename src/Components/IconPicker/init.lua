@@ -32,7 +32,10 @@ function IconPicker:render()
 
 	return Roact.createElement(Page, {
 		visible = props.tagName ~= nil,
-		title = tostring(props.tagName) .. " - Select an Icon",
+		titleKey = "IconPicker_PageTitle",
+		titleArgs = {
+			Tag = props.tagName or "",
+		},
 		titleIcon = props.tagIcon,
 
 		close = function()
@@ -44,7 +47,7 @@ function IconPicker:render()
 			Position = UDim2.new(0, 0, 0, 64),
 			tabs = {
 				{
-					name = "Icons",
+					name = "IconPicker_Tab_Icons",
 					render = function()
 						return Roact.createElement(IconsPage, {
 							tagName = props.tagName,
@@ -55,7 +58,7 @@ function IconPicker:render()
 					end,
 				},
 				{
-					name = "Emoji",
+					name = "IconPicker_Tab_Emoji",
 					render = function()
 						return Roact.createElement(EmojiPage, {
 							tagName = props.tagName,
@@ -66,7 +69,7 @@ function IconPicker:render()
 					end,
 				},
 				{
-					name = "Custom",
+					name = "IconPicker_Tab_Custom",
 					render = function()
 						return Roact.createElement(CustomPage, {
 							tagName = props.tagName,

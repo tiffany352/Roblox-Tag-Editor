@@ -2,3 +2,4 @@
 *.rbxl.lock
 roblox.toml
 emoji.json
+.~lock.*

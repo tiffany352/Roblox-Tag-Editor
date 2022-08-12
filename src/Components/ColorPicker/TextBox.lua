@@ -2,6 +2,7 @@ local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
+local tr = require(script.Parent.Parent.Parent.tr)
 
 local TextBox = Roact.PureComponent:extend("ColorPicker.TextBox")
 
@@ -39,7 +40,8 @@ function TextBox:render()
 			LayoutOrder = props.LayoutOrder,
 		}, {
 			Label = props.Label and Roact.createElement("TextLabel", {
-				Text = props.Label,
+				Text = if props.labelKey then tr(props.labelKey, props.labelArgs) else props.Label,
+				AutoLocalize = props.labelKey == nil,
 				Size = UDim2.new(0, inset, 0, 20),
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextSize = 20,
@@ -53,13 +55,13 @@ function TextBox:render()
 				BackgroundColor3 = theme:GetColor("InputFieldBackground"),
 				BorderColor3 = borderColor,
 
-				[Roact.Event.MouseEnter] = function(rbx)
+				[Roact.Event.MouseEnter] = function(_rbx)
 					self:setState({
 						hover = true,
 					})
 				end,
 
-				[Roact.Event.MouseLeave] = function(rbx)
+				[Roact.Event.MouseLeave] = function(_rbx)
 					self:setState({
 						hover = false,
 					})
@@ -67,7 +69,10 @@ function TextBox:render()
 			}, {
 				TextBox = Roact.createElement("TextBox", {
 					Text = "",
-					PlaceholderText = props.Text,
+					PlaceholderText = if self.props.placeholderTextKey
+						then tr(self.props.placeholderTextKey, self.props.placeholderTextArgs)
+						else props.Text,
+					AutoLocalize = false,
 					PlaceholderColor3 = theme:GetColor("DimmedText"),
 					Font = Enum.Font.SourceSans,
 					TextSize = 20,
@@ -92,7 +97,7 @@ function TextBox:render()
 						end
 					end,
 
-					[Roact.Event.Focused] = function(rbx)
+					[Roact.Event.Focused] = function(_rbx)
 						self:setState({
 							focus = true,
 						})

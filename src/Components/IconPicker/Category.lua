@@ -68,7 +68,7 @@ function Category:render()
 		AutomaticSize = Enum.AutomaticSize.Y,
 	}, {
 		Label = Roact.createElement(ThemedTextLabel, {
-			Text = props.CategoryName,
+			textKey = "Category_" .. props.CategoryName,
 			Size = UDim2.new(1, 0, 0, 20),
 			Font = Enum.Font.SourceSansSemibold,
 		}),

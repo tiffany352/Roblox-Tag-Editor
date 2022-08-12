@@ -2,6 +2,7 @@ local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
+local tr = require(script.Parent.Parent.tr)
 
 local Search = Roact.PureComponent:extend("Search")
 
@@ -60,7 +61,10 @@ function Search:render()
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Font = Enum.Font.SourceSans,
 					TextSize = 20,
-					PlaceholderText = self.props.PlaceholderText or "Search",
+					PlaceholderText = if self.props.placeholderTextKey
+						then tr(self.props.placeholderTextKey, self.props.placeholderTextArgs)
+						else self.props.PlaceholderText or tr("Nav_Search"),
+					AutoLocalize = false,
 					PlaceholderColor3 = theme:GetColor("DimmedText"),
 					TextColor3 = theme:GetColor("MainText"),
 					Text = self.props.term,

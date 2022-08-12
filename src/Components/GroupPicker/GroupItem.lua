@@ -9,6 +9,8 @@ local function GroupItem(props)
 	return Roact.createElement(Item, {
 		Icon = "folder",
 		Text = props.Name,
+		textKey = props.nameKey,
+		textArgs = props.nameArgs,
 		Active = props.Active,
 		LayoutOrder = props.LayoutOrder,
 

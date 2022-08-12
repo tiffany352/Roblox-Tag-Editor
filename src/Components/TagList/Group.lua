@@ -23,6 +23,7 @@ local function Group(props)
 				GroupText = Roact.createElement("TextLabel", {
 					Font = Enum.Font.SourceSansSemibold,
 					Text = props.Name,
+					AutoLocalize = false,
 					BackgroundTransparency = 1,
 					Size = UDim2.new(1, -70, 1, 0),
 					Position = UDim2.new(0, 20, 0, 0),
