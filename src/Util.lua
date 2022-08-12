@@ -148,7 +148,6 @@ local function GenerateOutline(props)
 		)
 	end
 	local Instances = {}
-	--props Size,Adornee,Color
 	for i, _ in Corners do
 		if i % 2 == 0 then
 			continue
