@@ -150,7 +150,7 @@ return function(plugin, savedState)
 	local visualizeIcon = plugin:createAction(
 		prefix .. "Visualize_Icon",
 		"Icon",
-		"Render this tag as an Highlight around parts when the overlay is enabled.",
+		"Render the tag's icon when the overlay is enabled.",
 		nil,
 		false
 	)
@@ -158,7 +158,7 @@ return function(plugin, savedState)
 	local visualizeHighlight = plugin:createAction(
 		prefix .. "Visualize_Highlight",
 		"Icon",
-		"Render this tag as a box when the overlay is enabled.",
+		"Render this tag as a Highlight around parts when the overlay is enabled.",
 		nil,
 		false
 	)

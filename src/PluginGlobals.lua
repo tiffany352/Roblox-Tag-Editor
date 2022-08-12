@@ -49,7 +49,7 @@ function exports.showTagMenu(dispatch, tag: string)
 			[exports.visualizeOutline] = "Outline",
 			[exports.visualizeText] = "Text",
 			[exports.visualizeIcon] = "Icon",
-			[exports.visualizeHighlight] = "Highlight"
+			[exports.visualizeHighlight] = "Highlight",
 		}
 
 		exports.currentTagMenu = tag

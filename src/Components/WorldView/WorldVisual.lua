@@ -9,6 +9,7 @@ local OutlineAdorn = require(script.Parent.OutlineAdorn)
 local IconAdorn = require(script.Parent.IconAdorn)
 local TextAdorn = require(script.Parent.TextAdorn)
 local HighlightAdorn = require(script.Parent.HighlightAdorn)
+
 local function WorldVisual(props)
 	local partsList = props.partsList
 
