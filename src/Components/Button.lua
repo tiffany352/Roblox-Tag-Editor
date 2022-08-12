@@ -2,6 +2,7 @@ local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
+local tr = require(script.Parent.Parent.tr)
 
 local Button = Roact.PureComponent:extend("Button")
 Button.defaultProps = {
@@ -64,7 +65,8 @@ function Button:render()
 			LayoutOrder = props.LayoutOrder,
 			Position = props.Position,
 			Size = props.Size,
-			Text = props.Text,
+			Text = if props.textKey then tr(props.textKey, props.textArgs) else props.Text,
+			AutoLocalize = props.textKey == nil,
 			TextColor3 = theme:GetColor("ButtonText", buttonState),
 			TextSize = props.TextSize,
 			ZIndex = props.ZIndex,

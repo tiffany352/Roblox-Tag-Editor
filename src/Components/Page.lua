@@ -4,6 +4,7 @@ local Roact = require(Modules.Roact)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local Icon = require(script.Parent.Icon)
 local TextLabel = require(script.Parent.TextLabel)
+local tr = require(script.Parent.Parent.tr)
 
 local function Page(props)
 	return StudioThemeAccessor.withTheme(function(theme)
@@ -22,13 +23,14 @@ local function Page(props)
 			}, {
 				Back = Roact.createElement("TextButton", {
 					Size = UDim2.new(0, 48, 0, 32),
-					Text = "Back",
+					Text = tr("Nav_Back"),
+					AutoLocalize = false,
 					TextSize = 20,
 					Font = Enum.Font.SourceSansBold,
 					BackgroundTransparency = 1.0,
 					TextColor3 = theme:GetColor("TitlebarText"),
 
-					[Roact.Event.MouseButton1Click] = function(rbx)
+					[Roact.Event.MouseButton1Click] = function(_rbx)
 						props.close()
 					end,
 				}),
@@ -48,6 +50,8 @@ local function Page(props)
 						LayoutOrder = 1,
 					}),
 					Label = Roact.createElement(TextLabel, {
+						textKey = props.titleKey,
+						textArgs = props.titleArgs,
 						Text = props.title,
 						LayoutOrder = 2,
 						TextColor3 = theme:GetColor("TitlebarText"),

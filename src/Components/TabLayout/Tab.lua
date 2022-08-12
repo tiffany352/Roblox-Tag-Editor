@@ -3,6 +3,7 @@ local TextService = game:GetService("TextService")
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
+local tr = require(script.Parent.Parent.Parent.tr)
 
 local function Tab(props)
 	local state = props.selected and Enum.StudioStyleGuideModifier.Selected or Enum.StudioStyleGuideModifier.Default
@@ -22,7 +23,8 @@ local function Tab(props)
 			Label = Roact.createElement("TextButton", {
 				BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.Tab, state),
 				BorderSizePixel = 0,
-				Text = props.name,
+				Text = tr(props.name),
+				AutoLocalize = false,
 				AutoButtonColor = false,
 				Size = UDim2.fromScale(1, 1),
 				-- AutomaticSize = Enum.AutomaticSize.X,

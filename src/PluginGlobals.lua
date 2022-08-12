@@ -2,6 +2,7 @@ local CoreGui = game:GetService("CoreGui")
 
 local Actions = require(script.Parent.Actions)
 local TagManager = require(script.Parent.TagManager)
+local tr = require(script.Parent.tr)
 
 type Exports = {
 	tagMenu: PluginMenu?,
@@ -30,7 +31,7 @@ function exports.promptPickColor(dispatch, tag: string)
 		local ColorPane = require(module)
 
 		ColorPane.PromptForColor({
-			PromptTitle = string.format("%s - Select a color", tag),
+			PromptTitle = tr("ColorPane_PromptSelectColor", { Tag = tag }),
 			InitialColor = manager:GetColor(tag),
 			OnColorChanged = function(color: Color3)
 				manager:SetColor(tag, color)

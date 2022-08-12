@@ -13,7 +13,7 @@ local RootPortal = require(Modules.Plugin.Components.RootPortal)
 local DropdownItem = function(props)
 	return Roact.createElement(ListItem, {
 		ShowDivider = false,
-		Text = props.Text,
+		textKey = props.textKey,
 		leftClick = props.leftClick,
 		ignoresMenuOpen = true,
 		TextProps = {
@@ -41,10 +41,11 @@ end
 function Dropdown:render()
 	local props = self.props
 	local children = {}
+	local keyPrefix = props.keyPrefix or "Dropdown_"
 
 	for _, option in ipairs(props.Options) do
 		children[option] = Roact.createElement(DropdownItem, {
-			Text = option,
+			textKey = keyPrefix .. option,
 			Height = 26,
 			leftClick = function()
 				self:setState({
@@ -61,7 +62,7 @@ function Dropdown:render()
 			Size = props.Size,
 			LayoutOrder = props.LayoutOrder,
 			Position = props.Position,
-			Text = props.CurrentOption,
+			textKey = keyPrefix .. props.CurrentOption,
 			[Roact.Event.Changed] = function(rbx)
 				local list = self._listRef.current
 
@@ -74,12 +75,8 @@ function Dropdown:render()
 
 					if remainingHeight - self.state.dropdownHeight < -60 then
 						-- There's not enough space below; put the dropdown above the button
-						list.Position = UDim2.new(
-							0,
-							buttonPosition.X,
-							0,
-							buttonPosition.Y - self.state.dropdownHeight - 4
-						)
+						list.Position =
+							UDim2.new(0, buttonPosition.X, 0, buttonPosition.Y - self.state.dropdownHeight - 4)
 						list.Size = UDim2.new(0, buttonSize.X, 0, self.state.dropdownHeight)
 					else
 						list.Position = UDim2.new(0, buttonPosition.X, 0, buttonPosition.Y + buttonSize.Y + 4)

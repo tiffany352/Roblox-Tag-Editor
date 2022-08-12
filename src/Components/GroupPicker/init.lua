@@ -21,7 +21,7 @@ local function GroupPicker(props)
 	})
 
 	children.Default = Roact.createElement(GroupItem, {
-		Name = "Default",
+		nameKey = "GroupPicker_DefaultGroup",
 		Group = nil,
 		Active = props.tagGroup == nil,
 		LayoutOrder = -1,
@@ -40,7 +40,7 @@ local function GroupPicker(props)
 
 	children.AddNew = Roact.createElement(Item, {
 		LayoutOrder = 99999999,
-		Text = "Add new group...",
+		textKey = "GroupPicker_AddNew",
 		Icon = "folder_add",
 		IsInput = true,
 
@@ -52,7 +52,10 @@ local function GroupPicker(props)
 
 	return Roact.createElement(Page, {
 		visible = props.groupPicker ~= nil,
-		title = tostring(props.groupPicker) .. " - Select a Group",
+		titleKey = "GroupPicker_PageTitle",
+		titleArgs = {
+			Tag = props.groupPicker or "",
+		},
 		titleIcon = props.tagIcon,
 
 		close = props.close,

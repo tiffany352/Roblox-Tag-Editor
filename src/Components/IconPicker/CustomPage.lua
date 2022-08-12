@@ -35,7 +35,7 @@ function CustomPage:render()
 		Input = Roact.createElement(Search, {
 			Size = UDim2.new(1, 0, 0, 40),
 			term = self.state.text,
-			PlaceholderText = "Enter an asset ID or URL",
+			placeholderTextKey = "IconPicker_EnterAssetId",
 			error = not valid,
 			setTerm = function(term)
 				self:setState({
@@ -59,7 +59,7 @@ function CustomPage:render()
 		Submit = Roact.createElement(Button, {
 			Size = UDim2.new(0, 100, 0, 24),
 			Position = UDim2.fromOffset(8, 50),
-			Text = "Save",
+			textKey = "IconPicker_Save",
 			leftClick = function()
 				local url = validate(self.state.text)
 				if url then

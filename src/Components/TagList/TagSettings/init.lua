@@ -37,7 +37,7 @@ local function TagSettings(props)
 			ChangeIcon = Roact.createElement(Button, {
 				LayoutOrder = 1,
 				Size = UDim2.new(1, 0, 0, 30),
-				Text = "Change icon",
+				textKey = "TagSettings_ChangeIcon",
 				leftClick = function()
 					props.iconPicker(props.tagMenu)
 				end,
@@ -45,7 +45,7 @@ local function TagSettings(props)
 			ChangeGroup = Roact.createElement(Button, {
 				LayoutOrder = 2,
 				Size = UDim2.new(1, 0, 0, 30),
-				Text = "Change group",
+				textKey = "TagSettings_ChangeGroup",
 				leftClick = function()
 					props.groupPicker(props.tagMenu)
 				end,
@@ -53,7 +53,7 @@ local function TagSettings(props)
 			TaggedInstances = Roact.createElement(Button, {
 				LayoutOrder = 3,
 				Size = UDim2.new(1, 0, 0, 30),
-				Text = "Tagged instances",
+				textKey = "TagSettings_TaggedInstances",
 				leftClick = function()
 					props.instanceView(props.tagMenu)
 				end,
@@ -61,7 +61,7 @@ local function TagSettings(props)
 			Delete = Roact.createElement(DeleteButton, {
 				LayoutOrder = 4,
 				Size = UDim2.new(1, 0, 0, 30),
-				Text = "Delete",
+				textKey = "TagSettings_Delete",
 				leftClick = function()
 					TagManager.Get():DelTag(props.tagMenu)
 					props.close()
@@ -87,13 +87,13 @@ local function TagSettings(props)
 			Title = Roact.createElement(TextLabel, {
 				Size = UDim2.new(1, 0, 0, 30),
 				LayoutOrder = 1,
-				Text = "Tag Visualization",
+				textKey = "TagSettings_VisualizationSection",
 				TextSize = 20,
 			}),
 			ChangeColor = Roact.createElement(Button, {
 				LayoutOrder = 2,
 				Size = UDim2.new(1, 0, 0, 30),
-				Text = "Change color",
+				textKey = "TagSettings_ChangeColor",
 				leftClick = function()
 					props.colorPicker(props.tagMenu)
 				end,
@@ -135,7 +135,7 @@ local function TagSettings(props)
 				Label = Roact.createElement(TextLabel, {
 					Size = UDim2.new(1, -30, 1, 0),
 					Position = UDim2.new(0, 30, 0, 0),
-					Text = "Always on top",
+					textKey = "TagSettings_AlwaysOnTop",
 					TextSize = 16,
 				}),
 			}),
@@ -151,13 +151,14 @@ local function TagSettings(props)
 					Padding = UDim.new(0, 5),
 				}),
 				Label = Roact.createElement(TextLabel, {
-					Text = "Visualize as:",
+					textKey = "TagSettings_VisualizeAs",
 					LayoutOrder = 1,
 					TextSize = 16,
 				}),
 				Dropdown = Roact.createElement(Dropdown, {
 					LayoutOrder = 2,
 					Size = UDim2.new(1, -75, 0, 30),
+					keyPrefix = "VisualizationMode_",
 					Options = {
 						"None",
 						"Icon",

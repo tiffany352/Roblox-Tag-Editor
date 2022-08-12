@@ -7,6 +7,7 @@ local Icon = require(script.Parent.Icon)
 local Checkbox = require(script.Parent.Checkbox)
 local StudioThemeAccessor = require(script.Parent.StudioThemeAccessor)
 local ListItemChrome = require(script.Parent.ListItemChrome)
+local tr = require(script.Parent.Parent.tr)
 
 local Item = Roact.PureComponent:extend("Item")
 
@@ -27,6 +28,8 @@ function Item:render()
 	elseif isHover then
 		state = Enum.StudioStyleGuideModifier.Hover
 	end
+
+	local sourceText = if props.textKey then tr(props.textKey, props.textArgs) else props.Text
 
 	return Roact.createElement(ListItemChrome, {
 		LayoutOrder = props.LayoutOrder,
@@ -80,7 +83,8 @@ function Item:render()
 							TextXAlignment = Enum.TextXAlignment.Left,
 							Position = props.Icon and UDim2.new(0, 48 + 16, 0, 0) or UDim2.new(0, 14, 0, 0),
 							Size = UDim2.new(1, -40, 1, 0),
-							Text = props.IsInput and (props.TextBoxText or "") or props.Text,
+							Text = props.IsInput and (props.TextBoxText or "") or sourceText,
+							AutoLocalize = false,
 							ClearTextOnFocus = (function()
 								if props.IsInput then
 									return props.ClearTextOnFocus
@@ -89,7 +93,7 @@ function Item:render()
 								end
 							end)(),
 							RichText = props.RichText and not props.IsInput,
-							PlaceholderText = props.IsInput and props.Text or nil,
+							PlaceholderText = props.IsInput and sourceText or nil,
 							PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
 							Font = Enum.Font.SourceSans,
 							TextSize = 20,

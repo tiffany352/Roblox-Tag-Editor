@@ -145,7 +145,7 @@ function TagList:render()
 	else
 		children.AddNew = Roact.createElement(Item, {
 			LayoutOrder = itemCount,
-			Text = "Add new tag...",
+			textKey = "TagList_AddNew",
 			Icon = "tag_blue_add",
 			IsInput = true,
 

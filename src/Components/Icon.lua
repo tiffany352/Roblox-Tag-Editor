@@ -12,6 +12,7 @@ local function EmojiIcon(props)
 		TextSize = 22,
 		TextScaled = props.TextScaled,
 		TextColor3 = Color3.fromRGB(0, 0, 0),
+		AutoLocalize = false,
 
 		[Roact.Event.MouseButton1Click] = props.onClick,
 

@@ -27,7 +27,10 @@ local function InstanceList(props)
 		Label = Roact.createElement(ThemedTextLabel, {
 			Position = UDim2.new(0, 16, 0, 4),
 			TextSize = 24,
-			Text = string.format("Instance List (%d instances)", #parts),
+			textKey = "InstanceView_ListTitle",
+			textArgs = {
+				Count = #parts,
+			},
 			Font = Enum.Font.SourceSansLight,
 		}),
 	})
@@ -50,7 +53,10 @@ local function InstanceList(props)
 	return Roact.createElement(Page, {
 		visible = props.tagName ~= nil,
 		titleIcon = props.tagIcon,
-		title = tostring(props.tagName),
+		titleKey = "InstanceView_PageTitle",
+		titleArgs = {
+			Tag = tostring(props.tagName),
+		},
 
 		close = props.close,
 	}, {

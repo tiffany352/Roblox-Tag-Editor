@@ -52,7 +52,10 @@ function ColorPicker:render()
 	return StudioThemeAccessor.withTheme(function(theme)
 		return Roact.createElement(Page, {
 			visible = props.tagName ~= nil,
-			title = tostring(props.tagName) .. " - Select a Color",
+			titleKey = "ColorPicker_PageTitle",
+			titleArgs = {
+				Tag = props.tagName or "",
+			},
 			titleIcon = props.tagIcon,
 
 			close = function()
@@ -88,10 +91,7 @@ function ColorPicker:render()
 					end,
 
 					[Roact.Event.InputEnded] = function(rbx, input)
-						if
-							input.UserInputType == Enum.UserInputType.MouseButton1
-							and self.state.wheelMouseDown
-						then
+						if input.UserInputType == Enum.UserInputType.MouseButton1 and self.state.wheelMouseDown then
 							local x, y = input.Position.X, input.Position.Y
 							local pos = Vector2.new(x, y) - rbx.AbsolutePosition
 							pos = pos / rbx.AbsoluteSize
@@ -105,10 +105,7 @@ function ColorPicker:render()
 					end,
 
 					[Roact.Event.InputChanged] = function(rbx, input)
-						if
-							self.state.wheelMouseDown
-							and input.UserInputType == Enum.UserInputType.MouseMovement
-						then
+						if self.state.wheelMouseDown and input.UserInputType == Enum.UserInputType.MouseMovement then
 							local pos = Vector2.new(input.Position.X, input.Position.Y) - rbx.AbsolutePosition
 							pos = pos / rbx.AbsoluteSize
 
@@ -151,7 +148,7 @@ function ColorPicker:render()
 					Hex = Roact.createElement(TextBox, {
 						Size = UDim2.new(1, 0, 0, 20),
 						Text = string.format("#%02x%02x%02x", red * 255, green * 255, blue * 255),
-						Label = "Hex",
+						labelKey = "ColorPicker_Hex",
 						LayoutOrder = 1,
 
 						Validate = function(text)
@@ -177,7 +174,7 @@ function ColorPicker:render()
 						Size = UDim2.new(1, 0, 0, 20),
 						Text = ("%d, %d, %d"):format(red * 255, green * 255, blue * 255),
 						LayoutOrder = 2,
-						Label = "RGB",
+						labelKey = "ColorPicker_RGB",
 
 						Validate = function(text)
 							local r, g, b = text:match("^%s*(%d?%d?%d)%s*,%s*(%d?%d?%d)%s*,%s*(%d?%d?%d)%s*%s*$")
@@ -211,7 +208,7 @@ function ColorPicker:render()
 					Hsv = Roact.createElement(TextBox, {
 						Size = UDim2.new(1, 0, 0, 20),
 						Text = ("%d, %d, %d"):format(hue * 360, sat * 100, val * 100),
-						Label = "HSV",
+						labelKey = "ColorPicker_HSV",
 						LayoutOrder = 3,
 
 						Validate = function(text)
@@ -263,20 +260,18 @@ function ColorPicker:render()
 							Padding = UDim.new(0, 8),
 						}),
 						Cancel = Roact.createElement(Button, {
-							Text = "Cancel",
+							textKey = "ColorPicker_Cancel",
 							Size = UDim2.new(0.5, 0, 0, 24),
 							leftClick = props.close,
 							LayoutOrder = 2,
 						}),
 						Submit = Roact.createElement(Button, {
 							LayoutOrder = 1,
-							Text = "Submit",
+							textKey = "ColorPicker_Submit",
 							Size = UDim2.new(0.5, 0, 0, 24),
 							leftClick = function()
-								TagManager.Get():SetColor(
-									props.tagName,
-									Color3.fromHSV(self.state.h, self.state.s, self.state.v)
-								)
+								TagManager.Get()
+									:SetColor(props.tagName, Color3.fromHSV(self.state.h, self.state.s, self.state.v))
 								props.close()
 							end,
 						}),
