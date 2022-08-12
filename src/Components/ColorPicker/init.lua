@@ -84,7 +84,7 @@ function ColorPicker:render()
 					AutoButtonColor = false,
 					ImageTransparency = 1 - val,
 
-					[Roact.Event.MouseButton1Down] = function(rbx)
+					[Roact.Event.MouseButton1Down] = function(_rbx)
 						self:setState({
 							wheelMouseDown = true,
 						})

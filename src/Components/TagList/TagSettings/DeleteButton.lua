@@ -2,7 +2,6 @@ local Modules = script.Parent.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 
 local Button = require(Modules.Plugin.Components.Button)
-local tr = require(script.Parent.Parent.Parent.Parent.tr)
 
 local DeleteButton = Roact.PureComponent:extend("DeleteButton")
 

@@ -114,7 +114,7 @@ function IconPicker:render()
 	})
 end
 
-local function mapStateToProps(state, props)
+local function mapStateToProps(state)
 	local tagName = state.IconPicker
 	local tagIcon
 	for _, tag in pairs(state.TagData) do
