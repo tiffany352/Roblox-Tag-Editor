@@ -8,6 +8,7 @@ local SphereAdorn = require(script.Parent.SphereAdorn)
 local OutlineAdorn = require(script.Parent.OutlineAdorn)
 local IconAdorn = require(script.Parent.IconAdorn)
 local TextAdorn = require(script.Parent.TextAdorn)
+local HighlightAdorn = require(script.Parent.HighlightAdorn)
 
 local function WorldVisual(props)
 	local partsList = props.partsList
@@ -24,6 +25,8 @@ local function WorldVisual(props)
 			elt = SphereAdorn
 		elseif entry.DrawType == "Icon" then
 			elt = IconAdorn
+		elseif entry.DrawType == "Highlight" then
+			elt = HighlightAdorn
 		elseif entry.DrawType == "Text" then
 			elt = TextAdorn
 		else

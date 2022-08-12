@@ -155,12 +155,21 @@ return function(plugin, savedState)
 		false
 	)
 
+	local visualizeHighlight = plugin:createAction(
+		prefix .. "Visualize_Highlight",
+		"Icon",
+		"Render this tag as a Highlight around parts when the overlay is enabled.",
+		nil,
+		false
+	)
+
 	local visualizeMenu: PluginMenu = plugin:createMenu(prefix .. "TagMenu_VisualizeAs", "Change draw mode")
 	visualizeMenu:AddAction(visualizeBox)
 	visualizeMenu:AddAction(visualizeSphere)
 	visualizeMenu:AddAction(visualizeOutline)
 	visualizeMenu:AddAction(visualizeText)
 	visualizeMenu:AddAction(visualizeIcon)
+	visualizeMenu:AddAction(visualizeHighlight)
 
 	local tagMenu: PluginMenu = plugin:createMenu(prefix .. "TagMenu")
 	tagMenu:AddAction(viewTaggedAction)
