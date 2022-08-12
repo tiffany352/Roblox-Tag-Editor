@@ -1,100 +1,100 @@
-Key,Source,Context,Example,en_US,pt_BR
-PluginAction_ChangeIcon_Label,,,,Change icon...,Mudar icon…
-PluginAction_ChangeIcon_Description,,,,Change the icon of the tag.,Mudar icon de tag.
-PluginAction_ChangeGroup_Label,,,,Change group...,Change group...
-PluginAction_ChangeGroup_Description,,,,Change the sorting group of the tag.,Change the sorting group of the tag.
-PluginAction_ChangeColor_Label,,,,Change color...,Change color...
-PluginAction_ChangeColor_Description,,,,Change the color of the tag.,Change the color of the tag.
-PluginAction_Rename_Label,,,,Rename,Rename
-PluginAction_Rename_Description,,,,"Rename the tag, updating every instance currently tagged","Rename the tag, updating every instance currently tagged"
-PluginAction_Delete_Label,,,,Delete,Delete
-PluginAction_Delete_Description,,,,Delete the tag and remove it from all instances.,Delete the tag and remove it from all instances.
-PluginAction_ViewTagged_Label,,,,View tagged instances,View tagged instances
-PluginAction_ViewTagged_Description,,,,Show a list of instances that have this tag.,Show a list of instances that have this tag.
-PluginAction_SelectAll_Label,,,,Select all,Selecionar todo
-PluginAction_SelectAll_Description,,,,Select all instances with this tag.,Selecionar todo instances com isto tag.
-PluginAction_Visualize_Box_Label,,,,Box,Caixa
-PluginAction_Visualize_Box_Description,,,,Render this tag as a box when the overlay is enabled.,Render this tag as a box when the overlay is enabled.
-PluginAction_Visualize_Sphere_Label,,,,Sphere,Sphere
-PluginAction_Visualize_Sphere_Description,,,,Render this tag as a sphere when the overlay is enabled.,Render this tag as a sphere when the overlay is enabled.
-PluginAction_Visualize_Outline_Label,,,,Outline,Outline
-PluginAction_Visualize_Outline_Description,,,,Render this tag as an outline around parts when the overlay is enabled.,Render this tag as an outline around parts when the overlay is enabled.
-PluginAction_Visualize_Text_Label,,,,Text,Texto
-PluginAction_Visualize_Text_Description,,,,Render this tag as a floating text label when the overlay is enabled.,Render this tag as a floating text label when the overlay is enabled.
-PluginAction_Visualize_Icon_Label,,,,Icon,Icon
-PluginAction_Visualize_Icon_Description,,,,Render the tag's icon when the overlay is enabled.,Render the tag's icon when the overlay is enabled.
-PluginAction_Visualize_Highlight_Label,,,,Highlight,Highlight
-PluginAction_Visualize_Highlight_Description,,,,Render this tag as a Highlight around parts when the overlay is enabled.,Render this tag as a Highlight around parts when the overlay is enabled.
-PluginMenu_TagMenu_VisualizeAs,,,,Change draw mode,Change draw mode
-Category_Activities,,,,Activities,Activities
-Category_Animals & Nature,,,,Animals & Nature,Animals & Nature
-Category_Arrows,,,,Arrows,Arrows
-Category_Awards & Medals,,,,Awards & Medals,Awards & Medals
-Category_Bricks,,,,Bricks,Bricks
-Category_Buttons,,,,Buttons,Buttons
-Category_Component,,,,Component,Component
-Category_Computers,,,,Computers,Computadores
-Category_Computers - Peripherals,,,,Computers - Peripherals,Computadores - Peripherals
-Category_Currency,,,,Currency,Dinheiro
-Category_Databases,,,,Databases,Databases
-Category_Documents,,,,Documents,Documentos
-Category_Film,,,,Film,Filme
-Category_Flags,,,,Flags,Flags
-Category_Folders,,,,Folders,Folders
-Category_Food & Drink,,,,Food & Drink,Comida & Bebida
-Category_Keys & Locks,,,,Keys & Locks,Chaves & Locks
-Category_Objects,,,,Objects,Objetos 
-Category_Objects - Game,,,,Objects - Game,Objetos - Jogo
-Category_Objects - Misc,,,,Objects - Misc,Objetos - Misc
-Category_Objects - UI,,,,Objects - UI,Objetos - UI
-Category_People & Body,,,,People & Body,Pessoas & Body
-Category_People & Emotes,,,,People & Emotes,Pessoas & Emotes
-Category_Scripts,,,,Scripts,Scripts
-Category_Shapes,,,,Shapes,Shapes
-Category_Smileys & Emotion,,,,Smileys & Emotion,Smileys & Emotion
-Category_Sports,,,,Sports,Sports
-Category_Symbols,,,,Symbols,Symbols
-Category_Symbols - UI,,,,Symbols - UI,Symbols - UI
-Category_Tags,,,,Tags,Tags
-Category_Text & Formatting,,,,Text & Formatting,Texto & Formatting
-Category_Time & Date,,,,Time & Date,Tempo
-Category_Tiny,,,,Tiny,Tiny
-Category_Travel & Places,,,,Travel & Places,Travel & Places
-Category_Weather,,,,Weather,Weather
-Nav_Back,,,,Back,Voltar
-InstanceView_ListTitle,,,,Instance List ({Count:int} instances),Instance list ({Count:int} instances)
-InstanceView_PageTitle,,,,{Tag},{Tag}
-GroupPicker_PageTitle,,,,{Tag} - Select a Group,{Tag} - Selecionar uma grupo
-GroupPicker_AddNew,,,,Add new group...,Add uma grupo...
-GroupPicker_DefaultGroup,,,,Default,Default
-ColorPane_PromptSelectColor,,,,{Tag} - Select a color,{Tag} - Selecionar uma cor
-ColorPicker_PageTitle,,,,{Tag} - Select a color,{Tag} - Selecionar uma cor
-ColorPicker_Submit,,,,Submit,Submit
-ColorPicker_Cancel,,,,Cancel,Cancelar
-ColorPicker_HSV,,,,HSV,HSV
-ColorPicker_RGB,,,,RGB,RGB
-ColorPicker_Hex,,,,Hex,Hex
-TagList_AddNew,,,,Add new tag...,Add uma tag...
-TagSettings_VisualizeAs,,,,Visualize as:,Visualize as:
-TagSettings_ChangeIcon,,,,Change icon,Mudar icon
-TagSettings_ChangeGroup,,,,Change group,Mudar grupo
-TagSettings_ChangeColor,,,,Change color,Mudar cor
-TagSettings_TaggedInstances,,,,Tagged instances,Tagged instances
-TagSettings_Delete,,,,Delete,Delete
-TagSettings_DeleteConfirm,,,,Confirm?,Confirm?
-TagSettings_VisualizationSection,,,,Tag Visualization,Tag Visualization
-TagSettings_AlwaysOnTop,,,,Always on top,Sempre no cima
-VisualizationMode_None,,,,None,Nada
-VisualizationMode_Icon,,,,Icon,Icon
-VisualizationMode_Highlight,,,,Highlight,Highlight
-VisualizationMode_Outline,,,,Outline,Outline
-VisualizationMode_Box,,,,Box,Caixa
-VisualizationMode_Sphere,,,,Sphere,Sphere
-VisualizationMode_Text,,,,Text,Texto
-IconPicker_EnterAssetId,,,,Enter an asset ID or URL,Entrar uma ID de asset ou URL
-IconPicker_Save,,,,Save,Salvar
-IconPicker_PageTitle,,,,{Tag} - Select an Icon,{Tag} - Selecionar uma Icon
-Nav_Search,,,,Search,Buscar
-IconPicker_Tab_Icons,,,,Icons,Icons
-IconPicker_Tab_Emoji,,,,Emoji,Emoji
-IconPicker_Tab_Custom,,,,Custom,Custom
+Key,Source,Context,Example,en_US
+PluginAction_ChangeIcon_Label,,,,Change icon...
+PluginAction_ChangeIcon_Description,,,,Change the icon of the tag.
+PluginAction_ChangeGroup_Label,,,,Change group...
+PluginAction_ChangeGroup_Description,,,,Change the sorting group of the tag.
+PluginAction_ChangeColor_Label,,,,Change color...
+PluginAction_ChangeColor_Description,,,,Change the color of the tag.
+PluginAction_Rename_Label,,,,Rename
+PluginAction_Rename_Description,,,,"Rename the tag, updating every instance currently tagged"
+PluginAction_Delete_Label,,,,Delete
+PluginAction_Delete_Description,,,,Delete the tag and remove it from all instances.
+PluginAction_ViewTagged_Label,,,,View tagged instances
+PluginAction_ViewTagged_Description,,,,Show a list of instances that have this tag.
+PluginAction_SelectAll_Label,,,,Select all
+PluginAction_SelectAll_Description,,,,Select all instances with this tag.
+PluginAction_Visualize_Box_Label,,,,Box
+PluginAction_Visualize_Box_Description,,,,Render this tag as a box when the overlay is enabled.
+PluginAction_Visualize_Sphere_Label,,,,Sphere
+PluginAction_Visualize_Sphere_Description,,,,Render this tag as a sphere when the overlay is enabled.
+PluginAction_Visualize_Outline_Label,,,,Outline
+PluginAction_Visualize_Outline_Description,,,,Render this tag as an outline around parts when the overlay is enabled.
+PluginAction_Visualize_Text_Label,,,,Text
+PluginAction_Visualize_Text_Description,,,,Render this tag as a floating text label when the overlay is enabled.
+PluginAction_Visualize_Icon_Label,,,,Icon
+PluginAction_Visualize_Icon_Description,,,,Render the tag's icon when the overlay is enabled.
+PluginAction_Visualize_Highlight_Label,,,,Highlight
+PluginAction_Visualize_Highlight_Description,,,,Render this tag as a Highlight around parts when the overlay is enabled.
+PluginMenu_TagMenu_VisualizeAs,,,,Change draw mode
+Category_Activities,,,,Activities
+Category_Animals & Nature,,,,Animals & Nature
+Category_Arrows,,,,Arrows
+Category_Awards & Medals,,,,Awards & Medals
+Category_Bricks,,,,Bricks
+Category_Buttons,,,,Buttons
+Category_Component,,,,Component
+Category_Computers,,,,Computers
+Category_Computers - Peripherals,,,,Computers - Peripherals
+Category_Currency,,,,Currency
+Category_Databases,,,,Databases
+Category_Documents,,,,Documents
+Category_Film,,,,Film
+Category_Flags,,,,Flags
+Category_Folders,,,,Folders
+Category_Food & Drink,,,,Food & Drink
+Category_Keys & Locks,,,,Keys & Locks
+Category_Objects,,,,Objects
+Category_Objects - Game,,,,Objects - Game
+Category_Objects - Misc,,,,Objects - Misc
+Category_Objects - UI,,,,Objects - UI
+Category_People & Body,,,,People & Body
+Category_People & Emotes,,,,People & Emotes
+Category_Scripts,,,,Scripts
+Category_Shapes,,,,Shapes
+Category_Smileys & Emotion,,,,Smileys & Emotion
+Category_Sports,,,,Sports
+Category_Symbols,,,,Symbols
+Category_Symbols - UI,,,,Symbols - UI
+Category_Tags,,,,Tags
+Category_Text & Formatting,,,,Text & Formatting
+Category_Time & Date,,,,Time & Date
+Category_Tiny,,,,Tiny
+Category_Travel & Places,,,,Travel & Places
+Category_Weather,,,,Weather
+Nav_Back,,,,Back
+InstanceView_ListTitle,,,,Instance List ({Count:int} instances)
+InstanceView_PageTitle,,,,{Tag}
+GroupPicker_PageTitle,,,,{Tag} - Select a Group
+GroupPicker_AddNew,,,,Add new group...
+GroupPicker_DefaultGroup,,,,Default
+ColorPane_PromptSelectColor,,,,{Tag} - Select a color
+ColorPicker_PageTitle,,,,{Tag} - Select a color
+ColorPicker_Submit,,,,Submit
+ColorPicker_Cancel,,,,Cancel
+ColorPicker_HSV,,,,HSV
+ColorPicker_RGB,,,,RGB
+ColorPicker_Hex,,,,Hex
+TagList_AddNew,,,,Add new tag...
+TagSettings_VisualizeAs,,,,Visualize as:
+TagSettings_ChangeIcon,,,,Change icon
+TagSettings_ChangeGroup,,,,Change group
+TagSettings_ChangeColor,,,,Change color
+TagSettings_TaggedInstances,,,,Tagged instances
+TagSettings_Delete,,,,Delete
+TagSettings_DeleteConfirm,,,,Confirm?
+TagSettings_VisualizationSection,,,,Tag Visualization
+TagSettings_AlwaysOnTop,,,,Always on top
+VisualizationMode_None,,,,None
+VisualizationMode_Icon,,,,Icon
+VisualizationMode_Highlight,,,,Highlight
+VisualizationMode_Outline,,,,Outline
+VisualizationMode_Box,,,,Box
+VisualizationMode_Sphere,,,,Sphere
+VisualizationMode_Text,,,,Text
+IconPicker_EnterAssetId,,,,Enter an asset ID or URL
+IconPicker_Save,,,,Save
+IconPicker_PageTitle,,,,{Tag} - Select an Icon
+Nav_Search,,,,Search
+IconPicker_Tab_Icons,,,,Icons
+IconPicker_Tab_Emoji,,,,Emoji
+IconPicker_Tab_Custom,,,,Custom
