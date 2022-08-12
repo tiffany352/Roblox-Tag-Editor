@@ -9,6 +9,7 @@ local TagManager = require(script.Parent.TagManager)
 local Actions = require(script.Parent.Actions)
 local Config = require(script.Parent.Config)
 local PluginGlobals = require(script.Parent.PluginGlobals)
+local tr = require(script.Parent.tr)
 
 local function getSuffix(plugin)
 	if plugin.isDev then
@@ -55,6 +56,7 @@ return function(plugin, savedState)
 	gui.Name = "TagEditor" .. nameSuffix
 	gui.Title = "Tag Editor" .. displaySuffix
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	gui.RootLocalizationTable = script.Parent.Localization
 	toggleButton:SetActive(gui.Enabled)
 
 	local connection = toggleButton.Click:Connect(function()
@@ -63,37 +65,19 @@ return function(plugin, savedState)
 	end)
 
 	local prefix = "TagEditor" .. nameSuffix .. "_"
+	local function createAction(id: string, icon: string?, allowBinding: boolean?): PluginAction
+		local label = tr("PluginAction_" .. id .. "_Label")
+		local description = tr("PluginAction_" .. id .. "_Description")
+		return plugin:createAction(prefix .. id, label, description, icon, allowBinding)
+	end
 
-	local changeIconAction =
-		plugin:createAction(prefix .. "ChangeIcon", "Change icon...", "Change the icon of the tag.")
-
-	local changeGroupAction =
-		plugin:createAction(prefix .. "ChangeGroup", "Change group...", "Change the sorting group of the tag.")
-
-	local changeColorAction =
-		plugin:createAction(prefix .. "ChangeColor", "Change color...", "Change the color of the tag.")
-
-	local renameAction =
-		plugin:createAction(prefix .. "Rename", "Rename", "Rename the tag, updating every instance currently tagged.")
-
-	local deleteAction = plugin:createAction(
-		prefix .. "Delete",
-		"Delete",
-		"Delete the tag and remove it from all instances.",
-		nil,
-		false
-	)
-
-	local viewTaggedAction = plugin:createAction(
-		prefix .. "ViewTagged",
-		"View tagged instances",
-		"Show a list of instances that have this tag.",
-		nil,
-		false
-	)
-
-	local selectAllAction: PluginAction =
-		plugin:createAction(prefix .. "SelectAll", "Select all", "Select all instances with this tag.")
+	local changeIconAction = createAction("ChangeIcon")
+	local changeGroupAction = createAction("ChangeGroup")
+	local changeColorAction = createAction("ChangeColor")
+	local renameAction = createAction("Rename")
+	local deleteAction = createAction("Delete")
+	local viewTaggedAction = createAction("ViewTagged")
+	local selectAllAction: PluginAction = createAction("SelectAll")
 
 	local selectAllConn = selectAllAction.Triggered:Connect(function()
 		local state = store:getState()
@@ -103,55 +87,14 @@ return function(plugin, savedState)
 		end
 	end)
 
-	local visualizeBox = plugin:createAction(
-		prefix .. "Visualize_Box",
-		"Box",
-		"Render this tag as a box when the overlay is enabled.",
-		nil,
-		false
-	)
+	local visualizeBox = createAction("Visualize_Box")
+	local visualizeSphere = createAction("Visualize_Sphere")
+	local visualizeOutline = createAction("Visualize_Outline")
+	local visualizeText = createAction("Visualize_Text")
+	local visualizeIcon = createAction("Visualize_Icon")
+	local visualizeHighlight = createAction("Visualize_Highlight")
 
-	local visualizeSphere = plugin:createAction(
-		prefix .. "Visualize_Sphere",
-		"Sphere",
-		"Render this tag as a sphere when the overlay is enabled.",
-		nil,
-		false
-	)
-
-	local visualizeOutline = plugin:createAction(
-		prefix .. "Visualize_Outline",
-		"Outline",
-		"Render this tag as an outline around parts when the overlay is enabled.",
-		nil,
-		false
-	)
-
-	local visualizeText = plugin:createAction(
-		prefix .. "Visualize_Text",
-		"Text",
-		"Render this tag as a floating text label when the overlay is enabled.",
-		nil,
-		false
-	)
-
-	local visualizeIcon = plugin:createAction(
-		prefix .. "Visualize_Icon",
-		"Icon",
-		"Render the tag's icon when the overlay is enabled.",
-		nil,
-		false
-	)
-
-	local visualizeHighlight = plugin:createAction(
-		prefix .. "Visualize_Highlight",
-		"Highlight",
-		"Render this tag as a Highlight around parts when the overlay is enabled.",
-		nil,
-		false
-	)
-
-	local visualizeMenu: PluginMenu = plugin:createMenu(prefix .. "TagMenu_VisualizeAs", "Change draw mode")
+	local visualizeMenu: PluginMenu = plugin:createMenu("TagMenu_VisualizeAs", tr("PluginMenu_TagMenu_VisualizeAs"))
 	visualizeMenu:AddAction(visualizeBox)
 	visualizeMenu:AddAction(visualizeSphere)
 	visualizeMenu:AddAction(visualizeOutline)
@@ -159,7 +102,7 @@ return function(plugin, savedState)
 	visualizeMenu:AddAction(visualizeIcon)
 	visualizeMenu:AddAction(visualizeHighlight)
 
-	local tagMenu: PluginMenu = plugin:createMenu(prefix .. "TagMenu")
+	local tagMenu: PluginMenu = plugin:createMenu("TagMenu")
 	tagMenu:AddAction(viewTaggedAction)
 	tagMenu:AddAction(selectAllAction)
 	tagMenu:AddMenu(visualizeMenu)

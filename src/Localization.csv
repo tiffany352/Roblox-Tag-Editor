@@ -1,0 +1,117 @@
+Key,Source,Context,Example,en_US,pt_BR
+,Change group,,,,Mudar grupo
+,nil,PluginGuiService.TagEditor.TagEditor.InstanceView.Topbar.Title.Label,,,
+,Back,PluginGuiService.TagEditor.TagEditor.InstanceView.Topbar.Back,,,
+,Instance List (0 instances),PluginGuiService.TagEditor.TagEditor.InstanceView.Body.Body.ScrollingFrame.InstanceCount.Label,,,
+,nil - Select a Color,PluginGuiService.TagEditor.TagEditor.ColorPicker.Topbar.Title.Label,,,
+,Back,PluginGuiService.TagEditor.TagEditor.ColorPicker.Topbar.Back,,,
+,#000000,PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Hex.Input.TextBox,,,
+,Hex,PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Hex.Label,,,
+,"0, 0, 0",PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Rgb.Input.TextBox,,,
+,RGB,PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Rgb.Label,,,
+,"0, 0, 0",PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Hsv.Input.TextBox,,,
+,HSV,PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Hsv.Label,,,
+,Cancel,PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Buttons.Cancel,,,
+,Submit,PluginGuiService.TagEditor.TagEditor.ColorPicker.Body.Body.PropertiesPanel.Buttons.Submit,,,
+,nil - Select an Icon,PluginGuiService.TagEditor.TagEditor.IconPicker.Topbar.Title.Label,,,
+,Back,PluginGuiService.TagEditor.TagEditor.IconPicker.Topbar.Back,,,
+,Folders,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Folders.Label,,,
+,Keys & Locks,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Keys & Locks.Label,,,
+,Documents,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Documents.Label,,,Documentos
+,Symbols,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Symbols.Label,,,
+,Shapes,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Shapes.Label,,,
+,Currency,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Currency.Label,,,
+,Awards & Medals,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Awards & Medals.Label,,,
+,Scripts,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Scripts.Label,,,
+,Tiny,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Tiny.Label,,,
+,Objects - UI,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Objects - UI.Label,,,Objetos – UI
+,Film,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Film.Label,,,Filme
+,Computers,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Computers.Label,,,Computadores
+,Symbols - UI,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Symbols - UI.Label,,,
+,Flags,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Flags.Label,,,
+,Objects - Misc,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Objects - Misc.Label,,,
+,Buttons,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Buttons.Label,,,
+,Computers - Peripherals,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Computers - Peripherals.Label,,,
+,People & Emotes,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.People & Emotes.Label,,,Pessoas & Emocãoes
+,Arrows,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Arrows.Label,,,
+,Text & Formatting,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Text & Formatting.Label,,,Texto
+,Databases,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Databases.Label,,,
+,Bricks,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Bricks.Label,,,
+,Tags,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Tags.Label,,,
+,Objects - Game,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Objects - Game.Label,,,
+,Time & Date,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Time & Date.Label,,,Tempo
+,Sports,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Sports.Label,,,
+,Weather,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabPanel.Content.ScrollingFrame.Weather.Label,,,
+,Custom,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabGroup.Tabs.Tab_Custom.Label,,,
+,Emoji,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabGroup.Tabs.Tab_Emoji.Label,,,
+,Icons,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TabLayout.TabGroup.Tabs.Tab_Icons.Label,,,
+,Search,PluginGuiService.TagEditor.TagEditor.IconPicker.Body.TopBar.Search.SearchBarContainer.SearchBar,,,
+,nil - Select a Group,PluginGuiService.TagEditor.TagEditor.GroupPicker.Topbar.Title.Label,,,
+,Back,PluginGuiService.TagEditor.TagEditor.GroupPicker.Topbar.Back,,,
+,Default,PluginGuiService.TagEditor.TagEditor.GroupPicker.Body.Body.ScrollingFrame.Default.Contents.TopElements.Name,,,
+,Add new group...,PluginGuiService.TagEditor.TagEditor.GroupPicker.Body.Body.ScrollingFrame.AddNew.Contents.TopElements.Name,,,
+,Example Group,PluginGuiService.TagEditor.TagEditor.GroupPicker.Body.Body.ScrollingFrame.Group Example Group.Contents.TopElements.Name,,,
+,Search,PluginGuiService.TagEditor.TagEditor.Container.TagSearch.SearchBarContainer.SearchBar,,,
+,ProximityPrompt,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.ProximityPrompt.Contents.TopElements.Name,,,
+,Custom Icon,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Custom Icon.Contents.TopElements.Name,,,
+,Example Group,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.GroupExample Group.Contents.GroupText,,,
+,Add new tag...,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.AddNew.Contents.TopElements.Name,,,
+,&lt;b&gt;evil&lt;/b&gt;,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.<b>evil</b>.Contents.TopElements.Name,,,
+,Key,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Key.Contents.TopElements.Name,,,
+,Emoji Icon,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Emoji Icon.Contents.TopElements.Name,,,
+,👩🏿‍🎤,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Emoji Icon.Contents.TopElements.Icon,,,
+,Door,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Door.Contents.TopElements.Name,,,
+,&amp;amp;,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.TopElements.Name,,,
+,Change icon,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.SideButtons.ChangeIcon,,,Mudar imagem
+,Delete,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.SideButtons.Delete,,,
+,Tagged instances,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.SideButtons.TaggedInstances,,,
+,Change group,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.SideButtons.ChangeGroup,,,
+,Tag Visualization,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.Visualization.Title,,,
+,Change color,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.Visualization.ChangeColor,,,
+,Box,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.Visualization.VisualizationKind.Dropdown,,,
+,Visualize as:,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.Visualization.VisualizationKind.Label,,,
+,Always on top,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.&amp;.Contents.Children.Settings.Visualization.AlwaysOnTop.Label,,,
+,Emoji Example 1,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Emoji Example 1.Contents.TopElements.Name,,,
+,🌸,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Emoji Example 1.Contents.TopElements.Icon,,,
+,Missile,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Missile.Contents.TopElements.Name,,,
+,Light,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Light.Contents.TopElements.Name,,,
+,💡,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Light.Contents.TopElements.Icon,,,
+,test,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.test.Contents.TopElements.Name,,,
+,👁️,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.test.Contents.TopElements.Icon,,,
+,Computer,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Computer.Contents.TopElements.Name,,,
+,BrickWall,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.BrickWall.Contents.TopElements.Name,,,
+,Really Really Really Really Really Loooooooooooooooooooong tag name,PluginGuiService.TagEditor.TagEditor.Container.TagList.ScrollingFrame.Really Really Really Really Really Loooooooooooooooooooong tag name.Contents.TopElements.Name,,,
+,Outline,PluginGuiService.TagEditor.TagEditor.OptionList.ScrollingFrame.Outline.Contents.TopElements.Name,,,
+,Sphere,PluginGuiService.TagEditor.TagEditor.OptionList.ScrollingFrame.Sphere.Contents.TopElements.Name,,,
+,Highlight,PluginGuiService.TagEditor.TagEditor.OptionList.ScrollingFrame.Highlight.Contents.TopElements.Name,,,
+,None,PluginGuiService.TagEditor.TagEditor.OptionList.ScrollingFrame.None.Contents.TopElements.Name,,,
+,Text,PluginGuiService.TagEditor.TagEditor.OptionList.ScrollingFrame.Text.Contents.TopElements.Name,,,
+,Icon,PluginGuiService.TagEditor.TagEditor.OptionList.ScrollingFrame.Icon.Contents.TopElements.Name,,,
+,Box,PluginGuiService.TagEditor.TagEditor.OptionList.ScrollingFrame.Box.Contents.TopElements.Name,,,
+PluginAction_ChangeIcon_Label,,,,Change icon...,Mudar icon…
+PluginAction_ChangeIcon_Description,,,,Change the icon of the tag.,Mudar icon de tag.
+PluginAction_ChangeGroup_Label,,,,Change group...,Change group...
+PluginAction_ChangeGroup_Description,,,,Change the sorting group of the tag.,Change the sorting group of the tag.
+PluginAction_ChangeColor_Label,,,,Change color...,Change color...
+PluginAction_ChangeColor_Description,,,,Change the color of the tag.,Change the color of the tag.
+PluginAction_Rename_Label,,,,Rename,Rename
+PluginAction_Rename_Description,,,,"Rename the tag, updating every instance currently tagged","Rename the tag, updating every instance currently tagged"
+PluginAction_Delete_Label,,,,Delete,Delete
+PluginAction_Delete_Description,,,,Delete the tag and remove it from all instances.,Delete the tag and remove it from all instances.
+PluginAction_ViewTagged_Label,,,,View tagged instances,View tagged instances
+PluginAction_ViewTagged_Description,,,,Show a list of instances that have this tag.,Show a list of instances that have this tag.
+PluginAction_SelectAll_Label,,,,Select all,Select all
+PluginAction_SelectAll_Description,,,,Select all instances with this tag.,Select all instances with this tag.
+PluginAction_Visualize_Box_Label,,,,Box,Box
+PluginAction_Visualize_Box_Description,,,,Render this tag as a box when the overlay is enabled.,Render this tag as a box when the overlay is enabled.
+PluginAction_Visualize_Sphere_Label,,,,Sphere,Sphere
+PluginAction_Visualize_Sphere_Description,,,,Render this tag as a sphere when the overlay is enabled.,Render this tag as a sphere when the overlay is enabled.
+PluginAction_Visualize_Outline_Label,,,,Outline,Outline
+PluginAction_Visualize_Outline_Description,,,,Render this tag as an outline around parts when the overlay is enabled.,Render this tag as an outline around parts when the overlay is enabled.
+PluginAction_Visualize_Text_Label,,,,Text,Text
+PluginAction_Visualize_Text_Description,,,,Render this tag as a floating text label when the overlay is enabled.,Render this tag as a floating text label when the overlay is enabled.
+PluginAction_Visualize_Icon_Label,,,,Icon,Icon
+PluginAction_Visualize_Icon_Description,,,,Render the tag's icon when the overlay is enabled.,Render the tag's icon when the overlay is enabled.
+PluginAction_Visualize_Highlight_Label,,,,Highlight,Highlight
+PluginAction_Visualize_Highlight_Description,,,,Render this tag as a Highlight around parts when the overlay is enabled.,Render this tag as a Highlight around parts when the overlay is enabled.
+PluginMenu_TagMenu_VisualizeAs,,,,Change draw mode,Change draw mode
