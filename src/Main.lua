@@ -67,23 +67,14 @@ return function(plugin, savedState)
 	local changeIconAction =
 		plugin:createAction(prefix .. "ChangeIcon", "Change icon...", "Change the icon of the tag.")
 
-	local changeGroupAction = plugin:createAction(
-		prefix .. "ChangeGroup",
-		"Change group...",
-		"Change the sorting group of the tag."
-	)
+	local changeGroupAction =
+		plugin:createAction(prefix .. "ChangeGroup", "Change group...", "Change the sorting group of the tag.")
 
-	local changeColorAction = plugin:createAction(
-		prefix .. "ChangeColor",
-		"Change color...",
-		"Change the color of the tag."
-	)
+	local changeColorAction =
+		plugin:createAction(prefix .. "ChangeColor", "Change color...", "Change the color of the tag.")
 
-	local renameAction = plugin:createAction(
-		prefix .. "Rename",
-		"Rename",
-		"Rename the tag, updating every instance currently tagged."
-	)
+	local renameAction =
+		plugin:createAction(prefix .. "Rename", "Rename", "Rename the tag, updating every instance currently tagged.")
 
 	local deleteAction = plugin:createAction(
 		prefix .. "Delete",
@@ -101,11 +92,8 @@ return function(plugin, savedState)
 		false
 	)
 
-	local selectAllAction: PluginAction = plugin:createAction(
-		prefix .. "SelectAll",
-		"Select all",
-		"Select all instances with this tag."
-	)
+	local selectAllAction: PluginAction =
+		plugin:createAction(prefix .. "SelectAll", "Select all", "Select all instances with this tag.")
 
 	local selectAllConn = selectAllAction.Triggered:Connect(function()
 		local state = store:getState()
@@ -157,7 +145,7 @@ return function(plugin, savedState)
 
 	local visualizeHighlight = plugin:createAction(
 		prefix .. "Visualize_Highlight",
-		"Icon",
+		"Highlight",
 		"Render this tag as a Highlight around parts when the overlay is enabled.",
 		nil,
 		false
@@ -195,6 +183,7 @@ return function(plugin, savedState)
 	PluginGlobals.visualizeOutline = visualizeOutline
 	PluginGlobals.visualizeText = visualizeText
 	PluginGlobals.visualizeIcon = visualizeIcon
+	PluginGlobals.visualizeHighlight = visualizeHighlight
 
 	local element = Roact.createElement(RoactRodux.StoreProvider, {
 		store = store,

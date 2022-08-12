@@ -42,7 +42,7 @@ function exports.promptPickColor(dispatch, tag: string)
 end
 
 function exports.showTagMenu(dispatch, tag: string)
-	coroutine.wrap(function()
+	task.spawn(function()
 		local visualTypes = {
 			[exports.visualizeBox] = "Box",
 			[exports.visualizeSphere] = "Sphere",
@@ -72,7 +72,7 @@ function exports.showTagMenu(dispatch, tag: string)
 		elseif action ~= nil and action ~= exports.selectAllAction then
 			print("Missing handler for action " .. action.Title)
 		end
-	end)()
+	end)
 end
 
 return exports
