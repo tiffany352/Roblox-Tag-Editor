@@ -8,8 +8,10 @@ local tr = require(script.Parent.Parent.Parent.tr)
 local function Tab(props)
 	local state = props.selected and Enum.StudioStyleGuideModifier.Selected or Enum.StudioStyleGuideModifier.Default
 
+	local text = tr(props.name)
+
 	-- Ugly workaround due to an AutomaticSize bug.
-	local width = TextService:GetTextSize(props.name, 16, Enum.Font.SourceSans, Vector2.new()).X
+	local width = TextService:GetTextSize(text, 16, Enum.Font.SourceSans, Vector2.new()).X
 
 	return StudioThemeAccessor.withTheme(function(theme: StudioTheme)
 		return Roact.createElement("Frame", {
@@ -23,7 +25,7 @@ local function Tab(props)
 			Label = Roact.createElement("TextButton", {
 				BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.Tab, state),
 				BorderSizePixel = 0,
-				Text = tr(props.name),
+				Text = text,
 				AutoLocalize = false,
 				AutoButtonColor = false,
 				Size = UDim2.fromScale(1, 1),
