@@ -1,8 +1,15 @@
 local Studio = game:GetService("StudioService")
 local Config = require(script.Parent.Config)
 
+local Localization = script.Parent.Localization
+
+local supportedLanguages = {
+	["en-us"] = "en-us",
+}
+
 local function tr(key: string, args: any): string
-	local l18n = script.Parent.Localization:GetTranslator(Studio.StudioLocaleId)
+	local locale = supportedLanguages[Studio.StudioLocaleId] or "en-us"
+	local l18n = Localization:GetTranslator(locale)
 
 	if Config.testLocalization then
 		return key
