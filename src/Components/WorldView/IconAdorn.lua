@@ -20,10 +20,9 @@ local function IconAdorn(props)
 	end
 	return Roact.createElement("BillboardGui", {
 		Adornee = props.Adornee,
-        Size = UDim2.new(1.5, 0, 1.5, 0),
+        Size = UDim2.fromScale(1.5, 1.5),
         SizeOffset = Vector2.new(0.5, 0.5),
-        ExtentsOffsetWorldSpace = Vector3.new(0,0,0),
-        StudsOffset = Vector3.new(-.75,-.75,0),
+        StudsOffset = Vector3.new(-0.75, -0.75, 0.0),
         AlwaysOnTop = props.AlwaysOnTop,
 	}, children)
 end
