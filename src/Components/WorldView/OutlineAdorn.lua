@@ -1,21 +1,25 @@
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
+local Util = require(Modules.Plugin.Util)
 
 local function OutlineAdorn(props)
-	if props.Adornee.ClassName == "Attachment" then
-		return Roact.createElement("BoxHandleAdornment", {
-			Adornee = props.Adornee.Parent,
-			CFrame = props.Adornee.CFrame,
-			Size = Vector3.new(1.5, 1.5, 1.5),
-			Transparency = 0.3,
+	local children = {}
+	if props.AlwaysOnTop then
+		children = Util.GenerateOutline({
+			Size = if props.Adornee.ClassName == "Attachment"
+				then props.Adornee.Parent.Size
+				elseif props.Adornee.ClassName == "Model" then props.Adornee:GetExtentsSize()
+				else props.Adornee.Size,
+			Adornee = if props.Adornee.ClassName == "Attachment" then props.Adornee.Parent else props.Adornee,
 			Color3 = props.Color,
 		})
 	end
 	return Roact.createElement("SelectionBox", {
-		LineThickness = 0.05,
-		Adornee = props.Adornee,
+		LineThickness = 0.03,
+		Adornee = if props.Adornee.ClassName == "Attachment" then props.Adornee.Parent else props.Adornee,
 		Color3 = props.Color,
-	})
+		Visible = not props.AlwaysOnTop,
+	}, children)
 end
 
 return OutlineAdorn
