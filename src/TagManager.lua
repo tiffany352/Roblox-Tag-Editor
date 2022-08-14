@@ -524,7 +524,6 @@ function TagManager:SetGroup(name: string, value: string?)
 end
 
 function TagManager:SetGroupVisiblity(name)
-	print(name)
 	local allEnabled = true
 	local tagsofgroup = {}
 	for _, tag in self:GetTags() do
@@ -535,15 +534,9 @@ function TagManager:SetGroupVisiblity(name)
 			table.insert(tagsofgroup, tag)
 		end
 	end
-	if allEnabled then
 		for _, tag in tagsofgroup do
-			self:SetVisible(tag.Name, false)
+			self:SetVisible(tag.Name, not allEnabled)
 		end
-	else
-		for _, tag in tagsofgroup do
-			self:SetVisible(tag.Name, true)
-		end
-	end
 end
 
 function TagManager:DelGroup(name: string)
