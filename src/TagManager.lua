@@ -523,6 +523,14 @@ function TagManager:SetGroup(name: string, value: string?)
 	self:_setProp(name, "Group", value or "")
 end
 
+function TagManager:DelGroup(name:string)
+	for _,tag in self:GetTags() do
+		if tag.Group == name then
+			self:SetGroup(tag.Name,"")
+		end
+	end
+end
+
 function TagManager:DelTag(name: string)
 	local instance = self:_findTagInst(name)
 	if not instance then

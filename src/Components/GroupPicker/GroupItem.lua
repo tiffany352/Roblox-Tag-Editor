@@ -21,6 +21,7 @@ local function GroupItem(props)
 
 		onDelete = props.Group and function()
 			props.delete(props.Group)
+			props.close()
 		end or nil,
 	})
 end
