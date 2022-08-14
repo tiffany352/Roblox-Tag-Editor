@@ -6,6 +6,8 @@ local Roact = require(Modules.Roact)
 
 local ListItemChrome = require(Modules.Plugin.Components.ListItemChrome)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
+local Icon = require(Modules.Plugin.Components.Icon)
+local TagManager = require(Modules.Plugin.TagManager)
 
 local function Group(props)
 	return Roact.createElement(ListItemChrome, {
@@ -20,6 +22,15 @@ local function Group(props)
 				BackgroundTransparency = 1,
 				Size = UDim2.new(1, 0, 1, 0),
 			}, {
+				Visibility =  Roact.createElement(Icon, {
+					Name = "folder_lightbulb",
+					Position = UDim2.new(1, -4, 0.5, 0),
+					AnchorPoint = Vector2.new(1, 0.5),
+					ZIndex = 10,
+					onClick = function()
+						TagManager:Get():SetGroupVisiblity(props.Name)
+					end,
+				}),
 				GroupText = Roact.createElement("TextLabel", {
 					Font = Enum.Font.SourceSansSemibold,
 					Text = props.Name,

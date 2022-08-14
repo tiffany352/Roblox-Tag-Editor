@@ -523,10 +523,33 @@ function TagManager:SetGroup(name: string, value: string?)
 	self:_setProp(name, "Group", value or "")
 end
 
-function TagManager:DelGroup(name:string)
-	for _,tag in self:GetTags() do
+function TagManager:SetGroupVisiblity(name)
+	print(name)
+	local allEnabled = true
+	local tagsofgroup = {}
+	for _, tag in self:GetTags() do
 		if tag.Group == name then
-			self:SetGroup(tag.Name,"")
+			if tag.Visible == false then
+				allEnabled = false
+			end
+			table.insert(tagsofgroup, tag)
+		end
+	end
+	if allEnabled then
+		for _, tag in tagsofgroup do
+			self:SetVisible(tag.Name, false)
+		end
+	else
+		for _, tag in tagsofgroup do
+			self:SetVisible(tag.Name, true)
+		end
+	end
+end
+
+function TagManager:DelGroup(name: string)
+	for _, tag in self:GetTags() do
+		if tag.Group == name then
+			self:SetGroup(tag.Name, "")
 		end
 	end
 end
