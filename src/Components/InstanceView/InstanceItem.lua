@@ -3,7 +3,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-
+local ClassIcon = require(Modules.Plugin.Components.ClassIcon)
 local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 local ListItemChrome = require(Modules.Plugin.Components.ListItemChrome)
 
@@ -91,12 +91,9 @@ function InstanceItem:render()
 				FillDirection = Enum.FillDirection.Horizontal,
 				Padding = UDim.new(0, 4),
 			}),
-			InstanceClass = Roact.createElement(ThemedTextLabel, {
-				object = "DimmedText",
-				state = state,
-				TextSize = 16,
-				Text = props.ClassName,
-				LayoutOrder = 1,
+			InstanceClass = Roact.createElement(ClassIcon,{
+				ClassName = props.ClassName,
+				Size = UDim2.fromScale(.5,.5)
 			}),
 			InstanceName = Roact.createElement(ThemedTextLabel, {
 				state = state,

@@ -43,6 +43,7 @@ local function TextLabel(props)
 		RichText = props.RichText,
 		TextWrapped = props.TextWrapped,
 		TextTruncate = props.TextTruncate,
+		TextScaled = props.TextScaled,
 		TextXAlignment = props.TextXAlignment or Enum.TextXAlignment.Left,
 		TextYAlignment = props.TextYAlignment,
 
@@ -50,6 +51,10 @@ local function TextLabel(props)
 		[Roact.Change.TextBounds] = autoSize and update or nil,
 		[Roact.Change.AbsoluteSize] = autoSize and update or nil,
 		[Roact.Change.Parent] = autoSize and update or nil,
+	},{
+		props.TextScaled and Roact.createElement("UITextSizeConstraint", {
+			MaxTextSize = props.TextSize or 20
+		})
 	})
 end
 

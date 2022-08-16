@@ -62,7 +62,7 @@ function Item:render()
 				TopElements = Roact.createElement("Frame", {
 					BackgroundTransparency = 1,
 					Size = UDim2.new(1, -indent, 0, 26),
-					Position = UDim2.new(0, indent, 0, 0),
+					Position = UDim2.new(0, indent-10, 0, 0),
 				}, {
 					Checkbox = props.Checked ~= nil and Roact.createElement(Checkbox, {
 						Checked = props.Checked,
@@ -114,7 +114,7 @@ function Item:render()
 					),
 					Visibility = props.onSetVisible and Roact.createElement(Icon, {
 						Name = props.Visible and "lightbulb" or "lightbulb_off",
-						Position = UDim2.new(1, -4, 0.5, 0),
+						Position = UDim2.new(1, 5, 0.5, 0),
 						AnchorPoint = Vector2.new(1, 0.5),
 
 						onClick = props.onSetVisible,

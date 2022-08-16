@@ -20,7 +20,7 @@ local function Tag(props)
 				Position = UDim2.fromScale(0.5, 0),
 				AnchorPoint = Vector2.new(0.5, 0),
 				BorderSizePixel = 0,
-				BackgroundColor3 = Constants.LightGrey,
+				BackgroundColor3 = theme:GetColor("MainText","Disabled"),
 			}),
 			Holder = Roact.createElement("Frame", {
 				Size = UDim2.fromScale(1, 0),
@@ -44,6 +44,7 @@ local function Tag(props)
 				}),
 				Tag = Roact.createElement(TextLabel, {
 					Text = text,
+					TextColor3 = theme:GetColor("MainText","Default"),
 					RichText = true,
 					LayoutOrder = 2,
 					TextWrapped = true,
