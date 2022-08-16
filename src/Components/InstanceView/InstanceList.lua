@@ -44,6 +44,7 @@ local function InstanceList(props)
 			LayoutOrder = i,
 			Name = part.Name,
 			ClassName = part.ClassName,
+			TagName = props.tagName,
 			Path = path,
 			Instance = part,
 			Selected = selected[part] ~= nil,

@@ -6,6 +6,9 @@ local Roact = require(Modules.Roact)
 local ClassIcon = require(Modules.Plugin.Components.ClassIcon)
 local ThemedTextLabel = require(Modules.Plugin.Components.ThemedTextLabel)
 local ListItemChrome = require(Modules.Plugin.Components.ListItemChrome)
+local Icon = require(Modules.Plugin.Components.Icon)
+local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
+local TagManager = require(Modules.Plugin.TagManager)
 
 local InstanceItem = Roact.PureComponent:extend("InstanceItem")
 
@@ -65,12 +68,7 @@ function InstanceItem:render()
 				local function isDown(key)
 					return UserInputService:IsKeyDown(Enum.KeyCode[key])
 				end
-				if
-					isDown("LeftControl")
-					or isDown("RightControl")
-					or isDown("LeftShift")
-					or isDown("RightShift")
-				then
+				if isDown("LeftControl") or isDown("RightControl") or isDown("LeftShift") or isDown("RightShift") then
 					baseSel = sel
 				end
 				baseSel[#baseSel + 1] = props.Instance
@@ -83,7 +81,7 @@ function InstanceItem:render()
 			BackgroundTransparency = 1.0,
 		}, {
 			UIPadding = Roact.createElement("UIPadding", {
-				PaddingLeft = UDim.new(0, 12),
+				PaddingLeft = UDim.new(0, 4),
 			}),
 			UIListLayout = Roact.createElement("UIListLayout", {
 				SortOrder = Enum.SortOrder.LayoutOrder,
@@ -91,9 +89,9 @@ function InstanceItem:render()
 				FillDirection = Enum.FillDirection.Horizontal,
 				Padding = UDim.new(0, 4),
 			}),
-			InstanceClass = Roact.createElement(ClassIcon,{
+			InstanceClass = Roact.createElement(ClassIcon, {
 				ClassName = props.ClassName,
-				Size = UDim2.fromScale(.5,.5)
+				Size = UDim2.fromScale(0.5, 0.5),
 			}),
 			InstanceName = Roact.createElement(ThemedTextLabel, {
 				state = state,
@@ -107,6 +105,27 @@ function InstanceItem:render()
 				LayoutOrder = 3,
 				TextSize = 16,
 			}),
+			Delete = Roact.createElement(Icon, {
+				Name = "cancel",
+				Position = UDim2.new(1, -4, 0.5, 0),
+				AnchorPoint = Vector2.new(1, 0.5),
+				LayoutOrder = -1,
+				ZIndex = 10,
+				onClick = function()
+					Selection:Set({props.Instance})
+					TagManager.Get():SetTag(props.TagName,false)
+					Selection:Set({})
+				end,
+			}),
+			Divider = StudioThemeAccessor.withTheme(function(theme: StudioTheme)
+				return Roact.createElement("Frame", {
+					Size = UDim2.new(0, 1, 1, 0),
+					Position = UDim2.fromScale(0, 1),
+					AnchorPoint = Vector2.new(0, 1),
+					BorderSizePixel = 0,
+					BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.Border),
+				})
+			end),
 		}),
 	})
 end
