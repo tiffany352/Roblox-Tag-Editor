@@ -7,7 +7,7 @@ local function HighlightAdorn(props)
 		Adornee = if props.Adornee.ClassName == "Attachment" then props.Adornee.Parent else props.Adornee,
 		FillColor = props.Color,
 		OutlineColor = props.Color,
-		DepthMode = if props.AlwaysOnTop then Enum.HighlightDepthMode.AlwaysOnTop else Enum.HighlightDepthMode.Occluded
+		DepthMode = if props.AlwaysOnTop then Enum.HighlightDepthMode.AlwaysOnTop else Enum.HighlightDepthMode.Occluded,
 	})
 end
 

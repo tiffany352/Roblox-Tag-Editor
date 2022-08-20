@@ -22,7 +22,7 @@ local function Group(props)
 				BackgroundTransparency = 1,
 				Size = UDim2.new(1, 0, 1, 0),
 			}, {
-				Visibility =  Roact.createElement(Icon, {
+				Visibility = Roact.createElement(Icon, {
 					Name = "folder_lightbulb",
 					Position = UDim2.new(1, -4, 0.5, 0),
 					AnchorPoint = Vector2.new(1, 0.5),

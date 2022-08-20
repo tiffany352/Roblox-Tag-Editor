@@ -44,7 +44,7 @@ local function TagSettings(props)
 				end,
 			}, {
 				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
-					MaxTextSize = 16
+					MaxTextSize = 16,
 				}),
 			}),
 			ChangeGroup = Roact.createElement(Button, {
@@ -57,7 +57,7 @@ local function TagSettings(props)
 				end,
 			}, {
 				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
-					MaxTextSize = 16
+					MaxTextSize = 16,
 				}),
 			}),
 			TaggedInstances = Roact.createElement(Button, {
@@ -70,7 +70,7 @@ local function TagSettings(props)
 				end,
 			}, {
 				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
-					MaxTextSize = 16
+					MaxTextSize = 16,
 				}),
 			}),
 			Delete = Roact.createElement(DeleteButton, {
@@ -84,7 +84,7 @@ local function TagSettings(props)
 				end,
 			}, {
 				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
-					MaxTextSize = 16
+					MaxTextSize = 16,
 				}),
 			}),
 		}),

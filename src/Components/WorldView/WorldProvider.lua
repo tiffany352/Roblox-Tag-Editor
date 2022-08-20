@@ -181,7 +181,7 @@ function WorldProvider:updateParts()
 				elseif tag.DrawType == "Icon" then
 					icons[#icons + 1] = tag.Icon
 				elseif tag.DrawType == "Highlight" then
-					highlights[#highlights+1] = tag.Color
+					highlights[#highlights + 1] = tag.Color
 				elseif tag.DrawType == "Text" then
 					labels[#labels + 1] = tagName
 				elseif tag.DrawType == "Sphere" then
