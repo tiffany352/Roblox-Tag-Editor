@@ -534,9 +534,10 @@ function TagManager:SetGroupVisiblity(name)
 			table.insert(tagsofgroup, tag)
 		end
 	end
-		for _, tag in tagsofgroup do
-			self:SetVisible(tag.Name, not allEnabled)
-		end
+
+	for _, tag in tagsofgroup do
+		self:SetVisible(tag.Name, not allEnabled)
+	end
 end
 
 function TagManager:DelGroup(name: string)

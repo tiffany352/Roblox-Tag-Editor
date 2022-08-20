@@ -62,7 +62,7 @@ function Item:render()
 				TopElements = Roact.createElement("Frame", {
 					BackgroundTransparency = 1,
 					Size = UDim2.new(1, -indent, 0, 26),
-					Position = UDim2.new(0, indent-10, 0, 0),
+					Position = UDim2.new(0, indent - 10, 0, 0),
 				}, {
 					Checkbox = props.Checked ~= nil and Roact.createElement(Checkbox, {
 						Checked = props.Checked,
