@@ -13,6 +13,7 @@ local TextService = game:GetService("TextService")
 local TextLabel = require(script.Parent.TextLabel)
 local Tag = require(script.Tag)
 local ClassIcon = require(Modules.Plugin.Components.ClassIcon)
+local Util = require(Modules.Plugin.Util)
 
 local TooltipView = Roact.PureComponent:extend("TooltipView")
 
@@ -84,19 +85,18 @@ function TooltipView:render()
 
 	children.UIListLayout = Roact.createElement("UIListLayout", {
 		SortOrder = Enum.SortOrder.LayoutOrder,
-		[Roact.Change.AbsoluteContentSize] = function(rbx)
-			local cs = rbx.AbsoluteContentSize
-			if rbx.Parent and rbx.Parent.Parent and self.state.Part then
-				local textsize = TextService:GetTextSize(
-					self.state.Part and self.state.Part.Name or "",
-					20,
-					Enum.Font.SourceSansSemibold,
-					cs
-				)
-				rbx.Parent.Parent.Size = UDim2.new(0, 50 + textsize.X, 0, cs.y)
-			end
-		end,
 	})
+
+	local maxWidth = 50
+
+	local tooltipTitle = self.state.Part and self.state.Part.Name or ""
+	local tooltipTitleSize = TextService:GetTextSize(
+		Util.escapeTagNamePlain(tooltipTitle),
+		20.0,
+		Enum.Font.SourceSansSemibold,
+		Vector2.new(0.0, 0.0)
+	)
+	maxWidth = math.max(maxWidth, tooltipTitleSize.X)
 
 	children.ObjectDesc = Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 0, 32),
@@ -118,7 +118,8 @@ function TooltipView:render()
 		}),
 		InstanceName = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement(TextLabel, {
-				Text = self.state.Part and self.state.Part.Name or "",
+				Text = Util.escapeTagName(tooltipTitle, theme),
+				RichText = true,
 				TextColor3 = theme:GetColor("MainText", "Default"),
 				LayoutOrder = 2,
 				Font = Enum.Font.SourceSansSemibold,
@@ -138,6 +139,10 @@ function TooltipView:render()
 				break
 			end
 		end
+		local size =
+			TextService:GetTextSize(Util.escapeTagNamePlain(tag), 20, Enum.Font.SourceSans, Vector2.new(0.0, 0.0))
+		maxWidth = math.max(maxWidth, size.X)
+
 		children[tag] = Roact.createElement(Tag, {
 			Tag = tag,
 			Icon = icon,
@@ -154,6 +159,8 @@ function TooltipView:render()
 				Window = Roact.createElement("Frame", {
 					BackgroundTransparency = 1.0,
 					Visible = self.state.Part ~= false and props.worldView,
+					Size = UDim2.new(0, maxWidth + 50, 0, 0),
+					AutomaticSize = Enum.AutomaticSize.Y,
 					[Roact.Ref] = function(rbx)
 						if rbx then
 							self.mouseSteppedConn = self:_runRunServiceEvent():Connect(function()
@@ -180,7 +187,8 @@ function TooltipView:render()
 					}),
 					Container = Roact.createElement("Frame", {
 						ZIndex = 2,
-						Size = UDim2.new(1, 0, 1, 0),
+						AutomaticSize = Enum.AutomaticSize.Y,
+						Size = UDim2.fromScale(1.0, 0.0),
 						BorderSizePixel = 0,
 						BackgroundColor3 = theme:GetColor("MainBackground"),
 					}, children),

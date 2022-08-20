@@ -53,8 +53,8 @@ local function TextLabel(props)
 		[Roact.Change.Parent] = autoSize and update or nil,
 	}, {
 		props.TextScaled and Roact.createElement("UITextSizeConstraint", {
-			MaxTextSize = props.TextSize or 20
-		})
+			MaxTextSize = props.TextSize or 20,
+		}),
 	})
 end
 

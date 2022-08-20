@@ -41,12 +41,7 @@ local function formatColorAttr(color: Color3): string
 	return string.format('color="rgb(%d, %d, %d)"', color.R * 255, color.G * 255, color.B * 255)
 end
 
-local function escapeTagName(name: string, theme: StudioTheme): string
-	local dimmedColor = theme:GetColor(Enum.StudioStyleGuideColor.DimmedText)
-	local errorColor = theme:GetColor(Enum.StudioStyleGuideColor.ErrorText)
-	local escapeFmt = "<font " .. formatColorAttr(dimmedColor) .. ">%s</font>"
-	local errorFmt = "<font " .. formatColorAttr(errorColor) .. ">%s</font>"
-
+local function escapeTagNameImpl(name: string, escapeFmt: string, errorFmt: string): string
 	local output = {}
 	local offset = 1
 	local len = string.len(name)
@@ -90,6 +85,19 @@ local function escapeTagName(name: string, theme: StudioTheme): string
 	end
 
 	return table.concat(output)
+end
+
+local function escapeTagNamePlain(name: string): string
+	return escapeTagNameImpl(name, "%s", "%s")
+end
+
+local function escapeTagName(name: string, theme: StudioTheme): string
+	local dimmedColor = theme:GetColor(Enum.StudioStyleGuideColor.DimmedText)
+	local errorColor = theme:GetColor(Enum.StudioStyleGuideColor.ErrorText)
+	local escapeFmt = "<font " .. formatColorAttr(dimmedColor) .. ">%s</font>"
+	local errorFmt = "<font " .. formatColorAttr(errorColor) .. ">%s</font>"
+
+	return escapeTagNameImpl(name, escapeFmt, errorFmt)
 end
 
 local function merge(...)
@@ -185,6 +193,7 @@ end
 return {
 	findIf = findIf,
 	escapeTagName = escapeTagName,
+	escapeTagNamePlain = escapeTagNamePlain,
 	merge = merge,
 	GenerateOutline = GenerateOutline,
 }
