@@ -7,7 +7,7 @@ local Util = require(Modules.Plugin.Util)
 
 local function Tag(props)
 	return StudioThemeAccessor.withTheme(function(theme)
-		local text = Util.escapeTagName(props.Tag, theme)
+		local text = Util.escapeTextColored(props.Tag, theme)
 
 		return Roact.createElement("Frame", {
 			Size = UDim2.fromScale(1, 0),

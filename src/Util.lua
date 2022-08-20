@@ -87,11 +87,11 @@ local function escapeTagNameImpl(name: string, escapeFmt: string, errorFmt: stri
 	return table.concat(output)
 end
 
-local function escapeTagNamePlain(name: string): string
+local function escapeTextPlain(name: string): string
 	return escapeTagNameImpl(name, "%s", "%s")
 end
 
-local function escapeTagName(name: string, theme: StudioTheme): string
+local function escapeTextColored(name: string, theme: StudioTheme): string
 	local dimmedColor = theme:GetColor(Enum.StudioStyleGuideColor.DimmedText)
 	local errorColor = theme:GetColor(Enum.StudioStyleGuideColor.ErrorText)
 	local escapeFmt = "<font " .. formatColorAttr(dimmedColor) .. ">%s</font>"
@@ -192,8 +192,8 @@ end
 
 return {
 	findIf = findIf,
-	escapeTagName = escapeTagName,
-	escapeTagNamePlain = escapeTagNamePlain,
+	escapeTextColored = escapeTextColored,
+	escapeTextPlain = escapeTextPlain,
 	merge = merge,
 	GenerateOutline = GenerateOutline,
 }

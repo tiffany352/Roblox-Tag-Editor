@@ -94,7 +94,7 @@ function TagList:render()
 		local tag = unknownTags[i]
 		children[tag] = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement(Item, {
-				Text = string.format("%s (click to import)", Util.escapeTagName(tag, theme)),
+				Text = string.format("%s (click to import)", Util.escapeTextColored(tag, theme)),
 				RichText = true,
 				Icon = "help",
 				ButtonColor = Constants.LightRed,

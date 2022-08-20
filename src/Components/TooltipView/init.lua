@@ -91,7 +91,7 @@ function TooltipView:render()
 
 	local tooltipTitle = self.state.Part and self.state.Part.Name or ""
 	local tooltipTitleSize = TextService:GetTextSize(
-		Util.escapeTagNamePlain(tooltipTitle),
+		Util.escapeTextPlain(tooltipTitle),
 		20.0,
 		Enum.Font.SourceSansSemibold,
 		Vector2.new(0.0, 0.0)
@@ -118,7 +118,7 @@ function TooltipView:render()
 		}),
 		InstanceName = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement(TextLabel, {
-				Text = Util.escapeTagName(tooltipTitle, theme),
+				Text = Util.escapeTextColored(tooltipTitle, theme),
 				RichText = true,
 				TextColor3 = theme:GetColor("MainText", "Default"),
 				LayoutOrder = 2,
@@ -139,8 +139,7 @@ function TooltipView:render()
 				break
 			end
 		end
-		local size =
-			TextService:GetTextSize(Util.escapeTagNamePlain(tag), 20, Enum.Font.SourceSans, Vector2.new(0.0, 0.0))
+		local size = TextService:GetTextSize(Util.escapeTextPlain(tag), 20, Enum.Font.SourceSans, Vector2.new(0.0, 0.0))
 		maxWidth = math.max(maxWidth, size.X)
 
 		children[tag] = Roact.createElement(Tag, {

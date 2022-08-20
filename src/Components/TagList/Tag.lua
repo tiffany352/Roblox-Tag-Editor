@@ -31,7 +31,7 @@ local function Tag(props)
 
 	return StudioThemeAccessor.withTheme(function(theme)
 		return Roact.createElement(Item, {
-			Text = Util.escapeTagName(props.Tag, theme),
+			Text = Util.escapeTextColored(props.Tag, theme),
 			AutoLocalize = false,
 			RichText = true,
 			Icon = props.Icon,
