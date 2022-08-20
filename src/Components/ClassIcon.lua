@@ -12,8 +12,9 @@ function ClassIcon:render()
 		ImageTransparency = props.transparency,
 		ImageRectOffset = iconProps.ImageRectOffset,
 		ImageRectSize = iconProps.ImageRectSize,
+		ResampleMode = Enum.ResamplerMode.Pixelated,
 		BackgroundTransparency = 1,
-		Size = props.Size,
+		Size = props.Size or UDim2.fromOffset(16, 16),
 		Position = props.Position,
 	}, {
 		ARConstraint = Roact.createElement("UIAspectRatioConstraint", {

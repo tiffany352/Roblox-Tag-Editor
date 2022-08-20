@@ -116,7 +116,6 @@ function TooltipView:render()
 		}),
 		InstanceClass = Roact.createElement(ClassIcon, {
 			ClassName = self.state.Part and self.state.Part.ClassName or "Part",
-			Size = UDim2.fromScale(0.5, 0.5),
 		}),
 		InstanceName = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement(TextLabel, {

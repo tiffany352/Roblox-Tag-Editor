@@ -91,7 +91,6 @@ function InstanceItem:render()
 			}),
 			InstanceClass = Roact.createElement(ClassIcon, {
 				ClassName = props.ClassName,
-				Size = UDim2.fromScale(0.5, 0.5),
 			}),
 			InstanceName = Roact.createElement(ThemedTextLabel, {
 				state = state,
@@ -112,8 +111,8 @@ function InstanceItem:render()
 				LayoutOrder = -1,
 				ZIndex = 10,
 				onClick = function()
-					Selection:Set({props.Instance})
-					TagManager.Get():SetTag(props.TagName,false)
+					Selection:Set({ props.Instance })
+					TagManager.Get():SetTag(props.TagName, false)
 					Selection:Set({})
 				end,
 			}),
