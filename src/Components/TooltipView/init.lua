@@ -7,7 +7,6 @@ local GuiService = game:GetService("GuiService")
 local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
-local Constants = require(Modules.Plugin.Constants)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
 local TextService = game:GetService("TextService")
 

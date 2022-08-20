@@ -27,19 +27,19 @@ function InstanceItem:render()
 		LayoutOrder = props.LayoutOrder,
 		state = state,
 
-		mouseEnter = function(rbx)
+		mouseEnter = function(_rbx)
 			self:setState({
 				hover = true,
 			})
 		end,
 
-		mouseLeave = function(rbx)
+		mouseLeave = function(_rbx)
 			self:setState({
 				hover = false,
 			})
 		end,
 
-		leftClick = function(rbx)
+		leftClick = function(_rbx)
 			local sel = Selection:Get()
 			local alreadySelected = false
 			for _, instance in pairs(sel) do
