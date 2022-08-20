@@ -18,7 +18,7 @@ local function ThemedTextLabel(props)
 				newProps[key] = value
 			end
 		end
-		return Roact.createElement(TextLabel, newProps,Roact.Children)
+		return Roact.createElement(TextLabel, newProps, props[Roact.Children])
 	end)
 end
 
