@@ -15,7 +15,6 @@ local TextLabel = require(script.Parent.TextLabel)
 local Tag = require(script.Tag)
 local ClassIcon = require(Modules.Plugin.Components.ClassIcon)
 
-
 local TooltipView = Roact.PureComponent:extend("TooltipView")
 
 function TooltipView:didMount()
@@ -119,13 +118,13 @@ function TooltipView:render()
 			ClassName = self.state.Part and self.state.Part.ClassName or "Part",
 			Size = UDim2.fromScale(0.5, 0.5),
 		}),
-		InstanceName = StudioThemeAccessor.withTheme(function(theme) 
+		InstanceName = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement(TextLabel, {
 				Text = self.state.Part and self.state.Part.Name or "",
 				TextColor3 = theme:GetColor("MainText", "Default"),
 				LayoutOrder = 2,
 				Font = Enum.Font.SourceSansSemibold,
-			}),
+			})
 		end),
 	})
 
