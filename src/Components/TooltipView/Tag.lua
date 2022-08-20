@@ -1,6 +1,5 @@
 local Modules = script.Parent.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
-local Constants = require(Modules.Plugin.Constants)
 local Icon = require(Modules.Plugin.Components.Icon)
 local TextLabel = require(Modules.Plugin.Components.TextLabel)
 local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
