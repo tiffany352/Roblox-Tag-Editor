@@ -8,11 +8,13 @@ local Modules = script.Parent.Parent.Parent
 local Roact = require(Modules.Roact)
 local RoactRodux = require(Modules.RoactRodux)
 local Constants = require(Modules.Plugin.Constants)
+local StudioThemeAccessor = require(Modules.Plugin.Components.StudioThemeAccessor)
+local TextService = game:GetService("TextService")
 
 local TextLabel = require(script.Parent.TextLabel)
 local Tag = require(script.Tag)
+local ClassIcon = require(Modules.Plugin.Components.ClassIcon)
 
-local TooltipGrey = Color3.fromRGB(238, 238, 238)
 
 local TooltipView = Roact.PureComponent:extend("TooltipView")
 
@@ -86,8 +88,14 @@ function TooltipView:render()
 		SortOrder = Enum.SortOrder.LayoutOrder,
 		[Roact.Change.AbsoluteContentSize] = function(rbx)
 			local cs = rbx.AbsoluteContentSize
-			if rbx.Parent and rbx.Parent.Parent then
-				rbx.Parent.Parent.Size = UDim2.new(0, 200, 0, cs.y)
+			if rbx.Parent and rbx.Parent.Parent and self.state.Part then
+				local textsize = TextService:GetTextSize(
+					self.state.Part and self.state.Part.Name or "",
+					20,
+					Enum.Font.SourceSansSemibold,
+					cs
+				)
+				rbx.Parent.Parent.Size = UDim2.new(0, 50 + textsize.X, 0, cs.y)
 			end
 		end,
 	})
@@ -107,17 +115,18 @@ function TooltipView:render()
 			Size = UDim2.new(0, 10, 1, 0),
 			BackgroundTransparency = 1.0,
 		}),
-		InstanceClass = Roact.createElement(TextLabel, {
-			Text = self.state.Part and self.state.Part.ClassName or "",
-			LayoutOrder = 1,
-			TextColor3 = Constants.VeryDarkGrey,
-			Font = Enum.Font.SourceSansSemibold,
+		InstanceClass = Roact.createElement(ClassIcon, {
+			ClassName = self.state.Part and self.state.Part.ClassName or "Part",
+			Size = UDim2.fromScale(0.5, 0.5),
 		}),
-		InstanceName = Roact.createElement(TextLabel, {
-			Text = self.state.Part and self.state.Part.Name or "",
-			LayoutOrder = 2,
-			Font = Enum.Font.SourceSansSemibold,
-		}),
+		InstanceName = StudioThemeAccessor.withTheme(function(theme) 
+			return Roact.createElement(TextLabel, {
+				Text = self.state.Part and self.state.Part.Name or "",
+				TextColor3 = theme:GetColor("MainText", "Default"),
+				LayoutOrder = 2,
+				Font = Enum.Font.SourceSansSemibold,
+			}),
+		end),
 	})
 
 	local tags = self.state.Tags or {}
@@ -138,48 +147,50 @@ function TooltipView:render()
 		})
 	end
 
-	return Roact.createElement(Roact.Portal, {
-		target = CoreGui,
-	}, {
-		TagEditorTooltip = Roact.createElement("ScreenGui", {
-			ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+	return StudioThemeAccessor.withTheme(function(theme)
+		return Roact.createElement(Roact.Portal, {
+			target = CoreGui,
 		}, {
-			Window = Roact.createElement("Frame", {
-				BackgroundTransparency = 1.0,
-				Visible = self.state.Part ~= false and props.worldView,
-				[Roact.Ref] = function(rbx)
-					if rbx then
-						self.mouseSteppedConn = self:_runRunServiceEvent():Connect(function()
-							local inset = GuiService:GetGuiInset()
-							local pos = UserInput:GetMouseLocation() - inset + Vector2.new(20, 0)
-							rbx.Position = UDim2.new(0, pos.x, 0, pos.y)
-						end)
-					else
-						self.mouseSteppedConn:Disconnect()
-					end
-				end,
+			TagEditorTooltip = Roact.createElement("ScreenGui", {
+				ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
 			}, {
-				HorizontalDivider = Roact.createElement("Frame", {
-					Size = UDim2.new(1, 2, 1, 0),
-					Position = UDim2.new(0, -1, 0, 0),
-					BorderSizePixel = 0,
-					BackgroundColor3 = TooltipGrey,
+				Window = Roact.createElement("Frame", {
+					BackgroundTransparency = 1.0,
+					Visible = self.state.Part ~= false and props.worldView,
+					[Roact.Ref] = function(rbx)
+						if rbx then
+							self.mouseSteppedConn = self:_runRunServiceEvent():Connect(function()
+								local inset = GuiService:GetGuiInset()
+								local pos = UserInput:GetMouseLocation() - inset + Vector2.new(20, 0)
+								rbx.Position = UDim2.new(0, pos.x, 0, pos.y)
+							end)
+						else
+							self.mouseSteppedConn:Disconnect()
+						end
+					end,
+				}, {
+					HorizontalDivider = Roact.createElement("Frame", {
+						Size = UDim2.new(1, 2, 1, 0),
+						Position = UDim2.new(0, -1, 0, 0),
+						BorderSizePixel = 0,
+						BackgroundColor3 = theme:GetColor("Tooltip"),
+					}),
+					VerticalDivider = Roact.createElement("Frame", {
+						Size = UDim2.new(1, 0, 1, 2),
+						Position = UDim2.new(0, 0, 0, -1),
+						BorderSizePixel = 0,
+						BackgroundColor3 = theme:GetColor("Tooltip"),
+					}),
+					Container = Roact.createElement("Frame", {
+						ZIndex = 2,
+						Size = UDim2.new(1, 0, 1, 0),
+						BorderSizePixel = 0,
+						BackgroundColor3 = theme:GetColor("MainBackground"),
+					}, children),
 				}),
-				VerticalDivider = Roact.createElement("Frame", {
-					Size = UDim2.new(1, 0, 1, 2),
-					Position = UDim2.new(0, 0, 0, -1),
-					BorderSizePixel = 0,
-					BackgroundColor3 = TooltipGrey,
-				}),
-				Container = Roact.createElement("Frame", {
-					ZIndex = 2,
-					Size = UDim2.new(1, 0, 1, 0),
-					BorderSizePixel = 0,
-					BackgroundColor3 = Constants.White,
-				}, children),
 			}),
-		}),
-	})
+		})
+	end)
 end
 
 --- RenderStepped errors out in Start Server, so bind to stepped if we can't bind to RenderStepped

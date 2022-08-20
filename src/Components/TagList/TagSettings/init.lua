@@ -38,34 +38,54 @@ local function TagSettings(props)
 				LayoutOrder = 1,
 				Size = UDim2.new(1, 0, 0, 30),
 				textKey = "TagSettings_ChangeIcon",
+				TextScaled = true,
 				leftClick = function()
 					props.iconPicker(props.tagMenu)
 				end,
+			}, {
+				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
+					MaxTextSize = 16
+				}),
 			}),
 			ChangeGroup = Roact.createElement(Button, {
 				LayoutOrder = 2,
 				Size = UDim2.new(1, 0, 0, 30),
 				textKey = "TagSettings_ChangeGroup",
+				TextScaled = true,
 				leftClick = function()
 					props.groupPicker(props.tagMenu)
 				end,
+			}, {
+				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
+					MaxTextSize = 16
+				}),
 			}),
 			TaggedInstances = Roact.createElement(Button, {
 				LayoutOrder = 3,
 				Size = UDim2.new(1, 0, 0, 30),
 				textKey = "TagSettings_TaggedInstances",
+				TextScaled = true,
 				leftClick = function()
 					props.instanceView(props.tagMenu)
 				end,
+			}, {
+				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
+					MaxTextSize = 16
+				}),
 			}),
 			Delete = Roact.createElement(DeleteButton, {
 				LayoutOrder = 4,
 				Size = UDim2.new(1, 0, 0, 30),
 				textKey = "TagSettings_Delete",
+				TextScaled = true,
 				leftClick = function()
 					TagManager.Get():DelTag(props.tagMenu)
 					props.close()
 				end,
+			}, {
+				UITextSizeConstraint = Roact.createElement("UITextSizeConstraint", {
+					MaxTextSize = 16
+				}),
 			}),
 		}),
 		Visualization = Roact.createElement("Frame", {
@@ -89,6 +109,7 @@ local function TagSettings(props)
 				LayoutOrder = 1,
 				textKey = "TagSettings_VisualizationSection",
 				TextSize = 20,
+				TextScaled = true,
 			}),
 			ChangeColor = Roact.createElement(Button, {
 				LayoutOrder = 2,
@@ -137,6 +158,7 @@ local function TagSettings(props)
 					Position = UDim2.new(0, 30, 0, 0),
 					textKey = "TagSettings_AlwaysOnTop",
 					TextSize = 16,
+					TextScaled = true,
 				}),
 			}),
 			VisualizationKind = Roact.createElement("Frame", {

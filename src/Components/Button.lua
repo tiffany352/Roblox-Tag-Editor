@@ -69,6 +69,7 @@ function Button:render()
 			AutoLocalize = props.textKey == nil,
 			TextColor3 = theme:GetColor("ButtonText", buttonState),
 			TextSize = props.TextSize,
+			TextScaled = props.TextScaled,
 			ZIndex = props.ZIndex,
 			[Roact.Event.MouseEnter] = self._mouseEnter,
 			[Roact.Event.MouseLeave] = self._mouseLeave,

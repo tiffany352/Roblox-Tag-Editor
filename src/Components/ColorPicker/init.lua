@@ -23,13 +23,21 @@ end
 
 function ColorPicker.getDerivedStateFromProps(nextProps, lastState)
 	if nextProps.tagColor == nil then
-		return {
-			h = 0,
-			s = 0,
-			v = 0,
-		}
+		if lastState.tagColor then
+			local h, s, v = Color3.toHSV(lastState.tagColor)
+			return {
+				h = h,
+				s = s,
+				v = v,
+			}
+		else
+			return {
+				h = 0,
+				s = 0,
+				v = 0,
+			}
+		end
 	end
-
 	if lastState.tagColor ~= nextProps.tagColor then
 		lastState.tagColor = nextProps.tagColor
 		local h, s, v = Color3.toHSV(nextProps.tagColor)
