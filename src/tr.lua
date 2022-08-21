@@ -4,7 +4,8 @@ local Config = require(script.Parent.Config)
 local Localization = script.Parent.Localization
 
 local supportedLanguages = {
-	["en-us"] = "en-us",
+	["en_US"] = "en-us",
+	["es_ES"] = "es-es"
 }
 
 local function tr(key: string, args: any): string
