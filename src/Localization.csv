@@ -81,6 +81,9 @@ ColorPicker_HSV,,,,HSV,HSV
 ColorPicker_RGB,,,,RGB,RGB/RVA
 ColorPicker_Hex,,,,Hex,Hex
 TagList_AddNew,,,,Add new tag...,Agregar nueva etiqueta…
+TagList_AddFromSearch,,,,Add tag {Tag}...,Add tag {Tag}...
+TagList_ImportTag,,,,{Tag} (click to import),{Tag} (click to import)
+TagList_NoSearchResults,,,,No search results found.,No search results found.
 TagSettings_VisualizeAs,,,,Visualize as:,Visualizar como:
 TagSettings_ChangeIcon,,,,Change icon,Cambiar icono
 TagSettings_ChangeGroup,,,,Change group,Cambiar grupo

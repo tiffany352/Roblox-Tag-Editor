@@ -94,7 +94,10 @@ function TagList:render()
 		local tag = unknownTags[i]
 		children[tag] = StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement(Item, {
-				Text = string.format("%s (click to import)", Util.escapeTextColored(tag, theme)),
+				textKey = "TagList_ImportTag",
+				textArgs = {
+					Tag = Util.escapeTextColored(tag, theme),
+				},
 				RichText = true,
 				Icon = "help",
 				ButtonColor = Constants.LightRed,
@@ -115,7 +118,7 @@ function TagList:render()
 	if #tags == 0 then
 		children.NoResults = Roact.createElement(Item, {
 			LayoutOrder = itemCount,
-			Text = "No search results found.",
+			textKey = "TagList_NoSearchResults",
 			Icon = "cancel",
 			TextProps = {
 				Font = Enum.Font.SourceSansItalic,
@@ -134,7 +137,10 @@ function TagList:render()
 	if props.searchTerm and #props.searchTerm > 0 and not searchTagExists then
 		children.AddNew = Roact.createElement(Item, {
 			LayoutOrder = itemCount,
-			Text = string.format("Add tag %q...", props.searchTerm),
+			textKey = "TagList_AddFromSearch",
+			textArgs = {
+				Tag = props.searchTerm,
+			},
 			Icon = "tag_blue_add",
 
 			leftClick = function(_rbx)
