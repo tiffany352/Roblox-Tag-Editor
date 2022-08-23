@@ -85,13 +85,7 @@ function Item:render()
 							Size = UDim2.new(1, -40, 1, 0),
 							Text = props.IsInput and (props.TextBoxText or "") or sourceText,
 							AutoLocalize = false,
-							ClearTextOnFocus = (function()
-								if props.IsInput then
-									return props.ClearTextOnFocus
-								else
-									return nil
-								end
-							end)(),
+							ClearTextOnFocus = if props.IsInput then props.ClearTextOnFocus else nil,
 							RichText = props.RichText and not props.IsInput,
 							PlaceholderText = props.IsInput and sourceText or nil,
 							PlaceholderColor3 = props.IsInput and theme:GetColor("DimmedText") or nil,
