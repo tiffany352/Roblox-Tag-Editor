@@ -74,7 +74,6 @@ function PluginFacade:button(
 		local existingButton = existingButtons[id]
 
 		if existingButton then
-			existingButton.Icon = icon
 			return existingButton
 		end
 	else
