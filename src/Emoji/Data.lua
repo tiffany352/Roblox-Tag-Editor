@@ -2,7 +2,7 @@
 
 return {
 	{
-		name = "Smileys & Emotion",
+		name = "SmileysAndEmotion",
 		items = {
 			{
 				name = "grinning",
@@ -603,7 +603,7 @@ return {
 		},
 	},
 	{
-		name = "People & Body",
+		name = "PeopleAndBody",
 		items = {
 			{
 				name = "wave",
@@ -2241,7 +2241,7 @@ return {
 		},
 	},
 	{
-		name = "Animals & Nature",
+		name = "AnimalsAndNature",
 		items = {
 			{
 				name = "monkey-face",
@@ -2754,7 +2754,7 @@ return {
 		},
 	},
 	{
-		name = "Food & Drink",
+		name = "FoodAndDrink",
 		items = {
 			{
 				name = "grapes",
@@ -3243,7 +3243,7 @@ return {
 		},
 	},
 	{
-		name = "Travel & Places",
+		name = "TravelAndPlaces",
 		items = {
 			{
 				name = "earth-africa",

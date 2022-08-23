@@ -49,8 +49,9 @@ lines.push("-- Automatically generated with create_emoji_list.js");
 lines.push("");
 lines.push("return {");
 for (const { name, items } of categoryList) {
+	const cleanedName = name.replace(" & ", "And").replace(" - ", "_");
 	lines.push(`\t{`);
-	lines.push(`\t\tname = "${name}",`);
+	lines.push(`\t\tname = "${cleanedName}",`);
 	lines.push(`\t\titems = {`);
 	for (const item of items) {
 		const text = item.unified
