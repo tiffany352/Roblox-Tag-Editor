@@ -1,4 +1,10 @@
 Key,Source,Context,Example,en_US,es_ES
+PluginGui_TagEditor_Title,,,,Tag Editor,Tag Editor
+Toolbar_InstanceTagging_Title,,,,Instance Tagging,Instance Tagging
+PluginButton_TagWindow_Title,,,,Tag Window,Tag Window
+PluginButton_TagWindow_ToolTip,,,,Manipulate CollectionService tags,Manipulate CollectionService tags
+PluginButton_WorldView_Title,,,,World View,World View
+PluginButton_WorldView_ToolTip,,,,Visualize tagged objects in the 3D view,Visualize tagged objects in the 3D view
 PluginAction_ChangeIcon_Label,,,,Change icon...,Cambiar icono…
 PluginAction_ChangeIcon_Description,,,,Change the icon of the tag.,Cambiar el icono de la etiqueta.
 PluginAction_ChangeGroup_Label,,,,Change group...,Cambiar grupo…

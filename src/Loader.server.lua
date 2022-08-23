@@ -61,13 +61,20 @@ end
 --[[
 	Abstraction for toolbar:CreateButton
 ]]
-function PluginFacade:button(toolbar, name, tooltip, icon)
+function PluginFacade:button(
+	toolbar: PluginToolbar,
+	id: string,
+	tooltip: string,
+	icon: string,
+	text: string
+): PluginToolbarButton
 	local existingButtons = self._buttons[toolbar]
 
 	if existingButtons then
-		local existingButton = existingButtons[name]
+		local existingButton = existingButtons[id]
 
 		if existingButton then
+			existingButton.Icon = icon
 			return existingButton
 		end
 	else
@@ -75,9 +82,9 @@ function PluginFacade:button(toolbar, name, tooltip, icon)
 		self._buttons[toolbar] = existingButtons
 	end
 
-	local button = toolbar:CreateButton(name, tooltip, icon)
+	local button = toolbar:CreateButton(id, tooltip, icon, text)
 
-	existingButtons[name] = button
+	existingButtons[id] = button
 
 	return button
 end

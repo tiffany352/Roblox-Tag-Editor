@@ -24,21 +24,20 @@ end
 return function(plugin, savedState)
 	local displaySuffix, nameSuffix = getSuffix(plugin)
 
-	local toolbar = plugin:toolbar("Instance Tagging" .. displaySuffix)
+	local toolbar = plugin:toolbar(tr("Toolbar_InstanceTagging_Title") .. displaySuffix)
 
-	local toggleButton = plugin:button(
-		toolbar,
-		"Tag Window",
-		"Manipulate CollectionService tags",
-		"http://www.roblox.com/asset/?id=1367281857"
-	)
+	local function pluginButton(key: string, icon: string): PluginToolbarButton
+		return plugin:button(
+			toolbar,
+			key,
+			tr("PluginButton_" .. key .. "_ToolTip"),
+			icon,
+			tr("PluginButton_" .. key .. "_Title")
+		)
+	end
 
-	local worldViewButton = plugin:button(
-		toolbar,
-		"World View",
-		"Visualize tagged objects in the 3D view",
-		"http://www.roblox.com/asset/?id=1367285594"
-	)
+	local toggleButton = pluginButton("TagWindow", "http://www.roblox.com/asset/?id=1367281857")
+	local worldViewButton = pluginButton("WorldView", "http://www.roblox.com/asset/?id=1367285594")
 
 	local store = Rodux.Store.new(Reducer, savedState)
 
@@ -54,7 +53,7 @@ return function(plugin, savedState)
 	local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 0, 0)
 	local gui = plugin:createDockWidgetPluginGui("TagEditor" .. nameSuffix, info)
 	gui.Name = "TagEditor" .. nameSuffix
-	gui.Title = "Tag Editor" .. displaySuffix
+	gui.Title = tr("PluginGui_TagEditor_Title") .. displaySuffix
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	gui.RootLocalizationTable = script.Parent.Localization
 	toggleButton:SetActive(gui.Enabled)
