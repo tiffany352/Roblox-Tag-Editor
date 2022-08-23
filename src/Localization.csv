@@ -33,39 +33,39 @@ PluginAction_Visualize_Highlight_Label,,,,Highlight,Resaltar
 PluginAction_Visualize_Highlight_Description,,,,Render this tag as a Highlight around parts when the overlay is enabled.,Representar esta etiqueta como un Highlight alrededor de partes cuando el overlay está habilitado.
 PluginMenu_TagMenu_VisualizeAs,,,,Change draw mode,Cambiar modo de representación
 Category_Activities,,,,Activities,Actividades
-Category_Animals & Nature,,,,Animals & Nature,Animales y Naturaleza
+Category_AnimalsAndNature,,,,Animals & Nature,Animales y Naturaleza
 Category_Arrows,,,,Arrows,Flechas
-Category_Awards & Medals,,,,Awards & Medals,Premios y Medallas
+Category_AwardsAndMedals,,,,Awards & Medals,Premios y Medallas
 Category_Bricks,,,,Bricks,Bloques
 Category_Buttons,,,,Buttons,Botones
 Category_Component,,,,Component,Componente
 Category_Computers,,,,Computers,Computadoras
-Category_Computers - Peripherals,,,,Computers - Peripherals,Computadoras - Periféricos
+Category_Computers_Peripherals,,,,Computers - Peripherals,Computadoras - Periféricos
 Category_Currency,,,,Currency,Moneda
 Category_Databases,,,,Databases,Bases de datos
 Category_Documents,,,,Documents,Documentos
 Category_Film,,,,Film,Película
 Category_Flags,,,,Flags,Banderas
 Category_Folders,,,,Folders,Carpetas
-Category_Food & Drink,,,,Food & Drink,Comida y Bebidas
-Category_Keys & Locks,,,,Keys & Locks,Llaves y Cerraduras
+Category_FoodAndDrink,,,,Food & Drink,Comida y Bebidas
+Category_KeysAndLocks,,,,Keys & Locks,Llaves y Cerraduras
 Category_Objects,,,,Objects,Objetos
-Category_Objects - Game,,,,Objects - Game,Objetos - Juego
-Category_Objects - Misc,,,,Objects - Misc,Objetos - Miscelánea
-Category_Objects - UI,,,,Objects - UI,Objetos - Interfaz
-Category_People & Body,,,,People & Body,Gente y Cuerpo
-Category_People & Emotes,,,,People & Emotes,Gente y Emociones
+Category_Objects_Game,,,,Objects - Game,Objetos - Juego
+Category_Objects_Misc,,,,Objects - Misc,Objetos - Miscelánea
+Category_Objects_UI,,,,Objects - UI,Objetos - Interfaz
+Category_PeopleAndBody,,,,People & Body,Gente y Cuerpo
+Category_PeopleAndEmotes,,,,People & Emotes,Gente y Emociones
 Category_Scripts,,,,Scripts,Código
 Category_Shapes,,,,Shapes,Formas
-Category_Smileys & Emotion,,,,Smileys & Emotion,Emoticonos y Emociones
+Category_SmileysAndEmotion,,,,Smileys & Emotion,Emoticonos y Emociones
 Category_Sports,,,,Sports,Deportes
 Category_Symbols,,,,Symbols,Símbolos
-Category_Symbols - UI,,,,Symbols - UI,Símbolos - Interfaz
+Category_Symbols_UI,,,,Symbols - UI,Símbolos - Interfaz
 Category_Tags,,,,Tags,Etiquetas
-Category_Text & Formatting,,,,Text & Formatting,Texto y Formato
-Category_Time & Date,,,,Time & Date,Hora y Fecha
+Category_TextAndFormatting,,,,Text & Formatting,Texto y Formato
+Category_TimeAndDate,,,,Time & Date,Hora y Fecha
 Category_Tiny,,,,Tiny,Pequeño
-Category_Travel & Places,,,,Travel & Places,Viajes y Lugares
+Category_TravelAndPlaces,,,,Travel & Places,Viajes y Lugares
 Category_Weather,,,,Weather,Clima
 Nav_Back,,,,Back,Atrás
 InstanceView_ListTitle,,,,Instance List ({Count:int} instances),Lista de instancias ({Count:int} instancias)

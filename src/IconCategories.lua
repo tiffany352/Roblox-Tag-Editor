@@ -21,7 +21,7 @@ return {
 		"arrow_undo",
 		"arrow_up",
 	},
-	["Objects - Game"] = {
+	Objects_Game = {
 		"anchor",
 		"bell",
 		"bomb",
@@ -80,7 +80,7 @@ return {
 		"wrench_orange",
 		"wrench",
 	},
-	["Objects - UI"] = {
+	Objects_UI = {
 		"controller",
 		"lightning",
 		"magifier_zoom_out",
@@ -113,7 +113,7 @@ return {
 		"zoom_in",
 		"zoom_out",
 	},
-	["Objects - Misc"] = {
+	Objects_Misc = {
 		"attach",
 		"basket",
 		"basket_put",
@@ -122,7 +122,7 @@ return {
 		"bin_closed",
 		"bin_empty",
 	},
-	["Awards & Medals"] = {
+	AwardsAndMedals = {
 		"asterisk_orange",
 		"asterisk_yellow",
 		"award_star_bronze_1",
@@ -242,7 +242,7 @@ return {
 		"tag",
 		"vector",
 	},
-	["Symbols - UI"] = {
+	Symbols_UI = {
 		"application_double",
 		"application_form",
 		"application_form_add",
@@ -387,7 +387,7 @@ return {
 		"script_go",
 		"script_link",
 	},
-	["People & Emotes"] = {
+	PeopleAndEmotes = {
 		"emoticon_evilgrin",
 		"emoticon_grin",
 		"emoticon_happy",
@@ -463,7 +463,7 @@ return {
 		"brick_go",
 		"brick_link",
 	},
-	["Time & Date"] = {
+	TimeAndDate = {
 		"clock",
 		"clock_pause",
 		"clock_play",
@@ -493,7 +493,7 @@ return {
 		"weather_snow",
 		"weather_sun",
 	},
-	["Computers - Peripherals"] = {
+	Computers_Peripherals = {
 		"camera",
 		"camera_add",
 		"camera_delete",
@@ -542,7 +542,7 @@ return {
 		"server_lightning",
 		"server_uncompressed",
 	},
-	["Keys & Locks"] = {
+	KeysAndLocks = {
 		"key",
 		"key_add",
 		"key_delete",
@@ -594,7 +594,7 @@ return {
 		"film_go",
 		"film_link",
 	},
-	["Text & Formatting"] = {
+	TextAndFormatting = {
 		"font",
 		"style",
 		"pilcrow",
