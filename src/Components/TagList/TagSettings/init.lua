@@ -176,6 +176,21 @@ local function TagSettings(props)
 					textKey = "TagSettings_VisualizeAs",
 					LayoutOrder = 1,
 					TextSize = 16,
+					Ref = function(inst)
+						-- Quick fix: long translations made dropdown overlap scrollbar (there might be a better way to do this)
+						if not inst then
+							return
+						end
+						local function update()
+							if not inst.Parent or not inst.Parent.Dropdown then
+								return
+							end
+							local abs = inst.AbsoluteSize
+							inst.Parent.Dropdown.Size = UDim2.new(1, -abs.X-5, 0, 30)
+						end
+						update()
+						inst:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
+					end,
 				}),
 				Dropdown = Roact.createElement(Dropdown, {
 					LayoutOrder = 2,
