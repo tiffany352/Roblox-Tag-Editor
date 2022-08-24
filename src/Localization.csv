@@ -1,10 +1,10 @@
 Key,Source,Context,Example,en_US,es_ES
-PluginGui_TagEditor_Title,,,,Tag Editor,Tag Editor
-Toolbar_InstanceTagging_Title,,,,Instance Tagging,Instance Tagging
-PluginButton_TagWindow_Title,,,,Tag Window,Tag Window
-PluginButton_TagWindow_ToolTip,,,,Manipulate CollectionService tags,Manipulate CollectionService tags
-PluginButton_WorldView_Title,,,,World View,World View
-PluginButton_WorldView_ToolTip,,,,Visualize tagged objects in the 3D view,Visualize tagged objects in the 3D view
+PluginGui_TagEditor_Title,,,,Tag Editor,Editor de Etiquetas
+Toolbar_InstanceTagging_Title,,,,Instance Tagging,Etiquetado de Instancias
+PluginButton_TagWindow_Title,,,,Tag Window,Ventana de Etiquetas
+PluginButton_TagWindow_ToolTip,,,,Manipulate CollectionService tags,Manipula etiquetas de CollectionService
+PluginButton_WorldView_Title,,,,World View,Vista del Mundo
+PluginButton_WorldView_ToolTip,,,,Visualize tagged objects in the 3D view,Visualiza objetos etiquetados en la vista 3D
 PluginAction_ChangeIcon_Label,,,,Change icon...,Cambiar icono…
 PluginAction_ChangeIcon_Description,,,,Change the icon of the tag.,Cambiar el icono de la etiqueta.
 PluginAction_ChangeGroup_Label,,,,Change group...,Cambiar grupo…
@@ -81,9 +81,9 @@ ColorPicker_HSV,,,,HSV,HSV
 ColorPicker_RGB,,,,RGB,RGB/RVA
 ColorPicker_Hex,,,,Hex,Hex
 TagList_AddNew,,,,Add new tag...,Agregar nueva etiqueta…
-TagList_AddFromSearch,,,,Add tag {Tag}...,Add tag {Tag}...
-TagList_ImportTag,,,,{Tag} (click to import),{Tag} (click to import)
-TagList_NoSearchResults,,,,No search results found.,No search results found.
+TagList_AddFromSearch,,,,Add tag {Tag}...,Agregar etiqueta {Tag}...
+TagList_ImportTag,,,,{Tag} (click to import),{Tag} (haz clic para importar)
+TagList_NoSearchResults,,,,No search results found.,No se han encontrado resultados para tu búsqueda..
 TagSettings_VisualizeAs,,,,Visualize as:,Visualizar como:
 TagSettings_ChangeIcon,,,,Change icon,Cambiar icono
 TagSettings_ChangeGroup,,,,Change group,Cambiar grupo
