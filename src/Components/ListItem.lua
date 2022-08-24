@@ -20,7 +20,6 @@ function Item:render()
 	local ignoresMenuOpen = props.ignoresMenuOpen
 	local isHover = self.state.Hover and (not props.menuOpen or ignoresMenuOpen)
 	local indent = props.Indent or 0
-	local height = props.Height or 26
 
 	local state = Enum.StudioStyleGuideModifier.Default
 	if props.Active or props.SemiActive then
@@ -31,11 +30,15 @@ function Item:render()
 
 	local sourceText = if props.textKey then tr(props.textKey, props.textArgs) else props.Text
 
+	local widthUsedUp = 48 + 16 + indent + 3
+	if props.onSetVisible then
+		widthUsedUp += 16 + 5
+	end
+
 	return Roact.createElement(ListItemChrome, {
 		LayoutOrder = props.LayoutOrder,
 		hidden = props.Hidden,
 		state = state,
-		height = height,
 		showDivider = props.ShowDivider,
 
 		mouseEnter = function(_rbx)
@@ -55,15 +58,24 @@ function Item:render()
 	}, {
 		StudioThemeAccessor.withTheme(function(theme)
 			return Roact.createElement("Frame", {
-				Size = UDim2.new(1, 0, 1, 0),
+				Size = UDim2.fromScale(1, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
 				BackgroundTransparency = 1.0,
-				Position = UDim2.new(0, 0, 0, 0),
 			}, {
+				Layout = Roact.createElement("UIListLayout", {
+					SortOrder = Enum.SortOrder.LayoutOrder,
+				}),
 				TopElements = Roact.createElement("Frame", {
+					LayoutOrder = 1,
 					BackgroundTransparency = 1,
-					Size = UDim2.new(1, -indent, 0, 26),
-					Position = UDim2.new(0, indent - 10, 0, 0),
+					Size = UDim2.fromScale(1.0, 0.0),
+					AutomaticSize = Enum.AutomaticSize.Y,
 				}, {
+					Padding = Roact.createElement("UIPadding", {
+						PaddingTop = UDim.new(0, 3),
+						PaddingBottom = UDim.new(0, 3),
+						PaddingLeft = UDim.new(0, indent),
+					}),
 					Checkbox = props.Checked ~= nil and Roact.createElement(Checkbox, {
 						Checked = props.Checked,
 						Disabled = props.CheckDisabled,
@@ -82,7 +94,8 @@ function Item:render()
 							BackgroundTransparency = 1.0,
 							TextXAlignment = Enum.TextXAlignment.Left,
 							Position = props.Icon and UDim2.new(0, 48 + 16, 0, 0) or UDim2.new(0, 14, 0, 0),
-							Size = UDim2.new(1, -40, 1, 0),
+							Size = UDim2.new(1, -widthUsedUp, 0.0, 0),
+							AutomaticSize = Enum.AutomaticSize.Y,
 							Text = props.IsInput and (props.TextBoxText or "") or sourceText,
 							AutoLocalize = false,
 							ClearTextOnFocus = if props.IsInput then props.ClearTextOnFocus else nil,
@@ -92,6 +105,7 @@ function Item:render()
 							Font = Enum.Font.SourceSans,
 							TextSize = 20,
 							TextColor3 = theme:GetColor("MainText"),
+							TextWrapped = true,
 
 							[Roact.Event.FocusLost] = props.IsInput and function(rbx, enterPressed)
 								local text = rbx.Text
@@ -108,7 +122,7 @@ function Item:render()
 					),
 					Visibility = props.onSetVisible and Roact.createElement(Icon, {
 						Name = props.Visible and "lightbulb" or "lightbulb_off",
-						Position = UDim2.new(1, 5, 0.5, 0),
+						Position = UDim2.new(1, -5, 0.5, 0),
 						AnchorPoint = Vector2.new(1, 0.5),
 
 						onClick = props.onSetVisible,
@@ -129,7 +143,9 @@ function Item:render()
 					}),
 				}),
 				Children = Roact.createElement("Frame", {
-					Size = UDim2.new(1, 0, 1, -26),
+					LayoutOrder = 2,
+					Size = UDim2.fromScale(1, 0),
+					AutomaticSize = Enum.AutomaticSize.Y,
 					Position = UDim2.new(0, 0, 0, 26),
 					BackgroundColor3 = theme:GetColor("MainBackground"),
 					BorderSizePixel = 0,

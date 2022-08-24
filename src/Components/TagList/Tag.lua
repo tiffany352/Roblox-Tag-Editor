@@ -45,7 +45,6 @@ local function Tag(props)
 			Active = props.isMenuOpen,
 			Hidden = props.Hidden,
 			Indent = props.Group and 10 or 0,
-			Height = props.isMenuOpen and 171 or 26,
 
 			onSetVisible = function()
 				TagManager.Get():SetVisible(props.Tag, not props.Visible)

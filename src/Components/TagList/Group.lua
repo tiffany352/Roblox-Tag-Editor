@@ -20,8 +20,13 @@ local function Group(props)
 		StudioThemeAccessor.withTheme(function(theme, isDarkTheme)
 			return Roact.createElement("Frame", {
 				BackgroundTransparency = 1,
-				Size = UDim2.new(1, 0, 1, 0),
+				Size = UDim2.fromScale(1, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
 			}, {
+				Padding = Roact.createElement("UIPadding", {
+					PaddingTop = UDim.new(0, 3),
+					PaddingBottom = UDim.new(0, 3),
+				}),
 				Visibility = Roact.createElement(Icon, {
 					Name = "folder_lightbulb",
 					Position = UDim2.new(1, -4, 0.5, 0),
@@ -36,11 +41,13 @@ local function Group(props)
 					Text = props.Name,
 					AutoLocalize = false,
 					BackgroundTransparency = 1,
-					Size = UDim2.new(1, -70, 1, 0),
+					Size = UDim2.new(1, -70, 0, 0),
+					AutomaticSize = Enum.AutomaticSize.Y,
 					Position = UDim2.new(0, 20, 0, 0),
 					TextColor3 = theme:GetColor("MainText"),
 					TextXAlignment = "Left",
 					TextSize = 20,
+					TextWrapped = true,
 				}),
 				Arrow = Roact.createElement("ImageLabel", {
 					Size = UDim2.new(0, 12, 0, 12),
