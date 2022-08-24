@@ -3,16 +3,10 @@ local Config = require(script.Parent.Config)
 
 local Localization = script.Parent.Localization
 
-local supportedLanguages = {
-	["en_US"] = "en-us",
-	["es_ES"] = "es-es"
-}
-
-local defaultLocale = "en-us"
-local locale = supportedLanguages[Studio.StudioLocaleId]
-
-local translator = Localization:GetTranslator(locale or defaultLocale)
-local fallback = locale ~= defaultLocale and Localization:GetTranslator(defaultLocale) -- JIC the string hasn't been translated
+local defaultLocale = "en_US"
+local translator = Localization:GetTranslator(Studio.StudioLocaleId)
+-- Just in case the string hasn't been translated
+local fallback = Studio.StudioLocaleId ~= defaultLocale and Localization:GetTranslator(defaultLocale)
 
 local function tr(key: string, args: any): string
 	if Config.testLocalization then
