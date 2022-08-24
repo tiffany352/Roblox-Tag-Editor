@@ -77,7 +77,8 @@ function InstanceItem:render()
 		end,
 	}, {
 		Container = Roact.createElement("Frame", {
-			Size = UDim2.new(1, 0, 1, 0),
+			Size = UDim2.fromScale(1.0, 0.0),
+			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundTransparency = 1.0,
 		}, {
 			UIPadding = Roact.createElement("UIPadding", {
@@ -118,7 +119,7 @@ function InstanceItem:render()
 			}),
 			Divider = StudioThemeAccessor.withTheme(function(theme: StudioTheme)
 				return Roact.createElement("Frame", {
-					Size = UDim2.new(0, 1, 1, 0),
+					Size = UDim2.new(0, 1, 0, 26),
 					Position = UDim2.fromScale(0, 1),
 					AnchorPoint = Vector2.new(0, 1),
 					BorderSizePixel = 0,
