@@ -1,5 +1,10 @@
 # Tag Editor
 
+> **Note**<br>
+> There is now an [official Tag Editor plugin](https://devforum.roblox.com/t/tag-editor-plugin-for-studio/2055202/41) that is integrated directly into Roblox Studio, which you might want to consider using instead. Both plugins save in the same format, which makes them compatible with each other, even in Team Create.
+> 
+> This plugin should be considered in maintenance mode. You can continue using it, but there might not be as much feature development on it anymore.
+
 A Roblox Studio plugin for manipulating [CollectionService](https://create.roblox.com/docs/reference/engine/classes/CollectionService).
 
 You can install it via the Roblox plugin marketplace, here: https://www.roblox.com/library/948084095/Tag-Editor
