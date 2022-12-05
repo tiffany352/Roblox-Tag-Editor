@@ -1,7 +1,7 @@
 # Tag Editor
 
 > **Note**<br>
-> There is now an [official Tag Editor plugin](https://devforum.roblox.com/t/tag-editor-plugin-for-studio/2055202/41) that is integrated directly into Roblox Studio, which you might want to consider using instead. Both plugins save in the same format, which makes them compatible with each other, even in Team Create.
+> There is now an [official Tag Editor plugin](https://devforum.roblox.com/t/tag-editor-plugin-for-studio/2055202) that is integrated directly into Roblox Studio, which you might want to consider using instead. Both plugins save in the same format, which makes them compatible with each other, even in Team Create.
 > 
 > This plugin should be considered in maintenance mode. You can continue using it, but there might not be as much feature development on it anymore.
 
